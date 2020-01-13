@@ -1,0 +1,205 @@
+/************ Login Page ************/
+#login{
+	.login_content{
+		input[type="text"],
+		input[type="email"],
+		input[type="password"] {
+		    border-radius: 2px;
+			-ms-box-shadow: none;
+			-o-box-shadow: none;
+			box-shadow: none;
+			border: 0;
+			border-bottom: 1px solid $gray-400;
+			color: #777;
+			margin: 0 0 20px;
+			width: 100%;
+
+		    &:focus {
+			    border: 0;
+  				border-bottom: 2px solid $blue;
+			}
+		}
+
+		.btn{
+			padding: 10px 20px; 
+			border: 1px solid #CCC; 
+			margin: 10px auto; 
+			display: inline-block; 
+		}
+	}
+}
+
+
+/************ Progress Bar ************/
+#nprogress{
+	.bar {
+	    background: #1ABB9C;
+	}
+	.peg {
+	    box-shadow: 0 0 10px #1ABB9C, 0 0 5px #1ABB9C
+	}
+	.spinner-icon {
+	    border-top-color: #1ABB9C;
+	    border-left-color: #1ABB9C
+	}
+}
+
+/************ Buttons ************/
+a.btn,
+.swal2-actions button.btn {
+
+	color: #FFF !important;
+    border: 0 !important;
+    padding: 6px 12px 6px 25px;
+    margin: 0 5px 5px 10px;
+    position: relative;
+    overflow: hidden;
+
+    i.fa,
+    i.far,
+    i.fas,
+    i.fab{
+	    position: absolute;
+	    left: 2px;
+	    top: 10%;
+	    font-size: 35px;
+	    opacity: 0.2;
+	    transition: all ease-in-out 0.3s
+	}
+
+	&.btn-default:hover{
+		background: $gray-100;
+	}
+
+	&:hover i.fa,
+    &:hover i.far,
+    &:hover i.fas,
+    &:hover i.fab{
+	    color: #30373A;
+	    transform: rotate(5deg);
+	}
+}
+
+/************ Select2 ************/
+.select2-container--default{
+
+    .select2-selection--single{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        min-height: 38px;
+
+        .select2-selection__arrow {
+            top: 7px;
+        }
+
+        .select2-selection__rendered {
+            color: #73879C;
+            padding-top: 5px;
+        }
+
+        .select2-selection__arrow {
+            height: 36px;
+        }
+    }
+
+    .select2-selection--multiple {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        min-height: 38px;
+
+        .select2-selection__arrow {
+            top: 7px;
+        }
+
+        .select2-selection__rendered {
+            padding-top: 3px;
+        }
+
+        .select2-selection__choice,
+        .select2-selection__clear {
+            margin-top: 2px;
+            border: none;
+            border-radius: 0;
+            padding: 3px 5px;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border: 1px solid #ccc;
+        }
+    }
+}
+
+/************ Error Label ************/
+label.error {
+    color: red;
+    font-weight: 700;
+}
+
+/************ Modal ************/
+.modal-dialog{
+
+    .modal-content{
+
+        .modal-header{
+
+            .close {
+                margin: 0;
+                padding: 0;
+                float: right;
+            }
+            .modal-title{
+                color: #FFF;
+            }
+        }
+    }
+}
+
+
+/************ DataTable ************/
+
+.table-responsive{
+	overflow-x: unset;
+
+	.dataTables_wrapper {
+	    position: relative;
+	    clear: both;
+	    padding-top: 20px;
+
+	    .dataTables_length {
+		    width: 40%;
+		    float: left
+		}
+		.dataTables_filter {
+		    width: 50%;
+		    float: right;
+		    text-align: right;
+
+		    input[type="search"] {
+			    border: 1px solid  #a6a6a6;
+			    margin-left: 10px
+			}
+		}
+		.dataTables_info {
+		    width: 60%;
+		    float: left
+		}
+	}
+
+	.dataTables_paginate{
+		float: right;
+	    text-align: right;
+	    background: #ff0000;
+
+		a {
+		    padding: 6px 9px !important;
+		    background: #ddd !important;
+		    border-color: #ddd !important
+		}
+	}
+
+	.dataTables_empty {
+	    text-align: center;
+	}
+}
