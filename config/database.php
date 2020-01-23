@@ -61,6 +61,15 @@ return [
             ]) : [],
         ],
 
+        'mysql_lime' => [
+            'driver' => 'mysql',
+            'host'      => env('DB_LIME_HOST', '127.0.0.1'),
+            'port'      => env('DB_LIME_PORT', '3306'),
+            'database'  => env('DB_LIME_DATABASE', 'forge'),
+            'username'  => env('DB_LIME_USERNAME', 'forge'),
+            'password'  => env('DB_LIME_PASSWORD', ''),
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

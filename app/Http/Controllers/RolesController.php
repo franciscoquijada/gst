@@ -78,7 +78,7 @@ class RolesController extends Controller
      */
     public function show($id)
     {
-        $role = Role::with('permissions')->find($id);
+        $role = Role::with('permissions')->findOrFail($id);
         return $role;
     }
 
@@ -90,7 +90,7 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::with('permissions')->find($id);
+        $role = Role::with('permissions')->findOrFail($id);
         return [
             'fields' => $role,
             'route'  => route( 'roles.update', $id )
@@ -127,7 +127,7 @@ class RolesController extends Controller
         if( $id != 1 )
         {
 
-            $role = Role::find($id);
+            $role = Role::findOrFail($id);
             $role->name = strtolower( $request->name );
             $role->save();
             $role->syncPermissions( $request->permission );
@@ -155,7 +155,7 @@ class RolesController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $rol = Role::find($id);
+        $rol = Role::findOrFail($id);
 
         if ( $id != 1 && $rol != null && $rol->users()->count() == 0)
         {

@@ -18,7 +18,6 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/validacion.js') }}"></script>
 <script type="text/javascript">
 	$('.btn_view')
 		.off('click', viewInfo )

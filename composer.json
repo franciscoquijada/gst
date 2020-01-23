@@ -20,7 +20,6 @@
         "malahierba-lab/chile-rut": "5.1.*",
         "mpdf/mpdf": "^8.0",
         "nwidart/laravel-modules": "^6.2",
-        "owen-it/laravel-auditing": "^9.2",
         "spatie/laravel-permission": "^2.36",
         "staudenmeir/eloquent-has-many-deep": "^1.8",
         "staudenmeir/eloquent-json-relations": "^1.1"

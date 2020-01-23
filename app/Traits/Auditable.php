@@ -29,7 +29,7 @@ trait Auditable
         'event'         => $description . ' (ID:' . ( $model->id ?? '?' ) . ')',
         'description'   => get_class($model) ?? null,
         'ip'            => request()->ip() ?? null,
-        'attr'          => request()
+        'attr'          => request()->all()
         ]);
     }
 }

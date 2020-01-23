@@ -10,7 +10,7 @@
   <meta name="author" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ setting('company_name') }} - Login</title>
+  <title>Login - {{ setting('company_name') }}</title>
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -39,24 +39,27 @@
 			                  		<div class="text-center">
 			                    		<h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
 			                  		</div>
-				                  	@if ($errors->has('email') || $errors->has('password') )
-										<p class="invalid-feedback" role="alert">Correo electrónio o contraseña invalida</p>
-									@endif
+				                  	
 									<form method="POST" action="{{ route('login') }}">
 									  	@csrf
 									  	<div class="p-3 login_content">
 									        <div>
 									          <img class="login-logo" src="{{ setting('company_logo') }}" style="width: 130px;margin: 20px auto; display: block;">
 									        </div>
+									        @if ($errors->has('email') || $errors->has('password') )
+									        	<div class="alert alert-danger" role="alert">
+												  <strong>Oh oh!</strong> Correo electrónio o contraseña invalida.
+												</div>
+											@endif
 									        <div>
 									          <input id="email" type="email" class="form-control input_user{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
 									        </div>
 									        <div>
 									          <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Contraseña">
 									        </div>
-									        <div>
-									          <button type="submit" class="btn btn-info submit">
-									            {{ __('Login') }}
+									        <div class="text-center">
+									          <button type="submit" class="btn btn-info custom submit">
+									            {{ __('Login') }}<i class="fas fa-sign-in-alt"></i>
 									          </button>
 									          @if (Route::has('password.request'))
 									              <!--a class="reset_pass" href="{{ route('password.request') }}">
@@ -65,8 +68,8 @@
 									          @endif
 									        </div>
 									        <hr/>
-									        <div class="change_link">
-									          <a href="{{ route('social_auth',['driver' => 'google']) }}" class="btn-default btn-xs btn mt-5 mb-5" style="text-decoration: none;">
+									        <div class="change_link text-center">
+									          <a href="{{ route('social_auth',['driver' => 'google']) }}" class="btn-default btn text-dark" style="text-decoration: none; border: 1px solid #CCC !important; color: #444 !important">
 									              Acceder con Google <i class="fab fa-google"></i>
 									          </a>
 									        </div>

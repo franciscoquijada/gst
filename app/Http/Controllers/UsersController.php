@@ -84,7 +84,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        return User::with('department')->find($id);
+        return User::with('department')->findOrFail($id);
     }
 
     /**
@@ -95,7 +95,7 @@ class UsersController extends Controller
      */
     public function edit( $id )
     {
-        $user = User::with( 'department','roles' )->find($id);
+        $user = User::with( 'department','roles' )->findOrFail($id);
         return [
             'fields' => $user,
             'route'  => route( 'users.update', $id )
@@ -135,7 +135,7 @@ class UsersController extends Controller
                 'errors' => $validar->errors()
             ]);
         
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $user->update( $request->all() );
 
         if( $id != 1 )
@@ -158,7 +158,7 @@ class UsersController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $user = User::find( $id );
+        $user = User::findOrFail( $id );
 
         if ($user != null && $id != 1)
         {

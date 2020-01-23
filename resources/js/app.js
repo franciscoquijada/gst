@@ -9,7 +9,12 @@ var $ = require("jquery");
 require('./bootstrap');
 
 
-window.Vue = require('vue');
+//window.Vue 			= require('vue');
+window.Swal			= require('sweetalert2')
+window.NProgress  	= require('NProgress');
+window.select2 	 	= require('select2');
+window.Inputmask  	= require('inputmask');
+window.PNotify 		= require('pnotify/dist/umd/PNotify');
 
 /**
  * The following block of code may be used to automatically register your
@@ -22,7 +27,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -31,50 +36,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 //const app = new Vue({ el: '#app' });
-const Swal 		= require('sweetalert2')
-const NProgress = require('NProgress');
-const select2 	= require('select2');
-const Inputmask = require('inputmask');
+
 
 /*********** Helpers ************/
-
-window.soloLetras = function(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = "áéíóúabcdefghijklmnñopqrstuvwxyz ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-    if(key == especiales[i]){
-      tecla_especial = true; 
-      break;
-    }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-    return false;
-  }
-}
-
-window.soloNum = function(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = " 0123456789 ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-      if(key == especiales[i]){
-          tecla_especial = true;
-          break;
-      }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-      return false;
-  }
-}
 
 window.resetForm = function( $form ){
   $form.find('[type="text"]').val('');
@@ -125,9 +89,72 @@ $('.send-form').on('click', sendForm );
 $('.btn_view').on('click', viewInfo );
 $('.btn_edit').on('click', editItem );
 $('.btn_del').on('click', delItem );
+$('button.link').on('click', goTo );
+
+$('input.numeric').on('keypress', onlyNumber );
+$('input.alpha').on('keypress', onlyAlpha );
+
 $(window).on('keydown', pressEnter);
 
-/*********** Cruds Functions ************/
+/*********** Event Functions ************/
+
+function input_optional(){
+	$('.optional').each(function(i,e){
+		$this = $(this);
+		$this.hide();
+
+		$( '[name="' + $this.data('parent') + '"]' ).on('change', function(e){
+
+			( $(this).val() == $this.data('answer') ) ? $this.show() : $this.hide();
+			
+		});
+	});
+}
+
+function onlyNumber(e){
+  key = e.keyCode || e.which;
+  tecla = String.fromCharCode(key).toLowerCase();
+  letras = " 0123456789 ";
+  especiales = "8-37-39-46";
+
+  tecla_especial = false
+  for(var i in especiales){
+      if(key == especiales[i]){
+          tecla_especial = true;
+          break;
+      }
+  }
+
+  if(letras.indexOf(tecla)==-1 && !tecla_especial){
+      return false;
+  }
+}
+
+function onlyAlpha(e){
+  key = e.keyCode || e.which;
+  tecla = String.fromCharCode(key).toLowerCase();
+  letras = "áéíóúabcdefghijklmnñopqrstuvwxyz ";
+  especiales = "8-37-39-46";
+
+  tecla_especial = false
+  for(var i in especiales){
+    if(key == especiales[i]){
+      tecla_especial = true; 
+      break;
+    }
+  }
+
+  if(letras.indexOf(tecla)==-1 && !tecla_especial){
+    return false;
+  }
+}
+
+function goTo( e ){
+	e.preventDefault();
+	if( $(this).data('route').length > 0 ){
+		location.href =  $(this).data('route');
+	}	
+}
 
 function sendForm( e ){
 	e.preventDefault();
@@ -139,7 +166,7 @@ function sendForm( e ){
 		data: $form.serialize(),
 		success: function (data) {
 
-			if (data.status === 500) {
+			if ( data.status === 500 ) {
 
 				$.each(data.errors, function( index, elem ){
 
@@ -154,8 +181,13 @@ function sendForm( e ){
                 	$form.find('.invalid').removeClass('invalid')
                 }, 6000);
             } else {
+
             	$form.find('.modal').modal('hide');
-            	location.reload();
+            	if ( typeof data.redirect !== 'undefined' ) {
+	            	location.href =  data.redirect;
+	            }else{
+	            	location.reload();
+	            }
             }
         }
     });
@@ -243,8 +275,8 @@ function delItem(e) {
 		cancelButtonText: 'No, cancelar! <i class="fas fa-times"></i>',
 	 	confirmButtonText: 'Si, Borrar! <i class="fas fa-check"></i>',
 		customClass: {
-			confirmButton: 'confirm-button-class btn',
-			cancelButton: 'cancel-button-class btn',
+			confirmButton: 'confirm-button-class btn custom',
+			cancelButton: 'cancel-button-class btn custom',
 		},
 	}).then((result) => {
     
@@ -283,6 +315,16 @@ $( window ).on( "load", function() {
 });
 
 $(document).ready(function() {
+
+	new PNotify({
+            title: 'Notificación',
+              text: 'mensaje',
+              type: 'success',
+              styling: 'bootstrap4',
+              icons: 'fontawesome5'
+          });
+
+	input_optional();
     
     /*$('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -291,7 +333,8 @@ $(document).ready(function() {
     $('.table.table-striped').DataTable({
         "language": {
             url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
-        }
+        },
+        "order": [[ 3, "desc" ]]
     });
 
     let newOption = new Option( '- Seleccione -', '', true, true);

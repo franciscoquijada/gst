@@ -28,7 +28,7 @@
           <div class="row">
             <div class="col-md-6 col-12 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
               <label class="form-group">Nombre</label>
-              <input type="text" name="name" value="" data-field="name" onkeypress="return soloLetras(event)" autocomplete="off" class="form-control" id="name" placeholder="Nombre Completo">
+              <input type="text" name="name" value="" data-field="name" autocomplete="off" class="form-control alpha" id="name" placeholder="Nombre Completo">
               <span id="name-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
 
@@ -54,7 +54,7 @@
           <div class="row">
             <div class="col-md-6 col-12 form-group" {{ $errors->has('phone') ? 'has-error' : '' }}>
               <label class="form-group">Telefono</label>
-              <input type="text" name="phone" value="" data-field="phone" onkeypress="return soloNum(event)" class="form-control" id="phone" data-inputmask="'mask':['9 9999 9999','+(99) 9 9999 9999']">
+              <input type="text" name="phone" value="" data-field="phone" class="form-control numeric" id="phone" data-inputmask="'mask':['9 9999 9999','+(99) 9 9999 9999']">
               <span id="phone-error" style="display: none;" class="label label-danger ml-1 error"></span>     
             </div>
 

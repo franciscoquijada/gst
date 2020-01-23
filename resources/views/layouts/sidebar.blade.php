@@ -27,12 +27,13 @@
     Modulos
   </div>
 
-  <!-- Nav Item - Pages Collapse Menu -->
-    @forelse($modules as $module)
-        @include( strtolower( $module->name ) . '::index')
-    @empty
-        <p style="text-align: center; color: #FFF;font-size: 12px;">No hay modulos cargados</p>
-    @endforelse
+  <!-- Modules -->
+  @forelse($modules as $module)
+    @include( strtolower( $module->getName() ) . '::index')
+  @empty
+    <p style="text-align: center; color: #FFF;font-size: 12px;">No hay modulos cargados</p>
+  @endforelse
+  <!-- / Modules -->
 
   <!-- Divider -->
   <hr class="sidebar-divider">
@@ -69,6 +70,7 @@
       </div>
     </div>
   </li>
+  <!-- / Nav Item - Collapse Menu -->
 
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true" aria-controls="collapseSettings">

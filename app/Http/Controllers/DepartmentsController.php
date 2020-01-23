@@ -77,7 +77,7 @@ class DepartmentsController extends Controller
     public function edit($id)
     {
         return [
-            'fields' => Department::find($id),
+            'fields' => Department::findOrFail($id),
             'route'  => route( 'departments.update', $id )
         ];
     }
@@ -110,7 +110,7 @@ class DepartmentsController extends Controller
                 'errors' => $validar->errors()
             ]);
                  
-        $depto          = Department::find($id);
+        $depto          = Department::findOrFail($id);
         $depto->name    = $request->name;
         $depto->save();
 
@@ -129,7 +129,7 @@ class DepartmentsController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $depto = Department::find($id);
+        $depto = Department::findOrFail($id);
 
         if( $depto != null && $id != 1 )
         {
