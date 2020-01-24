@@ -166,6 +166,10 @@ return [
          * Package Service Providers...
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        Malahierba\ChileRut\ChileRutServiceProvider::class,
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -180,11 +184,7 @@ return [
         /*
          * Package User Providers...
          */
-        Spatie\Permission\PermissionServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
-        Malahierba\ChileRut\ChileRutServiceProvider::class,
         App\Providers\PNotifyServiceProvider::class,
-
     ],
 
     /*
@@ -239,7 +239,7 @@ return [
         'Form'          => Collective\Html\FormFacade::class,
         'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
-        'PNotify'        => App\Library\Services\PNotify::class,
+        'PNotify'       => App\Library\Services\PNotify::class,
 
     ],
 

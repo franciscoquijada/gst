@@ -2,6 +2,9 @@
 
 // ********** Rutas creadas por Laravel ****************
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/notification', 'HomeController@markAsRead')
+  ->name('markAsRead')
+  ->middleware(['only_ajax']);
 
 /* Rutas de Autenticacion */
 Auth::routes();

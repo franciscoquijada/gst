@@ -25,4 +25,10 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function markAsRead(Request $request)
+    {
+        \auth::user()->unreadNotifications->markAsRead();
+        return response()->json('success', 200);
+    }
 }

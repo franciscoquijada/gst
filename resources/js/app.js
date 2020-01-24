@@ -85,6 +85,7 @@ console.log('init_helpers');
 
 /********** Cruds Events *************/
 
+$('.mark_as_read').on('click', markAsRead );
 $('.send-form').on('click', sendForm );
 $('.btn_view').on('click', viewInfo );
 $('.btn_edit').on('click', editItem );
@@ -155,6 +156,24 @@ function goTo( e ){
 		location.href =  $(this).data('route');
 	}	
 }
+
+function markAsRead(e) {
+	e.preventDefault();
+	let $this = $(this);
+	$.ajax({
+		type: 'GET',
+		url: $(this).data('route'),
+		data: {
+		  '_token': $('input[name=_token]').val(),
+		},
+		success: function (data) {
+			if ( data == 'success' ) {
+				$this.find('.badge-counter').text(0);
+			}
+		}
+	});
+}
+
 
 function sendForm( e ){
 	e.preventDefault();
@@ -334,7 +353,7 @@ $(document).ready(function() {
         "language": {
             url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
         },
-        "order": [[ 3, "desc" ]]
+        "order": [[ 0, "desc" ]]
     });
 
     let newOption = new Option( '- Seleccione -', '', true, true);
