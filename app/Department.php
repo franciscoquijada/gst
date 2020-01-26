@@ -14,7 +14,7 @@ class Department extends Model
 
     protected $table 	= 'departments';
     protected $dates 	= [ 'created_at', 'updated_at', 'deleted_at' ];
-    protected $fillable = ['name', 'attr'];
+    protected $fillable = [ 'name', 'attr'];
 
     public function users()
     {
