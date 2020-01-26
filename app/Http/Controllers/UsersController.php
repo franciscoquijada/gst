@@ -70,8 +70,7 @@ class UsersController extends Controller
         
         $newUser = User::create( $request->all() )->assignRole( $request->rol_id );
 
-        Session::flash('message', 'Usuario registrado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Usuario registrado con éxito');
 
         return Response()->json($newUser);
     }
@@ -144,8 +143,7 @@ class UsersController extends Controller
             $user->save();
         }
 
-        Session::flash('message', 'Usuario actualizado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Usuario actualizado con éxito');
 
         return response()->json($user);
     }
@@ -164,8 +162,7 @@ class UsersController extends Controller
         {
             $user->delete();
 
-            Session::flash('message', 'Usuario eliminado con éxito');
-            Session::flash('class', 'success');
+            \PNotify::success('Usuario eliminado con éxito!');
 
             return response()->json($user);
         }

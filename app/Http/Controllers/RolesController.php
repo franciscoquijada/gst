@@ -62,10 +62,7 @@ class RolesController extends Controller
 
         $newRole->syncPermissions( $request->permission );
 
-        log_act( Auth::user()->id, 'creó', 'se creó el rol - ' . $newRole->name, $request );
-
-        Session::flash('message', 'Rol creado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Rol creado con éxito');
 
         return Response()->json($newRole);
     }
@@ -132,18 +129,14 @@ class RolesController extends Controller
             $role->save();
             $role->syncPermissions( $request->permission );
 
-            log_act(Auth::user()->id, 'actualizó', 'se actualizó el rol - '. $role->name, $request );
-        
-            Session::flash('message', 'Rol actualizado con éxito');
-            Session::flash('class', 'success');
+            \PNotify::success('Rol actualizado con éxito');
 
             return response()->json($role);
         }
         else
         {
             return response()->json(false);
-            Session::flash('message', 'No tiene permiso para actualizar el rol super-admin');
-            Session::flash('class', 'danger');
+            \PNotify::error('No tiene permiso para actualizar el rol super-admin');
         }
     }
 
@@ -160,10 +153,7 @@ class RolesController extends Controller
         if ( $id != 1 && $rol != null && $rol->users()->count() == 0)
         {
             $rol->delete();
-            log_act(Auth::user()->id, 'eliminó', 'se eliminó el rol - ' . $rol->name,$request );
-
-            Session::flash('message', 'Rol eliminado con éxito');
-            Session::flash('class', 'success');
+            \PNotify::success('Rol eliminado con éxito');
 
             return response()->json($rol);
         }

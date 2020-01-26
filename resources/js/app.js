@@ -289,8 +289,8 @@ function delItem(e) {
 		text: "Esta operación no puede revertirse!",
 		icon: 'warning',
 		showCancelButton: true,
-		confirmButtonColor: '#3085d6',
-		cancelButtonColor: '#d33',
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#3085d6',
 		cancelButtonText: 'No, cancelar! <i class="fas fa-times"></i>',
 	 	confirmButtonText: 'Si, Borrar! <i class="fas fa-check"></i>',
 		customClass: {

@@ -62,8 +62,7 @@ class DepartmentsController extends Controller
         
         $depto = Department::create( $request->all() );
 
-        Session::flash('message', 'Departamento creado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Departamento creado con éxito');
 
         return response()->json($depto);
     }
@@ -114,8 +113,7 @@ class DepartmentsController extends Controller
         $depto->name    = $request->name;
         $depto->save();
 
-        Session::flash('message', 'Departamento actualizado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Departamento actualizado con éxito');
              
         return response()->json( $depto );
         
@@ -134,10 +132,8 @@ class DepartmentsController extends Controller
         if( $depto != null && $id != 1 )
         {
             $depto->delete();
-            log_act( Auth::user()->id, 'eliminó', 'se eliminó el departamento - '. $depto->name, $request );
         
-            Session::flash('message', 'Departamento eliminado con éxito');
-            Session::flash('class', 'success');
+            \PNotify::success('Departamento eliminado con éxito');
 
             return response()->json($depto);
         }

@@ -74,8 +74,6 @@ class SettingsController extends Controller
         $setting->value = strtolower( $request->value );
         $setting->save();
 
-        log_act(Auth::user()->id, 'Actualizó', 'Se actualizó satisfactoriamente la opción - ' . $setting->name, $request );
-
         return response()->json(true);
     }
 }

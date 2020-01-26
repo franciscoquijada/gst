@@ -240,7 +240,6 @@ return [
         'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
         'PNotify'       => App\Library\Services\PNotify::class,
-
     ],
 
 ];
