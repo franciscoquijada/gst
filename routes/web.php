@@ -22,98 +22,99 @@ Route::group(['middleware' => ['auth']], function ()
   /* Users */
   Route::get('users','UsersController@index')
     ->name('users.index')
-    ->middleware(['permission:listado de usuarios']);
+    ->middleware(['permission:usuarios:listado']);
   Route::get('users/create','UsersController@create')
     ->name('users.create')
-    ->middleware(['permission:crear usuario']);
+    ->middleware(['permission:usuarios:ver']);
   Route::get('users/{id}','UsersController@show')
     ->where('id', '[0-9]+')
     ->name('users.show')
-    ->middleware(['permission:ver usuario', 'only_ajax']);
+    ->middleware(['permission:usuarios:ver', 'only_ajax']);
   Route::post('users','UsersController@store')
     ->name('users.store')
-    ->middleware(['permission:crear usuario', 'only_ajax']);
+    ->middleware(['permission:usuarios:crear', 'only_ajax']);
   Route::get('users/{id}/edit','UsersController@edit')
     ->where('id', '[0-9]+')
     ->name('users.edit', 'only_ajax')
-    ->middleware(['permission:actualizar usuario']);
+    ->middleware(['permission:usuarios:actualizar']);
   Route::put('users/{id}','UsersController@update')
     ->where('id', '[0-9]+')
     ->name('users.update')
-    ->middleware(['permission:actualizar usuario', 'only_ajax']);
+    ->middleware(['permission:usuarios:actualizar', 'only_ajax']);
   Route::delete('users/{id}','UsersController@destroy')
     ->where('id', '[0-9]+')
     ->name('users.destroy')
-    ->middleware(['permission:eliminar usuario', 'only_ajax']);
+    ->middleware(['permission:usuarios:eliminar', 'only_ajax']);
   Route::get('/users/export', 'UsersController@export')
     ->name('users.export')
-    ->middleware(['permission:listado de usuarios']);
+    ->middleware(['permission:usuarios:listado']);
 
   /* Roles */
   Route::get('roles','RolesController@index')
     ->name('roles.index')
-    ->middleware(['permission:listado de roles']);
+    ->middleware(['permission:roles:listado']);
   Route::get('roles/create','RolesController@create')
     ->name('roles.create')
-    ->middleware(['permission:crear rol']);
+    ->middleware(['permission:roles:crear']);
   Route::get('roles/{id}','RolesController@show')
     ->where('id', '[0-9]+')
     ->name('roles.show')
-    ->middleware(['permission:ver rol', 'only_ajax']);
+    ->middleware(['permission:roles:ver', 'only_ajax']);
   Route::post('roles','RolesController@store')
     ->name('roles.store')
-    ->middleware(['permission:crear rol', 'only_ajax']);
+    ->middleware(['permission:roles:crear', 'only_ajax']);
   Route::get('roles/{role}/edit','RolesController@edit')
     ->name('roles.edit')
-    ->middleware(['permission:actualizar rol']);
+    ->middleware(['permission:roles:actualizar']);
   Route::put('roles/{id}','RolesController@update')
     ->where('id', '[0-9]+')
     ->name('roles.update')
-    ->middleware(['permission:actualizar rol', 'only_ajax']);
+    ->middleware(['permission:roles:actualizar', 'only_ajax']);
   Route::delete('roles/{role}','RolesController@destroy')
     ->name('roles.destroy')
-    ->middleware(['permission:eliminar rol', 'only_ajax']);
+    ->middleware(['permission:roles:eliminar', 'only_ajax']);
 
   /*Departments*/
   Route::get('departments','DepartmentsController@index')
     ->name('departments.index')
-    ->middleware(['permission:listado de departamentos']);
+    ->middleware(['permission:departamentos:listado']);
   Route::get('departments/create','DepartmentsController@create')
     ->name('departments.create')
-    ->middleware(['permission:crear departamento']);
+    ->middleware(['permission:departamentos:crear']);
   Route::get('departments/{id}','DepartmentsController@show')
     ->where('id', '[0-9]+')
     ->name('departments.show')
-    ->middleware(['permission:ver departamento']);
+    ->middleware(['permission:departamentos:ver']);
   Route::post('departments','DepartmentsController@store')
     ->name('departments.store')
-    ->middleware(['permission:crear departamento', 'only_ajax']);
+    ->middleware(['permission:departamentos:crear', 'only_ajax']);
   Route::get('departments/{id}/edit','DepartmentsController@edit')
     ->where('id', '[0-9]+')
     ->name('departments.edit')
-    ->middleware(['permission:actualizar departamento']);
+    ->middleware(['permission:departamentos:actualizar']);
   Route::put('departments/{id}','DepartmentsController@update')
     ->where('id', '[0-9]+')
     ->name('departments.update')
-    ->middleware(['permission:actualizar departamento', 'only_ajax']);
+    ->middleware(['permission:departamentos:actualizar', 'only_ajax']);
   Route::delete('departments/{id}','DepartmentsController@destroy')
     ->where('id', '[0-9]+')
     ->name('departments.destroy')
-    ->middleware(['permission:eliminar departamento', 'only_ajax']);
+    ->middleware(['permission:departamentos:eliminar', 'only_ajax']);
   Route::get('/departments/export', 'DepartmentsController@export')
-    ->name('department.export');
+    ->name('department.export')
+    ->middleware(['permission:departamentos:listado']);
 
   /* Registros */ 
   Route::get('logs','LogsController@index')
     ->name('logs.index')
-    ->middleware(['permission:auditoria']);
+    ->middleware(['permission:registros:listado']);
 
   /*Configuracion*/
   Route::get('settings','SettingsController@index')
     ->name('settings.index')
-    ->middleware(['permission:configuracion empresa']);
+    ->middleware(['permission:configuraciones:listado']);
   Route::post('settings/{id}','SettingsController@update')
     ->name('settings.store')
-    ->middleware(['permission:configuracion empresa', 'only_ajax']);
+    ->middleware(['permission:configuraciones:listado', 'only_ajax']);
 
 });
