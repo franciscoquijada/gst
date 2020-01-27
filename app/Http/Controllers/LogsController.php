@@ -14,7 +14,7 @@ class LogsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['permission:auditoria']);
+        $this->middleware(['permission:registros:listado']);
     }
 
     public function index()

@@ -12,6 +12,8 @@
 
   <title>{{ config('app.name') }} - {{ setting('company_name') }}</title>
 
+  @laravelPWA
+
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 

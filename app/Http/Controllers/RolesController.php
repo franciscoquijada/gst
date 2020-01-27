@@ -20,7 +20,7 @@ class RolesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['permission:modulo de usuarios|listado de roles|ver roles|crear roles|editar roles|eliminar roles']);
+        $this->middleware(['permission:roles:listado|roles:ver|roles:crear|roles:editar|roles:eliminar']);
     }
 
     public function index()

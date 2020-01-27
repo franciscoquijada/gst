@@ -12,11 +12,11 @@
       <td>{{ $d->name }}</td>
       <td>{{ $d->users()->count() }}</td>
       <td class="text-center">
-        @can('actualizar departamento')
+        @can('departamentos:actualizar')
           <button class="btn btn-warning btn_edit" title="Editar" data-item="{{ $d->id }}"><i class="fa fa-edit"></i></button>
         @endcan
         @if( $d->id != 1 ) 
-          @can('eliminar departamento')
+          @can('departamentos:eliminar')
             <button class="btn btn-danger btn_del" title="Eliminar" data-route="{{ route( 'departments.destroy', $d->id )}}"><i class="fa fa-trash"></i></button>
           @endcan
         @endif
