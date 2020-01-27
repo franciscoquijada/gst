@@ -24,7 +24,7 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['permission:listado de usuarios|ver usuarios|crear usuarios|editar usuarios|eliminar usuarios']);
+        $this->middleware(['permission:usuarios:listado|usuarios:ver|usuarios:crear|usuarios:actualizar|usuarios:eliminar']);
     }
 
     public function index()
@@ -50,10 +50,10 @@ class UsersController extends Controller
             [
                 'department_id' => 'required',
                 'rol_id'        => 'required',
-                'rut'           => [ 'required', 'unique:users,rut,NULL,id,deleted_at,NULL', 'string', new ValidarRut],
+                'rut'           => [ 'required', 'unique:users,rut,NULL,id,deleted_at,NULL', 'string', new ValidarRut ],
                 'name'          => 'required|string',
                 'password'      => 'confirmed',
-                'email'         => 'required|unique:users,email,NULL,id,deleted_at,NULL'
+                'email'         => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
                 'rut.unique'    => 'Ya este rut esta registrado', 
@@ -71,7 +71,6 @@ class UsersController extends Controller
         $newUser = User::create( $request->all() )->assignRole( $request->rol_id );
 
         \PNotify::success('Usuario registrado con éxito');
-
         return Response()->json($newUser);
     }
 
@@ -116,10 +115,10 @@ class UsersController extends Controller
             [
                 'department_id' => 'required',
                 'rol_id'        => 'required',
-                'rut'           => ['unique:users,rut,'.$id.',id,deleted_at,NULL', 'string', new ValidarRut],
+                'rut'           => [ 'unique:users,rut,' . $id . ',id,deleted_at,NULL', 'string', new ValidarRut ],
                 'name'          => 'required|string',
                 'password'      => 'confirmed',
-                'email'         => 'required|unique:users,email,'.$id.',id,deleted_at,NULL'
+                'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
                 'rut.unique'    => 'Ya este rut esta registrado', 
@@ -128,7 +127,7 @@ class UsersController extends Controller
         );
 
         //Si existen errores            
-        if ( count( $validar->errors() ) > 0)
+        if ( count( $validar->errors() ) > 0 )
             return response()->json([
                 'status' => 500,
                 'errors' => $validar->errors()
@@ -144,7 +143,6 @@ class UsersController extends Controller
         }
 
         \PNotify::success('Usuario actualizado con éxito');
-
         return response()->json($user);
     }
 
@@ -157,13 +155,10 @@ class UsersController extends Controller
     public function destroy(Request $request, $id)
     {
         $user = User::findOrFail( $id );
-
         if ($user != null && $id != 1)
         {
             $user->delete();
-
             \PNotify::success('Usuario eliminado con éxito!');
-
             return response()->json($user);
         }
 

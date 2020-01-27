@@ -24,7 +24,7 @@ class DepartmentsController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:modulo de usuarios|listado de departamentos|ver departamentos|crear departamentos|editar departamentos|eliminar departamentos']);
+        $this->middleware(['permission:departamentos:listado|departamentos:crear|departamentos:editar|departamentos:eliminar']);
     }
 
     public function index()

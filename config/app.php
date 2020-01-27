@@ -166,8 +166,8 @@ return [
          * Package Service Providers...
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
+        //Spatie\Permission\PermissionServiceProvider::class,
+        //Collective\Html\HtmlServiceProvider::class,
         Malahierba\ChileRut\ChileRutServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
 
@@ -236,8 +236,8 @@ return [
         'Validator'     => Illuminate\Support\Facades\Validator::class,
         'View'          => Illuminate\Support\Facades\View::class,
         'RUT'           => Malahierba\ChileRut\Facades\ChileRut::class,
-        'Form'          => Collective\Html\FormFacade::class,
-        'Html'          => Collective\Html\HtmlFacade::class,
+        //'Form'          => Collective\Html\FormFacade::class,
+        //'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
         'PNotify'       => App\Library\Services\PNotify::class,
     ],

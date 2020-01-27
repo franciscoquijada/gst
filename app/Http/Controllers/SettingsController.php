@@ -14,6 +14,11 @@ use Validator;
 
 class SettingsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:configuraciones:listado']);
+    }
+    
     /**
      * Display a listing of the resource.
      *
