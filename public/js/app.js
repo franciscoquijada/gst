@@ -64609,7 +64609,7 @@ $(window).on('keydown', pressEnter);
 
 function input_optional() {
   $('.optional').each(function (i, e) {
-    $this = $(this);
+    var $this = $(this);
     $this.hide();
     $('[name="' + $this.data('parent') + '"]').on('change', function (e) {
       $(this).val() == $this.data('answer') ? $this.show() : $this.hide();

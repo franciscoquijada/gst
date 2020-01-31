@@ -100,14 +100,12 @@ $(window).on('keydown', pressEnter);
 /*********** Event Functions ************/
 
 function input_optional(){
-	$('.optional').each(function(i,e){
-		$this = $(this);
+	$('.optional').each(function( i, e ){
+		let $this = $(this);
 		$this.hide();
 
 		$( '[name="' + $this.data('parent') + '"]' ).on('change', function(e){
-
 			( $(this).val() == $this.data('answer') ) ? $this.show() : $this.hide();
-			
 		});
 	});
 }

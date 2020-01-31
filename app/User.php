@@ -110,4 +110,9 @@ class User extends Authenticatable
             $this->attributes['phone'] = preg_replace( '/[^0-9]/', '', $value );
         }
     }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_WEBHOOK_URL', '');
+    }
 }
