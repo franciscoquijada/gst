@@ -8,7 +8,7 @@ _Php 7.2 o superior_
 
 ### Instalación 🔧
 
-* Script instalacion **composer install && php -r "file_exists('.env') || copy('.env.example', '.env');" && php artisan key:generate && chmod -R 777 storage bootstrap/cache**
+* Script instalacion **composer install && php -r "file_exists('.env') || copy('.env.example', '.env');" && php artisan key:generate && php artisan storage:link && chmod -R 777 storage bootstrap/cache**
 * Configurar entorno **archivo .env**
 * Ejecutar las migraciones **php artisan migrate**
 
