@@ -48,15 +48,16 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        $user->update([
-            'last_login_at' => now(),
-            'last_login_ip' => $request->getClientIp()
-        ]);
+      log_act(Auth::user()->id, 'Inicio de sesión', 'User\Login',$request );
+      $user->update([
+          'last_login_at' => now(),
+          'last_login_ip' => $request->getClientIp()
+      ]);
     }
 
     public function logout (Request $request)
     {
-      log_act(Auth::user()->id, 'cierre de sesión', 'cerró la sesión iniciada',$request );
+      log_act(Auth::user()->id, 'Cierre de sesión', 'User\Logout',$request );
       auth()->logout();
       session()->flush();
       return redirect('/login');
@@ -105,7 +106,6 @@ class LoginController extends Controller
         {
           \DB::commit();
           auth()->loginUsingId($user->id);
-          log_act(Auth::user()->id, 'inicio de sesión', 'sesión iniciada',$request );
           return redirect(route('home'));
         }
       }

@@ -23,4 +23,13 @@ class LogsController extends Controller
             'logs' => Log::all()
         ]);
     }
+
+    public function indexData()
+    {
+        $data = Log::get();
+
+        return Datatables::of( $data )
+        ->rawColumns([ 'id', 'user.name', 'event', 'descriptio', 'ip', 'created_at'])
+        ->make(true);
+    }
 }

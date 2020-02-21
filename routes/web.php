@@ -108,6 +108,8 @@ Route::group(['middleware' => ['auth']], function ()
   Route::get('logs','LogsController@index')
     ->name('logs.index')
     ->middleware(['permission:registros:listado']);
+  Route::get('/indexData','LogsController@indexData')
+        ->name('logs.indexData');
 
   /*Configuracion*/
   Route::get('settings','SettingsController@index')

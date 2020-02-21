@@ -2,22 +2,26 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\User;
+//use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as MongoModel;
 
-class Log extends Model
+class Log extends MongoModel
 {
-    protected $table 	= 'logs';
-    protected $fillable = [ 'user_id', 'event', 'description', 'ip', 'attr'];
-    protected $dates    = [ 'created_at','updated_at'];
-    protected $casts    = [
-        'attr'       => 'array',
+    //protected $table     = 'logs';
+    protected $collection = 'logs';
+    protected $connection = 'mongodb';
+    protected $fillable  = [ 'user_id', 'event', 'description', 'ip', 'attr'];
+    protected $dates     = [ 'created_at','updated_at'];
+    protected $casts     = [
         'created_at' => 'date:d-m-Y h:i A',
         'updated_at' => 'date:d-m-Y h:i A'
       ];
 
-    public function user()
+    public function getUserAttribute( $value )
 	{
-	    return $this->belongsTo('App\User', 'user_id');
+        return User::find( $this->user_id );
+	    //return $this->belongsTo(User::class);
 	}
 
 	public function setAttrAttribute( $value )
