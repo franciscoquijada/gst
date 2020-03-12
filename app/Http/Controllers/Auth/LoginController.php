@@ -48,16 +48,16 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-      log_act(Auth::user()->id, 'Inicio de sesión', 'User\Login',$request );
+      _log( Auth::user()->id, 'Inicio de sesión', 'User\Login', $request );
       $user->update([
           'last_login_at' => now(),
           'last_login_ip' => $request->getClientIp()
       ]);
     }
 
-    public function logout (Request $request)
+    public function logout(Request $request)
     {
-      log_act(Auth::user()->id, 'Cierre de sesión', 'User\Logout',$request );
+      _log(Auth::user()->id, 'Cierre de sesión', 'User\Logout', $request );
       auth()->logout();
       session()->flush();
       return redirect('/login');

@@ -2,7 +2,7 @@
 use App\Log;
 use App\Setting;
 
-function log_act($user, $event, $descripcion, $request)
+function _log($user, $event, $descripcion, $request)
 {
     log::create([
         'user_id'       => $user,
