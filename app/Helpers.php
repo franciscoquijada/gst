@@ -10,7 +10,7 @@ function _log($user, $event, $descripcion, $request)
         'description'   => $descripcion,
         'ip'            => $request->ip(),
         'attr'          => $request->all()
-        ]);
+    ]);
 }
 
 function setting( $key )
