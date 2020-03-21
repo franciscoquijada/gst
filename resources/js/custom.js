@@ -96,65 +96,59 @@ function sendForm( e ){
   let $form = $(this).parents('form');
 
   $.ajax({
-      type: $form.attr('method'), //metodo
-      url: $form.attr('action'), //url
-      data: $form.serialize(),
-      success: function (data) {
+    type: $form.attr('method'), //metodo
+    url: $form.attr('action'), //url
+    data: $form.serialize(),
+    success: function (data) {
 
-          if (data.status === 500) {
+      if (data.status === 500) {
 
-              $.each(data.errors, function( index, elem ){
+        $.each(data.errors, function( index, elem ){
 
-                let $index = index.split('.')[0];
-
-                $form.find('#' + $index ).addClass('invalid');
-                $form.find('#' + $index + '-error')
-                    .removeAttr('style')
-                    .html( elem );
-
-              });
-
-              setTimeout(function () {
+          let $index = index.split('.')[0];
+          $form.find('#' + $index ).addClass('invalid');
+          $form.find('#' + $index + '-error')
+            .removeAttr('style')
+                      .html( elem );
+                });
+                setTimeout(function () {
                   $form.find(".error").fadeOut(1500);
-                  $form.find('.invalid').removeClass('invalid') 
-              }, 6000);
-
-          } else {
-            $form.find('.modal').modal('hide');
-            location.reload();
-          }
-
-      }
-  });
+                  $form.find('.invalid').removeClass('invalid')
+                }, 6000);
+            } else {
+              $form.find('.modal').modal('hide');
+              location.reload();
+            }
+        }
+    });
 }
 
 function viewInfo(e) {
   e.preventDefault();
   let id = $(this).data('item');
-
   $.ajax({
-      type: 'GET', //metoodo
-      url: window.location + '/' + id, //id del delete
-      data: {
-          '_token': $('input[name=_token]').val(),
-      },
-      success: function ( data ) {
-        lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
-        $('.viewer.modal')
-          .modal('show')
-          .find('[data-field]')
-          .each( function( i, e ){
-            let elem = $(e);
+    type: 'GET', //metoodo
+    url: window.location + '/' + id, //id del delete
+    data: {
+      '_token': $('input[name=_token]').val(),
+    },
+    success: function ( data ) {
+      lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
+      $('.viewer.modal')
+        .modal('show')
+        .find('[data-field]')
+        .each( function( i, e ){
+          let elem = $(e);
 
-            try {
-              elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
-            }
-            catch(error) {
-              //console.error(error);
-              elem.text( ' N/D ' );
-            }
+          try {
+            elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+          }
+          catch(error) {
+            //console.error(error);
+            elem.text( ' N/D ' );
+          }
         });
-      }
+    }
   });
 }
 
@@ -162,46 +156,37 @@ function editItem(e) {
   e.preventDefault();
   let id = $(this).data('item');
   resetForm( $('.modal.edit form') );
-
   $.ajax({
     type: 'GET', //metoodo
     url: window.location + '/' + id + '/edit',
-    data: {
-        '_token': $('input[name=_token]').val(),
-    },
-    success: function (data) {
+      data: {
+          '_token': $('input[name=_token]').val(),
+      },
+      success: function (data) {
 
-      lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
-
-      $('.modal.edit')
-        .modal('show')
-        .find('[data-field]').each( function( i, e ){
-          let elem = $(e),
+        lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
+        $('.modal.edit')
+            .modal('show')
+            .find('[data-field]').each( function( i, e ){
+              let elem = $(e),
               options = eval('data.fields.' + elem.data('field') ) || '';
-          if( elem.is('input') || elem.is('textarea') ){ //Input
 
-            elem.val( options );
-
-          }else if( elem.is('select') ){ //Select
-
+            if( elem.is('input') || elem.is('textarea') ){ //Input
+              elem.val( options );
+            }else if( elem.is('select') ){ //Select
               if(elem.is('[multiple]') && Array.isArray( options ) ){ //Multiple
-
                 let plck = options.reduce( function( res,opt) {
                   res.push(opt.id);
                   return res;
                 },[]);
-
-                elem.val( plck ).trigger('change');
-
+              elem.val( plck ).trigger('change');
               }else{ //Simple
-                 elem.val( options ).trigger('change');
+                elem.val( options ).trigger('change');
               }
+            }else{ //Text
 
-          }else{ //Text
-
-            elem.text( options || ' N/D ' );
-
-          }
+              elem.text( options || ' N/D ' );
+            }
         }).parents('form').attr('action', data.route );
     }
   });
@@ -210,68 +195,66 @@ function editItem(e) {
 function delItem(e) {
   e.preventDefault();
   let route = $(this).data('route');
-
   Swal.fire({
-  title: '¿Estas seguro?',
-  text: "Esta operación no puede revertirse!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Si, borralo!'
+    title: '¿Estas seguro?',
+    text: "Esta operación no puede revertirse!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'No, cancelar! <i class="fas fa-times"></i>',
+    confirmButtonText: 'Si, Borrar! <i class="fas fa-check"></i>',
+    customClass: {
+      confirmButton: 'confirm-button-class btn',
+      cancelButton: 'cancel-button-class btn',
+    },
   }).then((result) => {
-
-    if (result.value) {
-      $.ajax({
-          type: 'DELETE', //metodo
-          url: route, //id del delete
-          data: {
+    
+      if (result.value) {
+        $.ajax({
+            type: 'DELETE', //metodo
+            url: route, //id del delete
+            data: {
               '_token': $('input[name=_token]').val(),
-          },
-          success: function (data) {
+            },
+            success: function (data) {
 
-            if (data.status != 500) {
-              Swal.fire(
-                'Borrado!',
-                'Fue borrado con éxito!.',
-                'success'
-              )
-              location.reload();
+              if (data.status != 500) {
+                Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                )
+                location.reload();
+              }
             }
-          }
-      });
-    }
+        });
+      }
   });
 }
 
 console.log('init_crud_functions');
 
 
-/*********** Init Functions ************/
+/*********** Init Assets ************/
 
 $( window ).on( "load", function() {
-	if (typeof NProgress != 'undefined') {
-		NProgress.start();
-	}
+  if (typeof NProgress != 'undefined') {
+    NProgress.start();
+  }
 });
 
 $(document).ready(function() {
-
-  Swal.fire(
-  'The Internet?',
-  'That thing is still around?',
-  'question'
-);
     
     /*$('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
         });*/
 
-    $('.table.table-striped').DataTable({
+    /*$('.table.table-striped').DataTable({
         "language": {
             url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
         }
-    });
+    });*/
 
     let newOption = new Option( '- Seleccione -', '', true, true);
     
@@ -322,9 +305,10 @@ $(document).ready(function() {
     if (typeof NProgress != 'undefined') {
       NProgress.done();
 
-    	$(document).ajaxStart( () => NProgress.start() );
-    	$(document).ajaxStop( () => NProgress.done() );
+      $(document).ajaxStart( () => NProgress.start() );
+      $(document).ajaxStop( () => NProgress.done() );
     }
 
 });
 
+console.log('init_assets');
