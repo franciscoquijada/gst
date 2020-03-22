@@ -10,13 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Traits\Auditable;
 use App\Traits\SaveLower;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SoftDeletes, Auditable, SaveLower;
+    use Notifiable, HasRoles, SoftDeletes, SaveLower;
 
     protected $dates = [
         'email_verified_at',
@@ -48,7 +47,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        //'password', 
+        'password', 
         'remember_token',
     ];
 
@@ -67,7 +66,7 @@ class User extends Authenticatable
 
     public function department()
     {
-        return $this->belongsTo( 'App\Department' );
+        return $this->belongsTo( Department::class );
     }
 
     public function logs()

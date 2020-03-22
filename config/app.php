@@ -170,6 +170,7 @@ return [
         //Collective\Html\HtmlServiceProvider::class,
         Malahierba\ChileRut\ChileRutServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -184,9 +185,6 @@ return [
         /*
          * Package User Providers...
          */
-        Spatie\Permission\PermissionServiceProvider::class,
-        Malahierba\ChileRut\ChileRutServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
         App\Providers\PNotifyServiceProvider::class,
     ],
 
@@ -242,7 +240,7 @@ return [
         //'Form'          => Collective\Html\FormFacade::class,
         //'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
-        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'DataTables'    => Yajra\DataTables\Facades\DataTables::class,
         'PNotify'       => App\Library\Services\PNotify::class,
     ],
 
