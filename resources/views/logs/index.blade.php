@@ -17,7 +17,7 @@
         serverSide: true,
         ajax: '{!! route('logs.index') !!}',
         columns: [
-            {data: 'user_name', name: 'user_name', title: 'Usuario', className: 'text-center'},
+            {data: 'user_name', name: 'user_name', title: 'Usuario', className: 'text-center text-capitalize'},
             {data: 'event', name: 'event', title: 'Evento', className: 'text-center'},
             {data: 'description', name: 'description', title: 'Descripción', className: 'text-center'},
             {data: 'ip', name: 'ip', title: 'IP', className: 'text-center'},
