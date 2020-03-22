@@ -1,43 +1,5 @@
 /*********** Helpers ************/
 
-window.soloLetras = function(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = "áéíóúabcdefghijklmnñopqrstuvwxyz ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-    if(key == especiales[i]){
-      tecla_especial = true; 
-      break;
-    }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-    return false;
-  }
-}
-
-window.soloNum = function(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = " 0123456789 ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-      if(key == especiales[i]){
-          tecla_especial = true;
-          break;
-      }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-      return false;
-  }
-}
-
 window.resetForm = function( $form ){
   $form.find('[type="text"]').val('');
   $form.find('select').val(null).trigger('change');
@@ -83,13 +45,93 @@ console.log('init_helpers');
 
 /********** Cruds Events *************/
 
+$('.mark_as_read').on('click', markAsRead );
 $('.send-form').on('click', sendForm );
 $('.btn_view').on('click', viewInfo );
 $('.btn_edit').on('click', editItem );
 $('.btn_del').on('click', delItem );
+$('button.link').on('click', goTo );
+
+$('input.numeric').on('keypress', onlyNumber );
+$('input.alpha').on('keypress', onlyAlpha );
+
 $(window).on('keydown', pressEnter);
 
-/*********** Cruds Functions ************/
+/*********** Event Functions ************/
+
+function input_optional(){
+  $('.optional').each(function( i, e ){
+    let $this = $(this);
+    $this.hide();
+
+    $( '[name="' + $this.data('parent') + '"]' ).on('change', function(e){
+      ( $(this).val() == $this.data('answer') ) ? $this.show() : $this.hide();
+    });
+  });
+}
+
+function onlyNumber(e){
+  key = e.keyCode || e.which;
+  tecla = String.fromCharCode(key).toLowerCase();
+  letras = " 0123456789 ";
+  especiales = "8-37-39-46";
+
+  tecla_especial = false
+  for(var i in especiales){
+      if(key == especiales[i]){
+          tecla_especial = true;
+          break;
+      }
+  }
+
+  if(letras.indexOf(tecla)==-1 && !tecla_especial){
+      return false;
+  }
+}
+
+function onlyAlpha(e){
+  key = e.keyCode || e.which;
+  tecla = String.fromCharCode(key).toLowerCase();
+  letras = "áéíóúabcdefghijklmnñopqrstuvwxyz ";
+  especiales = "8-37-39-46";
+
+  tecla_especial = false
+  for(var i in especiales){
+    if(key == especiales[i]){
+      tecla_especial = true; 
+      break;
+    }
+  }
+
+  if(letras.indexOf(tecla)==-1 && !tecla_especial){
+    return false;
+  }
+}
+
+function goTo( e ){
+  e.preventDefault();
+  if( $(this).data('route').length > 0 ){
+    location.href =  $(this).data('route');
+  } 
+}
+
+function markAsRead(e) {
+  e.preventDefault();
+  let $this = $(this);
+  $.ajax({
+    type: 'GET',
+    url: $(this).data('route'),
+    data: {
+      '_token': $('input[name=_token]').val(),
+    },
+    success: function (data) {
+      if ( data == 'success' ) {
+        $this.find('.badge-counter').text(0);
+      }
+    }
+  });
+}
+
 
 function sendForm( e ){
   e.preventDefault();
@@ -101,7 +143,7 @@ function sendForm( e ){
     data: $form.serialize(),
     success: function (data) {
 
-      if (data.status === 500) {
+      if ( data.status === 500 ) {
 
         $.each(data.errors, function( index, elem ){
 
@@ -116,8 +158,13 @@ function sendForm( e ){
                   $form.find('.invalid').removeClass('invalid')
                 }, 6000);
             } else {
+
               $form.find('.modal').modal('hide');
-              location.reload();
+              if ( typeof data.redirect !== 'undefined' ) {
+                location.href =  data.redirect;
+              }else{
+                location.reload();
+              }
             }
         }
     });
@@ -200,13 +247,13 @@ function delItem(e) {
     text: "Esta operación no puede revertirse!",
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
     cancelButtonText: 'No, cancelar! <i class="fas fa-times"></i>',
     confirmButtonText: 'Si, Borrar! <i class="fas fa-check"></i>',
     customClass: {
-      confirmButton: 'confirm-button-class btn',
-      cancelButton: 'cancel-button-class btn',
+      confirmButton: 'confirm-button-class btn custom',
+      cancelButton: 'cancel-button-class btn custom',
     },
   }).then((result) => {
     
@@ -245,6 +292,16 @@ $( window ).on( "load", function() {
 });
 
 $(document).ready(function() {
+
+  new PNotify({
+            title: 'Notificación',
+              text: 'mensaje',
+              type: 'success',
+              styling: 'bootstrap4',
+              icons: 'fontawesome5'
+          });
+
+  input_optional();
     
     /*$('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -253,7 +310,8 @@ $(document).ready(function() {
     /*$('.table.table-striped').DataTable({
         "language": {
             url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
-        }
+        },
+        "order": [[ 0, "desc" ]]
     });*/
 
     let newOption = new Option( '- Seleccione -', '', true, true);

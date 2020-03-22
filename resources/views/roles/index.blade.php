@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title')
 <h2>Roles</h2>
-    @can('crear rol')
+    @can('roles:crear')
         <a class="btn btn-info float-right" href="#" data-target="#new_role" data-toggle="modal">Añadir <i class="fa fa-plus"></i></a>
     @endcan
 @endsection
@@ -18,7 +18,6 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/validacion.js') }}"></script>
 <script type="text/javascript">
 	$('.btn_view')
 		.off('click', viewInfo )

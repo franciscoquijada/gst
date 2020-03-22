@@ -27,7 +27,7 @@
           <div class="row">
             <div class="col-md-6 col-12 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
               <label class="form-group">Nombre</label>
-              <input type="text" name="name" value="{{ old('name') }}" onkeypress="return soloLetras(event)" autocomplete="off" class="form-control" id="name" placeholder="Nombre Completo">
+              <input type="text" name="name" value="{{ old('name') }}" autocomplete="off" class="form-control alpha" id="name" placeholder="Nombre Completo">
               <span id="name-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
             <div class="col-md-6 col-12 form-group {{ $errors->has('email') ? 'has-error' : '' }}">
@@ -51,7 +51,7 @@
           <div class="row">
             <div class="col-md-6 col-12 form-group" {{ $errors->has('phone') ? 'has-error' : '' }}>
               <label class="form-group">Teléfono</label>
-              <input type="text" name="phone" value="{{ old('phone') }}" onkeypress="return soloNum(event)" class="form-control" id="phone"  placeholder="Teléfono" data-inputmask="'mask':['9 9999 9999','+(99) 9 9999 9999']">
+              <input type="text" name="phone" value="{{ old('phone') }}" class="form-control numeric" id="phone"  placeholder="Teléfono" data-inputmask="'mask':['9 9999 9999','+(99) 9 9999 9999']">
               <span id="phone-error" style="display: none;" class="label label-danger ml-1 error"></span>     
             </div>
             <div class="col-md-6 col-12 form-group {{ $errors->has('rut') ? 'has-error' : '' }}">

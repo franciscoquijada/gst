@@ -18,7 +18,6 @@ mix.js([
     'resources/js/sb-admin-2.min.js',
     'resources/vendor/datatables/dataTables.bootstrap4.min.js',
     'resources/vendor/datatables/jquery.dataTables.min.js',
-    
 	], 'public/js/app.js')
    .sass('resources/sass/app.scss', 'public/css');
 

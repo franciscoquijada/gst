@@ -14,7 +14,7 @@ class LogsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['permission:auditoria']);
+        $this->middleware(['permission:registros:listado']);
     }
 
     public function index()
@@ -49,5 +49,14 @@ class LogsController extends Controller
         return view( 'logs.index', [ 
             'logs' => Log::all()
         ]);
+    }
+
+    public function indexData()
+    {
+        $data = Log::get();
+
+        return Datatables::of( $data )
+        ->rawColumns([ 'id', 'user.name', 'event', 'descriptio', 'ip', 'created_at'])
+        ->make(true);
     }
 }

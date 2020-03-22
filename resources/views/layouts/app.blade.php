@@ -12,11 +12,15 @@
 
   <title>{{ config('app.name') }} - {{ setting('company_name') }}</title>
 
+  @laravelPWA
+
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
   <!-- Custom fonts for this template-->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  @yield('styles')
 
 </head>
 
@@ -75,6 +79,6 @@
     <!-- Core JavaScript-->
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
-
+    @include('PNotify::alert')
   </body>
 </html>

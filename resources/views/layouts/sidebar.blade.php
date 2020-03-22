@@ -27,12 +27,13 @@
     Modulos
   </div>
 
-  <!-- Nav Item - Pages Collapse Menu -->
-    @forelse($modules as $module)
-        @include( strtolower( $module->name ) . '::index')
-    @empty
-        <p style="text-align: center; color: #FFF;font-size: 12px;">No hay modulos cargados</p>
-    @endforelse
+  <!-- Modules -->
+  @forelse($modules as $module)
+    @include( strtolower( $module->getName() ) . '::index')
+  @empty
+    <p style="text-align: center; color: #FFF;font-size: 12px;">No hay modulos cargados</p>
+  @endforelse
+  <!-- / Modules -->
 
   <!-- Divider -->
   <hr class="sidebar-divider">
@@ -49,6 +50,7 @@
       <span>Charts</span></a>
   </li-->
 
+  @can('usuarios:listado','roles:listado','registros:listado')
   <!-- Nav Item - Collapse Menu -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers">
@@ -57,19 +59,22 @@
     </a>
     <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        @can('listado de usuarios')
+        @can('usuarios:listado')
             <a class="collapse-item" href="{{ route('users.index') }}">Usuarios</a>
         @endcan
-        @can('listado de roles')
+        @can('roles:listado')
             <a class="collapse-item" href="{{ route('roles.index') }}">Roles</a>
         @endcan
-        @can('auditoria')
+        @can('registros:listado')
             <a class="collapse-item" href="{{ route('logs.index') }}">Registros</a>
         @endcan
       </div>
     </div>
   </li>
+  <!-- / Nav Item - Collapse Menu -->
+  @endcan
 
+  @can('departamentos:listado','configuraciones:listado')
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true" aria-controls="collapseSettings">
       <i class="fas fa-fw fa-cogs"></i>
@@ -77,15 +82,16 @@
     </a>
     <div id="collapseSettings" class="collapse" aria-labelledby="headingSettings" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        @can('configuracion empresa')
+        @can('configuraciones:listado')
             <a class="collapse-item" href="{{ route('settings.index') }}">Opciones</a>
         @endcan
-        @can('listado de departamentos')
+        @can('departamentos:listado')
             <a class="collapse-item" href="{{ route('departments.index') }}">Departamentos</a>
         @endcan
       </div>
     </div>
   </li>
+  @endcan
 
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">

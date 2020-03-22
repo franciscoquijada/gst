@@ -31,7 +31,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'rut', 'department_id', 'phone', 'name', 'email', 'password', 'attr','last_login_at',
+        'rut', 
+        'department_id', 
+        'phone', 
+        'name', 
+        'email', 
+        'password', 
+        'attr',
+        'last_login_at',
         'last_login_ip'
     ];
 
@@ -41,7 +48,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        //'password', 
+        'remember_token',
     ];
 
     /**
@@ -79,6 +87,7 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value)
     {
+
         if( $value != "" )
         {
             $this->attributes['password'] = bcrypt( $value );
@@ -100,5 +109,10 @@ class User extends Authenticatable
         {
             $this->attributes['phone'] = preg_replace( '/[^0-9]/', '', $value );
         }
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_WEBHOOK_URL', '');
     }
 }

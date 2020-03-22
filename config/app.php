@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Metaproducciones'),
+    'name' => env('APP_NAME', 'Gestion'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://gestion.local'),
+    'url' => env('APP_URL', 'http://gst.local'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'es_ES',
 
     /*
     |--------------------------------------------------------------------------
@@ -166,6 +166,10 @@ return [
          * Package Service Providers...
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        //Spatie\Permission\PermissionServiceProvider::class,
+        //Collective\Html\HtmlServiceProvider::class,
+        Malahierba\ChileRut\ChileRutServiceProvider::class,
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -181,11 +185,9 @@ return [
          * Package User Providers...
          */
         Spatie\Permission\PermissionServiceProvider::class,
-        OwenIt\Auditing\AuditingServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
         Malahierba\ChileRut\ChileRutServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-
+        App\Providers\PNotifyServiceProvider::class,
     ],
 
     /*
@@ -237,11 +239,11 @@ return [
         'Validator'     => Illuminate\Support\Facades\Validator::class,
         'View'          => Illuminate\Support\Facades\View::class,
         'RUT'           => Malahierba\ChileRut\Facades\ChileRut::class,
-        'Form'          => Collective\Html\FormFacade::class,
-        'Html'          => Collective\Html\HtmlFacade::class,
+        //'Form'          => Collective\Html\FormFacade::class,
+        //'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-
+        'PNotify'       => App\Library\Services\PNotify::class,
     ],
 
 ];

@@ -61,6 +61,27 @@ return [
             ]) : [],
         ],
 
+        'mysql_aux' => [
+            'driver' => 'mysql',
+            'host'      => env('DB_AUX_HOST', '127.0.0.1'),
+            'port'      => env('DB_AUX_PORT', '3306'),
+            'database'  => env('DB_AUX_DATABASE', 'forge'),
+            'username'  => env('DB_AUX_USERNAME', 'forge'),
+            'password'  => env('DB_AUX_PASSWORD', ''),
+        ],
+
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_MONGO_HOST', '127.0.0.1'),
+            'port' => env('DB_MONGO_PORT', 27017),
+            'database' => env('DB_MONGO_DATABASE', ''),
+            'username' => env('DB_MONGO_USERNAME', ''),
+            'password' => env('DB_MONGO_PASSWORD', ''),
+            'options' => [
+                'database' => env('DB_MONGO_AUTH_DATABASE', 'admin')
+            ]
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
