@@ -21,12 +21,18 @@ $factory->define(Department::class, function (Faker $faker) {
         'created_at' => \Carbon\Carbon::now()
     ];
 });
+
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
+        'rut'               => '00000000-0',
+        'department_id'     => factory(Department::class),
+        'name'              => $faker->name,
+        'phone'             => '00000000000',
+        'email'             => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-        'remember_token' => Str::random(10),
+        'password'          => 'secret', // password
+        'remember_token'    => Str::random(10),
+        'attr'              => '',
+        'created_at'        => now()
     ];
 });

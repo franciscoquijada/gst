@@ -19,17 +19,11 @@ class LogsController extends Controller
 
     public function index()
     {
-        return view( 'logs.index', [ 
-            'logs' => Log::all()
-        ]);
-    }
-
-    public function indexData()
-    {
-        $data = Log::get();
-
-        return Datatables::of( $data )
-        ->rawColumns([ 'id', 'user.name', 'event', 'descriptio', 'ip', 'created_at'])
-        ->make(true);
+        if( request()->ajax() )
+            return \DataTables::of( Log::latest()->get() )
+                ->rawColumns([ 'id', 'user_name', 'event', 'description', 'ip', 'created_at'])
+                ->make(true);
+        
+        return view( 'logs.index');
     }
 }

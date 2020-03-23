@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://gestion.local'),
+    'url' => env('APP_URL', 'http://gst.local'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'es_ES',
 
     /*
     |--------------------------------------------------------------------------
@@ -170,6 +170,7 @@ return [
         //Collective\Html\HtmlServiceProvider::class,
         Malahierba\ChileRut\ChileRutServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -239,6 +240,7 @@ return [
         //'Form'          => Collective\Html\FormFacade::class,
         //'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
+        'DataTables'    => Yajra\DataTables\Facades\DataTables::class,
         'PNotify'       => App\Library\Services\PNotify::class,
     ],
 

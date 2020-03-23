@@ -4,9 +4,9 @@
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
     <div class="sidebar-brand-icon rotate-n-15">
-      {{ substr( ( setting('company_name') ?? 'Tk' ), 0, 2 ) }}
+      {{ substr( _setting('company_name', 'Tk'), 0, 2 ) }}
     </div>
-    <div class="sidebar-brand-text mx-3">{{ setting('company_name') ?? 'Toolkit' }}</div>
+    <div class="sidebar-brand-text mx-3">{{ _setting( 'company_name', 'Toolkit' ) }}</div>
   </a>
 
   <!-- Divider -->
@@ -28,7 +28,7 @@
   </div>
 
   <!-- Modules -->
-  @forelse($modules as $module)
+  @forelse( $modules as $module )
     @include( strtolower( $module->getName() ) . '::index')
   @empty
     <p style="text-align: center; color: #FFF;font-size: 12px;">No hay modulos cargados</p>

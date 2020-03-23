@@ -8,7 +8,7 @@
 
 @section('content')
 	<div class="table-responsive">
-		@include('roles.partials.table')
+		<table id="lista" class="table table-striped"></table>
 	</div>
 
 	@include('roles.partials.show')
@@ -19,13 +19,6 @@
 
 @section('scripts')
 <script type="text/javascript">
-	$('.btn_view')
-		.off('click', viewInfo )
-		.on('click', viewPermission );
-
-	$('.btn_edit')
-		.off('click', editItem )
-		.on('click', editPermission );
 
 	function viewPermission(e){
 	  e.preventDefault();
@@ -47,6 +40,7 @@
 	          let permissions = new Array();
 
 	          $( data.permissions ).each( function( i, e ){
+	          	//ToDo: Refactorizar
 	            permissions.push( '<li class="col-md-6">' + e.name + '</li>');
 	          });
 
@@ -85,6 +79,26 @@
 	      }
 	    });
 	}
+
+	$(function () {
+		$('#lista')
+			.off('click', '.btn_view',  window.viewInfo )
+			.on( 'click',  '.btn_view', window.viewPermission )
+			.off('click', '.btn_edit',  window.editItem )
+			.on( 'click',  '.btn_edit', window.editPermission )
+			.DataTable({
+				processing: true,
+				serverSide: true,
+				responsive: true,
+				ajax: '{!! route('roles.index') !!}',
+				columns: [
+					{data: 'name', name: 'name', title: 'Nombre', className: 'text-center text-capitalize'},
+					{data: 'users_count', name: 'users', title: 'Usuarios', className: 'text-center'},
+					{data: 'action', name: 'acciones', orderable: false, searchable: false, className: 'text-center actions'}
+				],
+				language: { url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json' }
+			});
+	});
 </script>
 @endsection
 

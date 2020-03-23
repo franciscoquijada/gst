@@ -10,10 +10,31 @@
 
 @section('content')
 	<div class="table-responsive">	
-		@include('users.partials.table')
+		<table id="lista" class="table table-striped"></table>
 	</div>
 
 	@include('users.partials.show')
 	@include('users.partials.create')
 	@include('users.partials.edit')
+@endsection
+
+@section('scripts')
+<script>
+	$(function () {
+	  $('#lista').DataTable({
+	    processing: true,
+	    serverSide: true,
+	    responsive: true,
+	    ajax: '{!! route('users.index') !!}',
+	    columns: [
+			{data: 'name', name: 'name', title: 'Nombre', className: 'text-center text-capitalize'},
+			{data: 'role_name', name: 'role_name', title: 'Rol', className: 'text-center'},
+			{data: 'email', name: 'email', title: 'Email', className: 'text-center'},
+			{data: 'department.name', name: 'department', title: 'Departamento', className: 'text-center'},
+			{data: 'action', name: 'acciones', orderable: false, searchable: false, className: 'text-center actions'}
+		],
+	    language: { url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json' }
+	  });
+	});
+</script>
 @endsection

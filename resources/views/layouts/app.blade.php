@@ -10,7 +10,7 @@
   <meta name="author" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ config('app.name') }} - {{ setting('company_name') }}</title>
+  <title>{{ config('app.name') }} - {{ _setting('company_name', 'Compañia') }}</title>
 
   @laravelPWA
 

@@ -16,6 +16,7 @@ _Php 7.2 o superior_
 ## Construido con 🛠️
 
 * [Laravel](https://laravel.com/) - El framework web usado
+* [DataTable](https://datatables.net/) - Manejo de Tablas HTML
 * [Vue.js](https://vuejs.org/) - Para realizar peticiones via Ajax
 * [Bootstrap](https://getbootstrap.com/) - Usado para el frontend
 * [SB Admin 2](https://startbootstrap.com/themes/sb-admin-2/) - Usado para el dashboard
@@ -24,4 +25,4 @@ _Php 7.2 o superior_
 
 
 ## Autor ✒️
-* **Luis José Pinto** *
+* **LPinto** *
