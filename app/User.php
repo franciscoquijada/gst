@@ -95,11 +95,7 @@ class User extends Authenticatable
 
     public function setRutAttribute($value)
     {
-        if( $value != "" )
-        {
-            $rut = preg_replace( '/[^0-9|k|K]/', '', $value );
-            $this->attributes['rut'] = substr( $rut, 0, -1 ) . '-' . substr( $rut, -1 );
-        }
+        $this->attributes['rut'] = _format_rut( $value );
     }
 
     public function setPhoneAttribute($value)

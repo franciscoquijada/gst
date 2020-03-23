@@ -48,7 +48,7 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-      _log( Auth::user()->id, 'Inicio de sesion', 'User\Login', $request );
+      _log( Auth::user()->id, 'Inicio de sesión', 'User\Login', $request );
       $user->update([
           'last_login_at' => now(),
           'last_login_ip' => $request->getClientIp()
@@ -57,7 +57,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-      _log(Auth::user()->id, 'Cierre de sesion', 'User\Logout', $request );
+      _log(Auth::user()->id, 'Cierre de sesión', 'User\Logout', $request );
       auth()->logout();
       session()->flush();
       return redirect( '/login' );
@@ -72,7 +72,7 @@ class LoginController extends Controller
     {
       if( ! request()->has('code') || request()->has('denied'))
       {
-        \PNotify::danger( __("Inicio de sesion cancelado") );
+        \PNotify::danger( __("Inicio de sesión cancelado") );
         return redirect( '/login' );
       }
 

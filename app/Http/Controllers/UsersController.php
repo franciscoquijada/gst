@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Log;
 use App\Department;
 
 use App\Rules\ValidarRut;
@@ -29,8 +30,13 @@ class UsersController extends Controller
 
     public function index()
     {
-        return view( 'users.index', [
-            'users'     => User::with('department')->get(), 
+        if( request()->ajax() )
+            return \DataTables::of( User::with('department')->latest()->get() )
+            ->addColumn( 'action', 'users.partials.buttons' )
+            ->addColumn( 'role_name', function( $data ){ return $data->getRoleNames()[0]; })
+            ->toJson();
+
+        return view( 'users.index', [ 
             'deptos'    => Department::pluck('name', 'id'),
             'roles'     => Role::pluck('name', 'id')
         ]);
@@ -43,8 +49,9 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {  
-        //Validamos que los datos cumplan con los requisitos
+    {
+        $request->merge([ 'rut' => _format_rut( $request->rut ) ]);
+
         $validar = \Validator::make(
             $request->all(),
             [
@@ -61,14 +68,21 @@ class UsersController extends Controller
             ]
         );
 
-        //Si existen errores retornamos cada uno de los errores
         if ( count( $validar->errors() ) > 0)
             return response()->json([
-                'status' => 500, 
+                'status' => 400, 
                 'errors' => $validar->errors()
             ]);
         
         $newUser = User::create( $request->all() )->assignRole( $request->rol_id );
+
+        log::create([
+            'user_id'       => auth()->id() ?? null,
+            'event'         => 'creó (ID:' . $newUser->id . ')',
+            'description'   => 'App\User',
+            'ip'            => $request->ip(),
+            'attr'          => $newUser
+        ]);
 
         \PNotify::success('Usuario registrado con éxito');
         return Response()->json($newUser);
@@ -109,7 +123,8 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //Validamos que los datos cumplan con los requisitos
+        $request->merge([ 'rut' => _format_rut( $request->rut ) ]);
+
         $validar = \Validator::make(
             $request->all(),
             [
@@ -129,7 +144,7 @@ class UsersController extends Controller
         //Si existen errores            
         if ( count( $validar->errors() ) > 0 )
             return response()->json([
-                'status' => 500,
+                'status' => 400,
                 'errors' => $validar->errors()
             ]);
         
@@ -141,6 +156,14 @@ class UsersController extends Controller
             $user->syncRoles( $request->rol_id );
             $user->save();
         }
+
+        log::create([
+            'user_id'       => auth()->id() ?? null,
+            'event'         => 'actualizó (ID:' . $id . ')',
+            'description'   => 'App\User',
+            'ip'            => $request->ip(),
+            'attr'          => $user
+        ]);
 
         \PNotify::success('Usuario actualizado con éxito');
         return response()->json($user);
@@ -155,15 +178,25 @@ class UsersController extends Controller
     public function destroy(Request $request, $id)
     {
         $user = User::findOrFail( $id );
+
         if ($user != null && $id != 1)
         {
             $user->delete();
+
+            log::create([
+                'user_id'       => auth()->id() ?? null,
+                'event'         => 'eliminó (ID:' . $id . ')',
+                'description'   => 'App\User',
+                'ip'            => $request->ip(),
+                'attr'          => $user
+            ]);
+
             \PNotify::success('Usuario eliminado con éxito!');
             return response()->json($user);
         }
 
         return response()->json([
-            'status' => 500,
+            'status' => 400,
             'errors' => 'Usuario invalido'
         ]);
     }

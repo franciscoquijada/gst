@@ -9,12 +9,14 @@
 	<table id="lista" class="table table-striped"></table>
 </div>
 @endsection
+
 @section('scripts')
   <script>
     $(function () {
       $('#lista').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
         ajax: '{!! route('logs.index') !!}',
         columns: [
             {data: 'user_name', name: 'user_name', title: 'Usuario', className: 'text-center text-capitalize'},

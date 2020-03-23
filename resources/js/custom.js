@@ -44,16 +44,20 @@ console.log('init_helpers');
 
 
 /********** Cruds Events *************/
-
 $('.mark_as_read').on('click', markAsRead );
+
 $('.send-form').on('click', sendForm );
-$('.btn_view').on('click', viewInfo );
-$('.btn_edit').on('click', editItem );
-$('.btn_del').on('click', delItem );
 $('button.link').on('click', goTo );
 
-$('input.numeric').on('keypress', onlyNumber );
-$('input.alpha').on('keypress', onlyAlpha );
+/**** Actions Table ******/
+$('.table').on('click', '.actions .btn_view', viewInfo );
+$('.table').on('click', '.actions .btn_edit', editItem );
+$('.table').on('click', '.actions .btn_del',  delItem );
+
+/**** Formats Inputs ******/
+$('input.numeric').on('keypress', onlyNumbers );
+$('input.alpha').on('keypress',   onlyAlphanumeric );
+$('input.letters').on('keypress', onlyLetters );
 
 $(window).on('keydown', pressEnter);
 
@@ -70,43 +74,30 @@ function input_optional(){
   });
 }
 
-function onlyNumber(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = " 0123456789 ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-      if(key == especiales[i]){
-          tecla_especial = true;
-          break;
-      }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-      return false;
-  }
+function onlyLetters() {
+  $(this).val($(this).val().replace(/[^A-Za-zñÑ ]/g, ''));
 }
 
-function onlyAlpha(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = "áéíóúabcdefghijklmnñopqrstuvwxyz ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-    if(key == especiales[i]){
-      tecla_especial = true; 
-      break;
-    }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-    return false;
-  }
+function onlyAlphanumeric() {
+  $(this).val($(this).val().replace(/[^0-9A-Za-zñÑ ]/g, ''));
 }
+
+function onlyNumbers() {
+  $(this).val( $(this).val().replace(/[^0-9]/g, '') );
+}
+
+/* Pendiente 
+function onlyRUT() {
+  $(this).val($(this).val().replace(/[^0-9k-]/g, ''));
+}
+
+function onlyDates() {
+    var date = $(this).val().replace(/[^0-9]/g, ''),
+        d = date.substring(0,2),
+        m = date.substring(2,4) != '' ? '/' + date.substring(2,4) : '',
+        y = date.substring(4,8) != '' ? '/' + date.substring(4,8) : '';
+  $(this).val( d + m + y );
+}*/
 
 function goTo( e ){
   e.preventDefault();
@@ -143,7 +134,7 @@ function sendForm( e ){
     data: $form.serialize(),
     success: function (data) {
 
-      if ( data.status === 500 ) {
+      if ( data.status === 400 ) {
 
         $.each(data.errors, function( index, elem ){
 
@@ -294,78 +285,79 @@ $( window ).on( "load", function() {
 $(document).ready(function() {
 
   new PNotify({
-            title: 'Notificación',
-              text: 'mensaje',
-              type: 'success',
-              styling: 'bootstrap4',
-              icons: 'fontawesome5'
-          });
+    title: 'Notificación',
+    text: 'mensaje',
+    type: 'success',
+    styling: 'bootstrap4',
+    icons: 'fontawesome5'
+  });
 
   input_optional();
+  Inputmask().mask(document.querySelectorAll("input"));
     
-    /*$('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-        });*/
+  /*$('.datepicker').datetimepicker({
+          format: 'DD/MM/YYYY',
+      });*/
 
-    /*$('.table.table-striped').DataTable({
-        "language": {
-            url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
-        },
-        "order": [[ 0, "desc" ]]
-    });*/
+  /*$('.table.table-striped').DataTable({
+      "language": {
+          url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
+      },
+      "order": [[ 0, "desc" ]]
+  });*/
 
-    let newOption = new Option( '- Seleccione -', '', true, true);
-    
-        $('.select:not([multiple])').prepend(newOption).select2({
-            width: '100%',
-            language: "es"
-        });
+  let newOption = new Option( '- Seleccione -', '', true, true);
+  
+      $('.select:not([multiple])').prepend(newOption).select2({
+          width: '100%',
+          language: "es"
+      });
 
-    $.fn.select2.amd.require(
-      [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
-      function (Utils, Dropdown, AttachBody) {
-        function SelectAll() { }
+  $.fn.select2.amd.require(
+    [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
+    function (Utils, Dropdown, AttachBody) {
+      function SelectAll() { }
 
-        SelectAll.prototype.render = function (decorated) {
-          var $rendered = decorated.call(this),
-              self = this,
-              $selectAll = $('<a/>').addClass('btn w-100').text('Seleccionar todos');
+      SelectAll.prototype.render = function (decorated) {
+        var $rendered = decorated.call(this),
+            self = this,
+            $selectAll = $('<a/>').addClass('btn w-100').text('Seleccionar todos');
 
-          $rendered.find('.select2-dropdown').prepend( $selectAll );
+        $rendered.find('.select2-dropdown').prepend( $selectAll );
 
-          $selectAll.on('click', function (e) {
-            var $results = $rendered.find('.select2-results__option[aria-selected=false]');
-            $results.each( function () {
-              var $result = $(this),
-                  data = $result.data('data');
-              
-              self.trigger('select', {
-                data: data
-              });
+        $selectAll.on('click', function (e) {
+          var $results = $rendered.find('.select2-results__option[aria-selected=false]');
+          $results.each( function () {
+            var $result = $(this),
+                data = $result.data('data');
+            
+            self.trigger('select', {
+              data: data
             });
-
-          self.trigger('close');
           });
 
-          return $rendered;
-        };
+        self.trigger('close');
+        });
 
-      $(".select[multiple]").select2({
-        placeholder: "Selecionar...",
-        width: '100%',
-        language: "es",
-        dropdownAdapter: Utils.Decorate(
-          Utils.Decorate( Dropdown, AttachBody ),
-        SelectAll ),
-      });
+        return $rendered;
+      };
+
+    $(".select[multiple]").select2({
+      placeholder: "Selecionar...",
+      width: '100%',
+      language: "es",
+      dropdownAdapter: Utils.Decorate(
+        Utils.Decorate( Dropdown, AttachBody ),
+      SelectAll ),
     });
+  });
 
-    if (typeof NProgress != 'undefined') {
-      NProgress.done();
+  if (typeof NProgress != 'undefined') {
+    NProgress.done();
 
-      $(document).ajaxStart( () => NProgress.start() );
-      $(document).ajaxStop( () => NProgress.done() );
-    }
+    $(document).ajaxStart( () => NProgress.start() );
+    $(document).ajaxStop( () => NProgress.done() );
+  }
 
 });
 

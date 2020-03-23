@@ -13,9 +13,10 @@ function _log($user, $event, $descripcion, $request)
     ]);
 }
 
-function setting( $key )
+function _setting( $key, $default = '' )
 {
-	return Setting::where( 'key', $key )->withTrashed()->first()->value ?? null;
+    $value = Setting::where( 'key', $key )->withTrashed()->first()->value ?? null;
+	return ( $value != null &&  $value != '' ) ? $value : $default;
 }
 
 function _lower( $value )
@@ -24,4 +25,15 @@ function _lower( $value )
 		$value = strtolower( $value );
 
 	return $value;
+}
+
+function _format_rut($value)
+{
+    if( $value != "" )
+    {
+        $rut = preg_replace( '/[^0-9|k|K]/', '', $value );
+        $value = substr( $rut, 0, -1 ) . '-' . substr( $rut, -1 );
+    }
+
+    return $value;
 }
