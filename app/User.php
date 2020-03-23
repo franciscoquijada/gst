@@ -10,13 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Traits\Auditable;
 use App\Traits\SaveLower;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SoftDeletes, Auditable, SaveLower;
+    use Notifiable, HasRoles, SoftDeletes, SaveLower;
 
     protected $dates = [
         'email_verified_at',
@@ -31,7 +30,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'rut', 'department_id', 'phone', 'name', 'email', 'password', 'attr','last_login_at',
+        'rut', 
+        'department_id', 
+        'phone', 
+        'name', 
+        'email', 
+        'password', 
+        'attr',
+        'last_login_at',
         'last_login_ip'
     ];
 
@@ -41,7 +47,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 
+        'remember_token',
     ];
 
     /**
@@ -59,7 +66,7 @@ class User extends Authenticatable
 
     public function department()
     {
-        return $this->belongsTo( 'App\Department' );
+        return $this->belongsTo( Department::class );
     }
 
     public function logs()
@@ -79,6 +86,7 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value)
     {
+
         if( $value != "" )
         {
             $this->attributes['password'] = bcrypt( $value );
@@ -87,11 +95,7 @@ class User extends Authenticatable
 
     public function setRutAttribute($value)
     {
-        if( $value != "" )
-        {
-            $rut = preg_replace( '/[^0-9|k|K]/', '', $value );
-            $this->attributes['rut'] = substr( $rut, 0, -1 ) . '-' . substr( $rut, -1 );
-        }
+        $this->attributes['rut'] = _format_rut( $value );
     }
 
     public function setPhoneAttribute($value)
@@ -100,5 +104,10 @@ class User extends Authenticatable
         {
             $this->attributes['phone'] = preg_replace( '/[^0-9]/', '', $value );
         }
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_WEBHOOK_URL', '');
     }
 }

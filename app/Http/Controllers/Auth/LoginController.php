@@ -48,18 +48,19 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        $user->update([
-            'last_login_at' => now(),
-            'last_login_ip' => $request->getClientIp()
-        ]);
+      _log( Auth::user()->id, 'Inicio de sesión', 'User\Login', $request );
+      $user->update([
+          'last_login_at' => now(),
+          'last_login_ip' => $request->getClientIp()
+      ]);
     }
 
-    public function logout (Request $request)
+    public function logout(Request $request)
     {
-      log_act(Auth::user()->id, 'cierre de sesión', 'cerró la sesión iniciada',$request );
+      _log(Auth::user()->id, 'Cierre de sesión', 'User\Logout', $request );
       auth()->logout();
       session()->flush();
-      return redirect('/login');
+      return redirect( '/login' );
     }
 
     public function redirectToProvider ($driver)
@@ -71,43 +72,33 @@ class LoginController extends Controller
     {
       if( ! request()->has('code') || request()->has('denied'))
       {
-        session()->flash('message', ['danger', __("Inicio de sesión cancelado")]);
-        return redirect('login');
+        \PNotify::danger( __("Inicio de sesión cancelado") );
+        return redirect( '/login' );
+      }
+
+      $socialUser = Socialite::driver($driver)->user();
+      $user       = null;
+      $email      = $socialUser->email;
+      $check      = User::whereEmail($email)->first();
+
+      if( $check )
+      {
+        $user   = $check;
+        $filtro = UserSocialAccount::where( 'user_id', $user->id )->count();
+        
+        if ( $filtro <= 0 )
+        {
+          UserSocialAccount::create([
+            "user_id"       => $user->id,
+            "provider"      => $driver,
+            "provider_uid"  => $socialUser->id
+          ]);
+        }
       }
       else
-      {
-        $socialUser = Socialite::driver($driver)->user();
-        $user = null;
-        $success = true;
-        $email = $socialUser->email;
-        $check = User::whereEmail($email)->first();
+        return redirect( '/login' );
 
-        if( $check )
-        {
-          $user = $check;
-          $filtro= UserSocialAccount::where('user_id',$user->id)->count();
-          
-          if ( $filtro <= 0 )
-          {
-            UserSocialAccount::create([
-              "user_id"       => $user->id,
-              "provider"      => $driver,
-              "provider_uid"  => $socialUser->id
-            ]);
-          }
-        }
-        else
-        {
-          return redirect('login');
-        }
-
-        if($success === true)
-        {
-          \DB::commit();
-          auth()->loginUsingId($user->id);
-          log_act(Auth::user()->id, 'inicio de sesión', 'sesión iniciada',$request );
-          return redirect(route('home'));
-        }
-      }
+      auth()->loginUsingId( $user->id );
+      return redirect( route('home') );
     }
 }

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('title')
 <h2>Roles</h2>
-    @can('crear rol')
+    @can('roles:crear')
         <a class="btn btn-info float-right" href="#" data-target="#new_role" data-toggle="modal">Añadir <i class="fa fa-plus"></i></a>
     @endcan
 @endsection
 
 @section('content')
 	<div class="table-responsive">
-		@include('roles.partials.table')
+		<table id="lista" class="table table-striped"></table>
 	</div>
 
 	@include('roles.partials.show')
@@ -18,15 +18,7 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/validacion.js') }}"></script>
 <script type="text/javascript">
-	$('.btn_view')
-		.off('click', viewInfo )
-		.on('click', viewPermission );
-
-	$('.btn_edit')
-		.off('click', editItem )
-		.on('click', editPermission );
 
 	function viewPermission(e){
 	  e.preventDefault();
@@ -48,6 +40,7 @@
 	          let permissions = new Array();
 
 	          $( data.permissions ).each( function( i, e ){
+	          	//ToDo: Refactorizar
 	            permissions.push( '<li class="col-md-6">' + e.name + '</li>');
 	          });
 
@@ -86,6 +79,26 @@
 	      }
 	    });
 	}
+
+	$(function () {
+		$('#lista')
+			.off('click', '.btn_view',  window.viewInfo )
+			.on( 'click',  '.btn_view', window.viewPermission )
+			.off('click', '.btn_edit',  window.editItem )
+			.on( 'click',  '.btn_edit', window.editPermission )
+			.DataTable({
+				processing: true,
+				serverSide: true,
+				responsive: true,
+				ajax: '{!! route('roles.index') !!}',
+				columns: [
+					{data: 'name', name: 'name', title: 'Nombre', className: 'text-center text-capitalize'},
+					{data: 'users_count', name: 'users', title: 'Usuarios', className: 'text-center'},
+					{data: 'action', name: 'acciones', orderable: false, searchable: false, className: 'text-center actions'}
+				],
+				language: { url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json' }
+			});
+	});
 </script>
 @endsection
 

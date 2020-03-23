@@ -12,7 +12,7 @@
           <div class="row">
             <div class="col-md-12 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
               <label class="form-group">Nombre</label>
-              <input type="text" name="name" value="" data-field="name" onkeypress="return soloLetras(event)" autocomplete="off" class="form-control" id="name" placeholder="Nombre">
+              <input type="text" name="name" value="" data-field="name" autocomplete="off" class="form-control alpha" id="name" placeholder="Nombre">
               <span id="name-error" style="display: none;" class="label label-danger ml-2 mb-2"></span>
             </div>
           </div>

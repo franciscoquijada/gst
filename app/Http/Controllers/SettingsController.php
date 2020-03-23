@@ -14,6 +14,11 @@ use Validator;
 
 class SettingsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:configuraciones:listado']);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -73,8 +78,6 @@ class SettingsController extends Controller
 
         $setting->value = strtolower( $request->value );
         $setting->save();
-
-        log_act(Auth::user()->id, 'Actualizó', 'Se actualizó satisfactoriamente la opción - ' . $setting->name, $request );
 
         return response()->json(true);
     }

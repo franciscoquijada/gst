@@ -1,43 +1,5 @@
 /*********** Helpers ************/
 
-window.soloLetras = function(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = "áéíóúabcdefghijklmnñopqrstuvwxyz ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-    if(key == especiales[i]){
-      tecla_especial = true; 
-      break;
-    }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-    return false;
-  }
-}
-
-window.soloNum = function(e){
-  key = e.keyCode || e.which;
-  tecla = String.fromCharCode(key).toLowerCase();
-  letras = " 0123456789 ";
-  especiales = "8-37-39-46";
-
-  tecla_especial = false
-  for(var i in especiales){
-      if(key == especiales[i]){
-          tecla_especial = true;
-          break;
-      }
-  }
-
-  if(letras.indexOf(tecla)==-1 && !tecla_especial){
-      return false;
-  }
-}
-
 window.resetForm = function( $form ){
   $form.find('[type="text"]').val('');
   $form.find('select').val(null).trigger('change');
@@ -82,79 +44,149 @@ console.log('init_helpers');
 
 
 /********** Cruds Events *************/
+$('.mark_as_read').on('click', markAsRead );
 
 $('.send-form').on('click', sendForm );
-$('.btn_view').on('click', viewInfo );
-$('.btn_edit').on('click', editItem );
-$('.btn_del').on('click', delItem );
+$('button.link').on('click', goTo );
+
+/**** Actions Table ******/
+$('.table').on('click', '.actions .btn_view', viewInfo );
+$('.table').on('click', '.actions .btn_edit', editItem );
+$('.table').on('click', '.actions .btn_del',  delItem );
+
+/**** Formats Inputs ******/
+$('input.numeric').on('keypress', onlyNumbers );
+$('input.alpha').on('keypress',   onlyAlphanumeric );
+$('input.letters').on('keypress', onlyLetters );
+
 $(window).on('keydown', pressEnter);
 
-/*********** Cruds Functions ************/
+/*********** Event Functions ************/
+
+function input_optional(){
+  $('.optional').each(function( i, e ){
+    let $this = $(this);
+    $this.hide();
+
+    $( '[name="' + $this.data('parent') + '"]' ).on('change', function(e){
+      ( $(this).val() == $this.data('answer') ) ? $this.show() : $this.hide();
+    });
+  });
+}
+
+function onlyLetters() {
+  $(this).val($(this).val().replace(/[^A-Za-zñÑ ]/g, ''));
+}
+
+function onlyAlphanumeric() {
+  $(this).val($(this).val().replace(/[^0-9A-Za-zñÑ ]/g, ''));
+}
+
+function onlyNumbers() {
+  $(this).val( $(this).val().replace(/[^0-9]/g, '') );
+}
+
+/* Pendiente 
+function onlyRUT() {
+  $(this).val($(this).val().replace(/[^0-9k-]/g, ''));
+}
+
+function onlyDates() {
+    var date = $(this).val().replace(/[^0-9]/g, ''),
+        d = date.substring(0,2),
+        m = date.substring(2,4) != '' ? '/' + date.substring(2,4) : '',
+        y = date.substring(4,8) != '' ? '/' + date.substring(4,8) : '';
+  $(this).val( d + m + y );
+}*/
+
+function goTo( e ){
+  e.preventDefault();
+  if( $(this).data('route').length > 0 ){
+    location.href =  $(this).data('route');
+  } 
+}
+
+function markAsRead(e) {
+  e.preventDefault();
+  let $this = $(this);
+  $.ajax({
+    type: 'GET',
+    url: $(this).data('route'),
+    data: {
+      '_token': $('input[name=_token]').val(),
+    },
+    success: function (data) {
+      if ( data == 'success' ) {
+        $this.find('.badge-counter').text(0);
+      }
+    }
+  });
+}
+
 
 function sendForm( e ){
   e.preventDefault();
   let $form = $(this).parents('form');
 
   $.ajax({
-      type: $form.attr('method'), //metodo
-      url: $form.attr('action'), //url
-      data: $form.serialize(),
-      success: function (data) {
+    type: $form.attr('method'), //metodo
+    url: $form.attr('action'), //url
+    data: $form.serialize(),
+    success: function (data) {
 
-          if (data.status === 500) {
+      if ( data.status === 400 ) {
 
-              $.each(data.errors, function( index, elem ){
+        $.each(data.errors, function( index, elem ){
 
-                let $index = index.split('.')[0];
-
-                $form.find('#' + $index ).addClass('invalid');
-                $form.find('#' + $index + '-error')
-                    .removeAttr('style')
-                    .html( elem );
-
-              });
-
-              setTimeout(function () {
+          let $index = index.split('.')[0];
+          $form.find('#' + $index ).addClass('invalid');
+          $form.find('#' + $index + '-error')
+            .removeAttr('style')
+                      .html( elem );
+                });
+                setTimeout(function () {
                   $form.find(".error").fadeOut(1500);
-                  $form.find('.invalid').removeClass('invalid') 
-              }, 6000);
+                  $form.find('.invalid').removeClass('invalid')
+                }, 6000);
+            } else {
 
-          } else {
-            $form.find('.modal').modal('hide');
-            location.reload();
-          }
-
-      }
-  });
+              $form.find('.modal').modal('hide');
+              if ( typeof data.redirect !== 'undefined' ) {
+                location.href =  data.redirect;
+              }else{
+                location.reload();
+              }
+            }
+        }
+    });
 }
 
 function viewInfo(e) {
   e.preventDefault();
   let id = $(this).data('item');
-
   $.ajax({
-      type: 'GET', //metoodo
-      url: window.location + '/' + id, //id del delete
-      data: {
-          '_token': $('input[name=_token]').val(),
-      },
-      success: function ( data ) {
-        lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
-        $('.viewer.modal')
-          .modal('show')
-          .find('[data-field]')
-          .each( function( i, e ){
-            let elem = $(e);
+    type: 'GET', //metoodo
+    url: window.location + '/' + id, //id del delete
+    data: {
+      '_token': $('input[name=_token]').val(),
+    },
+    success: function ( data ) {
+      lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
+      $('.viewer.modal')
+        .modal('show')
+        .find('[data-field]')
+        .each( function( i, e ){
+          let elem = $(e);
 
-            try {
-              elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
-            }
-            catch(error) {
-              //console.error(error);
-              elem.text( ' N/D ' );
-            }
+          try {
+            elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+          }
+          catch(error) {
+            //console.error(error);
+            elem.text( ' N/D ' );
+          }
         });
-      }
+    }
   });
 }
 
@@ -162,46 +194,37 @@ function editItem(e) {
   e.preventDefault();
   let id = $(this).data('item');
   resetForm( $('.modal.edit form') );
-
   $.ajax({
     type: 'GET', //metoodo
     url: window.location + '/' + id + '/edit',
-    data: {
-        '_token': $('input[name=_token]').val(),
-    },
-    success: function (data) {
+      data: {
+          '_token': $('input[name=_token]').val(),
+      },
+      success: function (data) {
 
-      lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
-
-      $('.modal.edit')
-        .modal('show')
-        .find('[data-field]').each( function( i, e ){
-          let elem = $(e),
+        lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
+        $('.modal.edit')
+            .modal('show')
+            .find('[data-field]').each( function( i, e ){
+              let elem = $(e),
               options = eval('data.fields.' + elem.data('field') ) || '';
-          if( elem.is('input') || elem.is('textarea') ){ //Input
 
-            elem.val( options );
-
-          }else if( elem.is('select') ){ //Select
-
+            if( elem.is('input') || elem.is('textarea') ){ //Input
+              elem.val( options );
+            }else if( elem.is('select') ){ //Select
               if(elem.is('[multiple]') && Array.isArray( options ) ){ //Multiple
-
                 let plck = options.reduce( function( res,opt) {
                   res.push(opt.id);
                   return res;
                 },[]);
-
-                elem.val( plck ).trigger('change');
-
+              elem.val( plck ).trigger('change');
               }else{ //Simple
-                 elem.val( options ).trigger('change');
+                elem.val( options ).trigger('change');
               }
+            }else{ //Text
 
-          }else{ //Text
-
-            elem.text( options || ' N/D ' );
-
-          }
+              elem.text( options || ' N/D ' );
+            }
         }).parents('form').attr('action', data.route );
     }
   });
@@ -210,121 +233,132 @@ function editItem(e) {
 function delItem(e) {
   e.preventDefault();
   let route = $(this).data('route');
-
   Swal.fire({
-  title: '¿Estas seguro?',
-  text: "Esta operación no puede revertirse!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Si, borralo!'
+    title: '¿Estas seguro?',
+    text: "Esta operación no puede revertirse!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    cancelButtonText: 'No, cancelar! <i class="fas fa-times"></i>',
+    confirmButtonText: 'Si, Borrar! <i class="fas fa-check"></i>',
+    customClass: {
+      confirmButton: 'confirm-button-class btn custom',
+      cancelButton: 'cancel-button-class btn custom',
+    },
   }).then((result) => {
-
-    if (result.value) {
-      $.ajax({
-          type: 'DELETE', //metodo
-          url: route, //id del delete
-          data: {
+    
+      if (result.value) {
+        $.ajax({
+            type: 'DELETE', //metodo
+            url: route, //id del delete
+            data: {
               '_token': $('input[name=_token]').val(),
-          },
-          success: function (data) {
+            },
+            success: function (data) {
 
-            if (data.status != 500) {
-              Swal.fire(
-                'Borrado!',
-                'Fue borrado con éxito!.',
-                'success'
-              )
-              location.reload();
+              if (data.status != 500) {
+                Swal.fire(
+                  'Borrado!',
+                  'Se ha borrado con éxito.',
+                  'success'
+                )
+                location.reload();
+              }
             }
-          }
-      });
-    }
+        });
+      }
   });
 }
 
 console.log('init_crud_functions');
 
 
-/*********** Init Functions ************/
+/*********** Init Assets ************/
 
 $( window ).on( "load", function() {
-	if (typeof NProgress != 'undefined') {
-		NProgress.start();
-	}
+  if (typeof NProgress != 'undefined') {
+    NProgress.start();
+  }
 });
 
 $(document).ready(function() {
 
-  Swal.fire(
-  'The Internet?',
-  'That thing is still around?',
-  'question'
-);
+  new PNotify({
+    title: 'Notificación',
+    text: 'mensaje',
+    type: 'success',
+    styling: 'bootstrap4',
+    icons: 'fontawesome5'
+  });
+
+  input_optional();
+  Inputmask().mask(document.querySelectorAll("input"));
     
-    /*$('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-        });*/
+  /*$('.datepicker').datetimepicker({
+          format: 'DD/MM/YYYY',
+      });*/
 
-    $('.table.table-striped').DataTable({
-        "language": {
-            url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
-        }
-    });
+  /*$('.table.table-striped').DataTable({
+      "language": {
+          url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
+      },
+      "order": [[ 0, "desc" ]]
+  });*/
 
-    let newOption = new Option( '- Seleccione -', '', true, true);
-    
-        $('.select:not([multiple])').prepend(newOption).select2({
-            width: '100%',
-            language: "es"
-        });
+  let newOption = new Option( '- Seleccione -', '', true, true);
+  
+      $('.select:not([multiple])').prepend(newOption).select2({
+          width: '100%',
+          language: "es"
+      });
 
-    $.fn.select2.amd.require(
-      [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
-      function (Utils, Dropdown, AttachBody) {
-        function SelectAll() { }
+  $.fn.select2.amd.require(
+    [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
+    function (Utils, Dropdown, AttachBody) {
+      function SelectAll() { }
 
-        SelectAll.prototype.render = function (decorated) {
-          var $rendered = decorated.call(this),
-              self = this,
-              $selectAll = $('<a/>').addClass('btn w-100').text('Seleccionar todos');
+      SelectAll.prototype.render = function (decorated) {
+        var $rendered = decorated.call(this),
+            self = this,
+            $selectAll = $('<a/>').addClass('btn w-100').text('Seleccionar todos');
 
-          $rendered.find('.select2-dropdown').prepend( $selectAll );
+        $rendered.find('.select2-dropdown').prepend( $selectAll );
 
-          $selectAll.on('click', function (e) {
-            var $results = $rendered.find('.select2-results__option[aria-selected=false]');
-            $results.each( function () {
-              var $result = $(this),
-                  data = $result.data('data');
-              
-              self.trigger('select', {
-                data: data
-              });
+        $selectAll.on('click', function (e) {
+          var $results = $rendered.find('.select2-results__option[aria-selected=false]');
+          $results.each( function () {
+            var $result = $(this),
+                data = $result.data('data');
+            
+            self.trigger('select', {
+              data: data
             });
-
-          self.trigger('close');
           });
 
-          return $rendered;
-        };
+        self.trigger('close');
+        });
 
-      $(".select[multiple]").select2({
-        placeholder: "Selecionar...",
-        width: '100%',
-        language: "es",
-        dropdownAdapter: Utils.Decorate(
-          Utils.Decorate( Dropdown, AttachBody ),
-        SelectAll ),
-      });
+        return $rendered;
+      };
+
+    $(".select[multiple]").select2({
+      placeholder: "Selecionar...",
+      width: '100%',
+      language: "es",
+      dropdownAdapter: Utils.Decorate(
+        Utils.Decorate( Dropdown, AttachBody ),
+      SelectAll ),
     });
+  });
 
-    if (typeof NProgress != 'undefined') {
-      NProgress.done();
+  if (typeof NProgress != 'undefined') {
+    NProgress.done();
 
-    	$(document).ajaxStart( () => NProgress.start() );
-    	$(document).ajaxStop( () => NProgress.done() );
-    }
+    $(document).ajaxStart( () => NProgress.start() );
+    $(document).ajaxStop( () => NProgress.done() );
+  }
 
 });
 
+console.log('init_assets');

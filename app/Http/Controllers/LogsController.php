@@ -14,13 +14,16 @@ class LogsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['permission:auditoria']);
+        $this->middleware(['permission:registros:listado']);
     }
 
     public function index()
     {
-        return view( 'logs.index', [ 
-            'logs' => Log::all()
-        ]);
+        if( request()->ajax() )
+            return \DataTables::of( Log::latest()->get() )
+                ->rawColumns([ 'id', 'user_name', 'event', 'description', 'ip', 'created_at'])
+                ->make(true);
+        
+        return view( 'logs.index');
     }
 }

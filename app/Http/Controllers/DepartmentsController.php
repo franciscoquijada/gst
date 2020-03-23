@@ -24,7 +24,7 @@ class DepartmentsController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:modulo de usuarios|listado de departamentos|ver departamentos|crear departamentos|editar departamentos|eliminar departamentos']);
+        $this->middleware(['permission:departamentos:listado|departamentos:crear|departamentos:editar|departamentos:eliminar']);
     }
 
     public function index()
@@ -62,8 +62,7 @@ class DepartmentsController extends Controller
         
         $depto = Department::create( $request->all() );
 
-        Session::flash('message', 'Departamento creado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Departamento creado con éxito');
 
         return response()->json($depto);
     }
@@ -77,7 +76,7 @@ class DepartmentsController extends Controller
     public function edit($id)
     {
         return [
-            'fields' => Department::find($id),
+            'fields' => Department::findOrFail($id),
             'route'  => route( 'departments.update', $id )
         ];
     }
@@ -110,12 +109,11 @@ class DepartmentsController extends Controller
                 'errors' => $validar->errors()
             ]);
                  
-        $depto          = Department::find($id);
+        $depto          = Department::findOrFail($id);
         $depto->name    = $request->name;
         $depto->save();
 
-        Session::flash('message', 'Departamento actualizado con éxito');
-        Session::flash('class', 'success');
+        \PNotify::success('Departamento actualizado con éxito');
              
         return response()->json( $depto );
         
@@ -129,15 +127,13 @@ class DepartmentsController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $depto = Department::find($id);
+        $depto = Department::findOrFail($id);
 
         if( $depto != null && $id != 1 )
         {
             $depto->delete();
-            log_act( Auth::user()->id, 'eliminó', 'se eliminó el departamento - '. $depto->name, $request );
         
-            Session::flash('message', 'Departamento eliminado con éxito');
-            Session::flash('class', 'success');
+            \PNotify::success('Departamento eliminado con éxito');
 
             return response()->json($depto);
         }

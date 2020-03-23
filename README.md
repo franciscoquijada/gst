@@ -2,31 +2,27 @@
 
 _Sistema de gestión base_
 
-
 ### Pre-requisitos 📋
 
-_Php 7.3 o superior_
-_Recomiendo el uso de Laragon ya que nos crea los hostvirtuales de una manera sencilla_
+_Php 7.2 o superior_
 
 ### Instalación 🔧
 
-* Hacer primero **git clone**
-* Luego **composer install**
-* Crear **archivo .env**
-* Configurar la conexion a la BD
-* Ejecutar las migraciones con el comando **php artisan migrate**
+* Script instalacion **composer install && php -r "file_exists('.env') || copy('.env.example', '.env');" && php artisan key:generate && php artisan storage:link && chmod -R 777 storage bootstrap/cache**
+* Configurar entorno **archivo .env**
+* Ejecutar las migraciones **php artisan migrate**
 
 
 ## Construido con 🛠️
 
 * [Laravel](https://laravel.com/) - El framework web usado
+* [DataTable](https://datatables.net/) - Manejo de Tablas HTML
 * [Vue.js](https://vuejs.org/) - Para realizar peticiones via Ajax
 * [Bootstrap](https://getbootstrap.com/) - Usado para el frontend
-* [Gentelella](https://colorlib.com/polygon/gentelella/) - Usado como template
+* [SB Admin 2](https://startbootstrap.com/themes/sb-admin-2/) - Usado para el dashboard
 * [Laravel-Socialite](https://laravel.com/docs/5.7/socialite) - Para acceder con redes sociales
 * [Spatie/Laravel-permissions](https://github.com/spatie/laravel-permission) - Para el manejo de roles y permisos
 
 
-## Autores ✒️
-
-* **Luis José Pinto** *
+## Autor ✒️
+* **LPinto** *
