@@ -20,7 +20,6 @@
 
 @section('scripts')
 <script>
-	var table = 
 	$(function () {
 	  $('#lista').DataTable({
 	    processing: true,

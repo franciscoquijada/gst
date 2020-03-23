@@ -64980,7 +64980,7 @@ function delItem(e) {
         },
         success: function success(data) {
           if (data.status != 500) {
-            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            Swal.fire('Borrado!', 'Se ha borrado con éxito.', 'success');
             location.reload();
           }
         }

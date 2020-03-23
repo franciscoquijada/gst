@@ -259,8 +259,8 @@ function delItem(e) {
 
               if (data.status != 500) {
                 Swal.fire(
-                  'Deleted!',
-                  'Your file has been deleted.',
+                  'Borrado!',
+                  'Se ha borrado con éxito.',
                   'success'
                 )
                 location.reload();

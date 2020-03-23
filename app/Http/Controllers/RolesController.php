@@ -25,10 +25,12 @@ class RolesController extends Controller
 
     public function index()
     {
-        return view('roles.index', [
-            'roles'       => Role::all(),
-            'permissions' => Permission::all()
-        ]);
+         if( request()->ajax() )
+            return \DataTables::of( Role::withCount('users')->latest()->get() )
+            ->addColumn( 'action', 'roles.partials.buttons' )
+            ->toJson();
+
+        return view('roles.index', [ 'permissions' => Permission::all() ]);
     }
 
     /**
