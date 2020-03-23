@@ -10,7 +10,7 @@
   <meta name="author" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>Login - {{ setting('company_name') }}</title>
+  <title>Login - {{ _setting('company_name', 'Compañia') }}</title>
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -20,7 +20,7 @@
 
 </head>
 
-<body id="app" class="bg-info">
+<body id="app" class="bg-info dog-img">
 
   	<div class="container">
 
@@ -33,7 +33,7 @@
 		          	<div id="login" class="card-body p-0">
 		            	<!-- Nested Row within Card Body -->
 		            	<div class="row">
-		              		<div class="col-lg-6 d-none d-lg-block bg-login-image" style="background-image: url('https://source.unsplash.com/daily')"></div>
+		              		<div class="col-lg-6 d-none d-lg-block bg-login-image" ></div>
 		              		<div class="col-lg-6">
 			                	<div class="p-5">
 			                  		<div class="text-center">
@@ -44,7 +44,7 @@
 									  	@csrf
 									  	<div class="p-3 login_content">
 									        <div>
-									          <img class="login-logo" src="{{ setting('company_logo') }}" style="width: 130px;margin: 20px auto; display: block;">
+									          <img class="login-logo" src="{{ _setting('company_logo') }}" style="width: 130px;margin: 20px auto; display: block;">
 									        </div>
 									        @if ($errors->has('email') || $errors->has('password') )
 									        	<div class="alert alert-danger" role="alert">

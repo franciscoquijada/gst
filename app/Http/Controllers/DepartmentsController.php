@@ -29,9 +29,12 @@ class DepartmentsController extends Controller
 
     public function index()
     {
-        return view('departments.index', [
-            'departments' => Department::all()
-        ]);
+        if( request()->ajax() )
+            return \DataTables::of( Department::withCount('users')->latest()->get() )
+            ->addColumn( 'action', 'departments.partials.buttons' )
+            ->toJson();
+
+        return view('departments.index');
     }
 
     /**

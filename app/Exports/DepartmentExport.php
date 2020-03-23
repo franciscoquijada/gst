@@ -18,12 +18,11 @@ class DepartmentExport implements FromCollection,WithHeadings
             'Nombre',
             'Fecha de Creacion',
             'Usuarios',
-            'Centros de Costos',
         ];
     }
 
     public function collection()
     {
-        return Department::select('name','created_at')->withCount(['users', 'cost_centers'])->get();
+        return Department::select('name','created_at')->withCount(['users'])->get();
     }
 }
