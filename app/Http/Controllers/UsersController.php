@@ -84,7 +84,7 @@ class UsersController extends Controller
             'attr'          => $newUser
         ]);
 
-        \PNotify::success('Usuario registrado con éxito');
+        \Notify::success('Usuario registrado con éxito');
         return Response()->json($newUser);
     }
 
@@ -165,7 +165,7 @@ class UsersController extends Controller
             'attr'          => $user
         ]);
 
-        \PNotify::success('Usuario actualizado con éxito');
+        \Notify::success('Usuario actualizado con éxito');
         return response()->json($user);
     }
 
@@ -191,7 +191,7 @@ class UsersController extends Controller
                 'attr'          => $user
             ]);
 
-            \PNotify::success('Usuario eliminado con éxito!');
+            \Notify::success('Usuario eliminado con éxito!');
             return response()->json($user);
         }
 

@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
       	<p><b>Permisos asociados:</b></p>
-        <ul id="permission" class="row"></ul>
+        <div id="permission" class="row"></div>
       </div>
     </div>
   </div>

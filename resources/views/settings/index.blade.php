@@ -34,7 +34,7 @@ $(function(){
 		        },
 		        success: function (data) {
 
-		            if ( data.status === 500 ) {
+		            if ( data.status === 400 ) {
 		            	$this.val('').addClass('invalid');
 		            	$('#' + id + '-error')
 		                        .removeAttr('style')

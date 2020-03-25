@@ -3,7 +3,7 @@ namespace App\Library\Services;
   
 use Illuminate\Session\Store;
   
-class PNotifier
+class Notifier
 {
     /**
      * @var SessionStore
@@ -34,11 +34,10 @@ class PNotifier
      * @param bool|string $title
      * @param string $type
      */
-    public function message($text, $title = false, $type = 'info')
+    public function message( $title, $icon = 'info' )
     {
-        $this->config['text'] = $text;
         $this->config['title'] = $title;
-        $this->config['type'] = $type;
+        $this->config['icon'] = $icon;
         $this->setMessage();
     }
 
@@ -49,11 +48,9 @@ class PNotifier
      * @param $title
      * @return $this
      */
-    public function success($text, $title = false)
+    public function success( $text )
     {
-        $this->message( $text, $title, 'success' );
-
-        //return $this;
+        $this->message( $text, 'success' );
     }
 
     /**
@@ -63,9 +60,9 @@ class PNotifier
      * @param $title
      * @return $this
      */
-    public function info($text, $title = false)
+    public function info($text)
     {
-        $this->message($text, $title, 'info');
+        $this->message($text, 'info');
 
         return $this;
     }
@@ -77,9 +74,9 @@ class PNotifier
      * @param $title
      * @return $this
      */
-    public function warning($text, $title = false)
+    public function warning($text)
     {
-        $this->message($text, $title, 'notice');
+        $this->message($text, 'warning');
 
         return $this;
     }
@@ -91,9 +88,9 @@ class PNotifier
      * @param $title
      * @return $this
      */
-    public function danger($text, $title = false)
+    public function danger($text)
     {
-        $this->message($text, $title, 'error');
+        $this->message($text, 'error');
 
         return $this;
     }
@@ -107,21 +104,7 @@ class PNotifier
      */
     public function error($text, $title = false)
     {
-        $this->message($text, $title, 'error');
-
-        return $this;
-    }
-
-    /**
-     * Dark message
-     *
-     * @param $text
-     * @param $title
-     * @return $this
-     */
-    public function dark($text, $title = false)
-    {
-        $this->message($text, $title, 'dark');
+        $this->message($text, 'error');
 
         return $this;
     }
@@ -133,7 +116,7 @@ class PNotifier
      */
     public function sticky()
     {
-        $this->config['hide'] = false;
+        $this->config['timer'] = false;
         $this->flashConfig();
 
         return $this;
@@ -144,8 +127,8 @@ class PNotifier
      */
     private function setMessage()
     {
-        $this->session->flash('PNotify.alert', 
-            array_merge( (array) $this->session->get('PNotify.alert'), [$this->buildConfig()] ) );
+        $this->session->flash('Notify.alert', 
+            array_merge( (array) $this->session->get('Notify.alert'), [$this->buildConfig()] ) );
     }
 
     /**
@@ -156,7 +139,7 @@ class PNotifier
     private function buildConfig()
     {
         if(! $this->config['title'] )
-        	$this->config['title'] = 'Notificación';
+            $this->config['title'] = 'Notificación';
 
         return json_encode($this->config);
     }
@@ -166,12 +149,9 @@ class PNotifier
      */
     private function setDefaultConfig()
     {
-    	$this->config = [
-    		'title' 	=>  'Notificación',
-    		'text' 		=>  null,
-    		'type' 		=>  null,
-    		'styling' 	=>  'bootstrap4',
-    		'icons' 	=>  'fontawesome5'
-    	];
+        $this->config = [
+            'title'     =>  null,
+            'icon'      =>  null
+        ];
     }
 }

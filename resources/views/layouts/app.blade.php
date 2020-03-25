@@ -79,6 +79,6 @@
     <!-- Core JavaScript-->
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
-    @include('PNotify::alert')
+    @include('Notify::alert')
   </body>
 </html>

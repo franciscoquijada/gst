@@ -76,6 +76,24 @@ class SettingsTableSeeder extends Seeder
                     'validate'  => 'required|email'
                 ]
             ],[
+                'key'           => 'bg_login',
+                'name'          => 'Imagen Login',
+                'value'         => '',
+                'description'   => 'Imagen del login',
+                'field'         => [ 
+                    'type'      => 'text',
+                    'validate'  => 'string'
+                ]
+            ],[
+                'key'           => 'color_primary',
+                'name'          => 'Color Principal',
+                'value'         => '#36B9CC',
+                'description'   => 'Color de fondo',
+                'field'         => [ 
+                    'type'      => 'text',
+                    'validate'  => 'string'
+                ]
+            ],[
                 'key'           => 'company_giro',
                 'name'          => 'giro',
                 'value'         => '',
