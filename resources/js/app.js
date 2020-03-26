@@ -14,7 +14,6 @@ window.Swal			= require('sweetalert2')
 window.NProgress  	= require('NProgress');
 window.select2 	 	= require('select2');
 window.Inputmask  	= require('inputmask');
-window.PNotify 		= require('pnotify/dist/umd/PNotify');
 
 /**
  * The following block of code may be used to automatically register your

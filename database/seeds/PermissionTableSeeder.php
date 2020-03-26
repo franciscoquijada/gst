@@ -14,37 +14,36 @@ class PermissionTableSeeder extends Seeder
      */
     public function run()
     {
+        // Users
+        Permission::create(['name' => 'usuarios:listado']);
+        Permission::create(['name' => 'usuarios:ver']);
+        Permission::create(['name' => 'usuarios:crear']);
+        Permission::create(['name' => 'usuarios:actualizar']);
+        Permission::create(['name' => 'usuarios:eliminar']);
 
-      // Users
-      Permission::create(['name' => 'usuarios:listado']);
-      Permission::create(['name' => 'usuarios:ver']);
-      Permission::create(['name' => 'usuarios:crear']);
-      Permission::create(['name' => 'usuarios:actualizar']);
-      Permission::create(['name' => 'usuarios:eliminar']);
+        // Roles
+        Permission::create(['name' => 'roles:listado']);
+        Permission::create(['name' => 'roles:ver']);
+        Permission::create(['name' => 'roles:crear']);
+        Permission::create(['name' => 'roles:actualizar']);
+        Permission::create(['name' => 'roles:eliminar']);
 
-      // Roles
-      Permission::create(['name' => 'roles:listado']);
-      Permission::create(['name' => 'roles:ver']);
-      Permission::create(['name' => 'roles:crear']);
-      Permission::create(['name' => 'roles:actualizar']);
-      Permission::create(['name' => 'roles:eliminar']);
+        // Departments
+        Permission::create(['name' => 'departamentos:listado']);
+        Permission::create(['name' => 'departamentos:crear']);
+        Permission::create(['name' => 'departamentos:actualizar']);
+        Permission::create(['name' => 'departamentos:eliminar']);
 
-      // Departments
-      Permission::create(['name' => 'departamentos:listado']);
-      Permission::create(['name' => 'departamentos:crear']);
-      Permission::create(['name' => 'departamentos:actualizar']);
-      Permission::create(['name' => 'departamentos:eliminar']);
+        // Logs
+        Permission::create(['name' => 'registros:listado']);
 
-      // Logs
-      Permission::create(['name' => 'registros:listado']);
+        // Settings
+        Permission::create(['name' => 'configuraciones:listado']);  
 
-      // Settings
-      Permission::create(['name' => 'configuraciones:listado']);  
+        // Create Super-Admin
+        $role = Role::create(['name' => 'super-admin']);
+        $role->givePermissionTo( Permission::all() );
 
-      // Create Super-Admin
-      $role = Role::create(['name' => 'super-admin']);
-      $role->givePermissionTo( Permission::all() );
-
-      User::find(1)->assignRole(['super-Admin']);
+        User::find(1)->assignRole(['super-admin']);
     }
 }

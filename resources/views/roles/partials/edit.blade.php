@@ -21,16 +21,36 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 col-12 form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                    <label class="col-md-6">Permisos</label>
-                    @foreach($permissions as $p)
-                    <label class="col-md-6">
-                        {!! Form::checkbox('permission[]', $p->id, false, ['class' => 'form-check-input']) !!}
-                        {{ $p->name }}
-                    </label>
-                    @endforeach
-                    <span id="permission-error" style="display: none;" class="label label-danger ml-1 error"></span>
+              <label class="col-md-12">Permisos del Sistema</label>
+              @foreach($system as $title => $section)
+              <div class="col-md-6 mt-3">
+                <label class="col-md-6"><b>{{ $title }}</b></label>
+                @foreach($section as $name => $id)
+                <div class="pl-4 w-100">
+                  {!! Form::checkbox('permission[]', $id, false, ['class' => 'form-check-input']) !!}
+                  {{ $name }}
                 </div>
+                @endforeach
+              </div>
+              @endforeach
+              @if( is_array( $mod ) && count( $mod ) > 0 )
+                  @foreach($mod as $title => $sub_mod)
+                    <hr class="w-100"/>
+                    <label class="col-md-12">Modulo: {{ $title }}</label>
+                    @foreach($sub_mod as $title_sub => $section)
+                      <div class="col-md-6">
+                      <label class="col-md-6"><b>{{ $title_sub }}</b></label>
+                      @foreach($section as $name => $id)
+                        <div class="pl-4 w-100">
+                          {!! Form::checkbox('permission[]', $id, false, ['class' => 'form-check-input']) !!}
+                          {{ $name }}
+                        </div>
+                      @endforeach
+                      </div>
+                    @endforeach
+                  @endforeach
+                @endif
+              <span id="permission-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
         </div>
         <div class="clearfix"></div>

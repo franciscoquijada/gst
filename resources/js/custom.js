@@ -142,22 +142,22 @@ function sendForm( e ){
           $form.find('#' + $index ).addClass('invalid');
           $form.find('#' + $index + '-error')
             .removeAttr('style')
-                      .html( elem );
-                });
-                setTimeout(function () {
-                  $form.find(".error").fadeOut(1500);
-                  $form.find('.invalid').removeClass('invalid')
-                }, 6000);
-            } else {
+            .html( elem );
+          });
+          setTimeout(function () {
+            $form.find(".error").fadeOut(1500);
+            $form.find('.invalid').removeClass('invalid')
+          }, 6000);
+        } else {
 
-              $form.find('.modal').modal('hide');
-              if ( typeof data.redirect !== 'undefined' ) {
-                location.href =  data.redirect;
-              }else{
-                location.reload();
-              }
-            }
+          $form.find('.modal').modal('hide');
+          if ( typeof data.redirect !== 'undefined' ) {
+            location.href =  data.redirect;
+          }else{
+            location.reload();
+          }
         }
+       }
     });
 }
 
@@ -284,27 +284,8 @@ $( window ).on( "load", function() {
 
 $(document).ready(function() {
 
-  new PNotify({
-    title: 'Notificación',
-    text: 'mensaje',
-    type: 'success',
-    styling: 'bootstrap4',
-    icons: 'fontawesome5'
-  });
-
   input_optional();
   Inputmask().mask(document.querySelectorAll("input"));
-    
-  /*$('.datepicker').datetimepicker({
-          format: 'DD/MM/YYYY',
-      });*/
-
-  /*$('.table.table-striped').DataTable({
-      "language": {
-          url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
-      },
-      "order": [[ 0, "desc" ]]
-  });*/
 
   let newOption = new Option( '- Seleccione -', '', true, true);
   

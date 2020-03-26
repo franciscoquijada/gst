@@ -59,13 +59,13 @@ class DepartmentsController extends Controller
         //Si existen errores retornamos cada uno de los errores
         if ( count( $validar->errors() ) > 0)
             return response()->json([
-                'status' => 500, 
+                'status' => 400, 
                 'errors' => $validar->errors()
             ]);
         
         $depto = Department::create( $request->all() );
 
-        \PNotify::success('Departamento creado con éxito');
+        \Notify::success('Departamento creado con éxito');
 
         return response()->json($depto);
     }
@@ -108,7 +108,7 @@ class DepartmentsController extends Controller
         //Si existen errores retornamos cada uno de los errores
         if ( count( $validar->errors() ) > 0)
             return response()->json([
-                'status' => 500, 
+                'status' => 400, 
                 'errors' => $validar->errors()
             ]);
                  
@@ -116,7 +116,7 @@ class DepartmentsController extends Controller
         $depto->name    = $request->name;
         $depto->save();
 
-        \PNotify::success('Departamento actualizado con éxito');
+        \Notify::success('Departamento actualizado con éxito');
              
         return response()->json( $depto );
         
@@ -136,13 +136,13 @@ class DepartmentsController extends Controller
         {
             $depto->delete();
         
-            \PNotify::success('Departamento eliminado con éxito');
+            \Notify::success('Departamento eliminado con éxito');
 
             return response()->json($depto);
         }
 
         return response()->json([
-            'status' => 500,
+            'status' => 400,
             'errors' => 'Departamento invalido'
         ]);
     }

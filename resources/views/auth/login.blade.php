@@ -18,9 +18,16 @@
   <!-- Custom fonts for this template-->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
+  <style type="text/css">
+  	.btn-info {
+	    color: #fff;
+	    background-color: {{ _setting('color_primary', '#36B9CC') }} !important;
+	}
+  </style>
+
 </head>
 
-<body id="app" class="bg-info dog-img">
+<body id="app" style="background-color: {{ _setting('color_primary', '#36B9CC') }}">
 
   	<div class="container">
 
@@ -33,11 +40,11 @@
 		          	<div id="login" class="card-body p-0">
 		            	<!-- Nested Row within Card Body -->
 		            	<div class="row">
-		              		<div class="col-lg-6 d-none d-lg-block bg-login-image" ></div>
+		              		<div class="col-lg-6 d-none d-lg-block bg-login-image" style=" background-image: url('{{ _setting('bg_login', 'https://source.unsplash.com/K4mSJ7kc0As/600x800') }}');" ></div>
 		              		<div class="col-lg-6">
 			                	<div class="p-5">
 			                  		<div class="text-center">
-			                    		<h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+			                    		<h1 class="h4 text-gray-900 mb-4">{{ __('Hola!') }}</h1>
 			                  		</div>
 				                  	
 									<form method="POST" action="{{ route('login') }}">
@@ -48,18 +55,18 @@
 									        </div>
 									        @if ($errors->has('email') || $errors->has('password') )
 									        	<div class="alert alert-danger" role="alert">
-												  <strong>Oh oh!</strong> Correo electrónio o contraseña invalida.
+												  <strong>Oh oh!</strong> {{ __('Correo electrónio o contraseña invalida') }}.
 												</div>
 											@endif
 									        <div>
-									          <input id="email" type="email" class="form-control input_user{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
+									          <input id="email" type="email" class="form-control input_user{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="{{ __('Email') }}">
 									        </div>
 									        <div>
-									          <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Contraseña">
+									          <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="{{ __('Contraseña') }}">
 									        </div>
 									        <div class="text-center">
 									          <button type="submit" class="btn btn-info custom submit">
-									            {{ __('Login') }}<i class="fas fa-sign-in-alt"></i>
+									            {{ __('Iniciar Sesión') }}<i class="fas fa-sign-in-alt"></i>
 									          </button>
 									          @if (Route::has('password.request'))
 									              <!--a class="reset_pass" href="{{ route('password.request') }}">
@@ -69,8 +76,7 @@
 									        </div>
 									        <hr/>
 									        <div class="change_link text-center">
-									          <a href="{{ route('social_auth',['driver' => 'google']) }}" class="btn-default btn text-dark" style="text-decoration: none; border: 1px solid #CCC !important; color: #444 !important">
-									              Acceder con Google <i class="fab fa-google"></i>
+									          <a href="{{ route('social_auth',['driver' => 'google']) }}" class="btn-default btn text-dark" style="text-decoration: none; border: 1px solid #CCC !important; color: #444 !important">{{ __('Acceder con Google') }} <i class="fab fa-google"></i>
 									          </a>
 									        </div>
 									    </div>
@@ -78,7 +84,7 @@
 									</form>
 			                  		<hr>
 									<div class="text-center">
-										<a class="small" href="forgot-password.html">Forgot Password?</a>
+										<a class="small" href="forgot-password.html">{{ __('Olvide mi contraseña') }}</a>
 									</div>
 									<!--div class="text-center">
 										<a class="small" href="register.html">Create an Account!</a>

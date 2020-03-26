@@ -72,7 +72,7 @@ class LoginController extends Controller
     {
       if( ! request()->has('code') || request()->has('denied'))
       {
-        \PNotify::danger( __("Inicio de sesión cancelado") );
+        \Notify::danger( __("Inicio de sesión cancelado") );
         return redirect( '/login' );
       }
 
