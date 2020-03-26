@@ -29,8 +29,24 @@ class RolesController extends Controller
             return \DataTables::of( Role::withCount('users')->latest()->get() )
             ->addColumn( 'action', 'roles.partials.buttons' )
             ->toJson();
+            
+        $system = [];
+        $modules = [];
 
-        return view('roles.index', [ 'permissions' => Permission::all() ]);
+        foreach ( Permission::all() as $key => $p)
+        {
+            $name =  explode(':', $p->name);
+            if( isset( $name[2] ) )
+                $modules[ $name[0] ][ $name[1] ][ $name[2] ] = $p->id;
+            else
+                $system[ $name[0] ][ $name[1] ] = $p->id;
+        }
+
+        return view('roles.index', [ 
+            'permissions'   => Permission::all(),
+            'system'        => $system,
+            'mod'           => $modules
+        ]);
     }
 
     /**
@@ -54,7 +70,7 @@ class RolesController extends Controller
 
         if ( count( $validar->errors() ) > 0)
             return response()->json([
-                'status' => 500, 
+                'status' => 400, 
                 'errors' => $validar->errors()
             ]);
         
@@ -64,7 +80,7 @@ class RolesController extends Controller
 
         $newRole->syncPermissions( $request->permission );
 
-        \PNotify::success('Rol creado con éxito');
+        \Notify::success('Rol creado con éxito');
 
         return Response()->json($newRole);
     }
@@ -119,7 +135,7 @@ class RolesController extends Controller
 
         if ( count( $validar->errors() ) > 0)
             return response()->json([
-                'status' => 500, 
+                'status' => 400, 
                 'errors' => $validar->errors()
             ]);
 
@@ -131,14 +147,14 @@ class RolesController extends Controller
             $role->save();
             $role->syncPermissions( $request->permission );
 
-            \PNotify::success('Rol actualizado con éxito');
+            \Notify::success('Rol actualizado con éxito');
 
             return response()->json($role);
         }
         else
         {
             return response()->json(false);
-            \PNotify::error('No tiene permiso para actualizar el rol super-admin');
+            \Notify::error('No tiene permiso para actualizar el rol super-admin');
         }
     }
 
@@ -155,13 +171,13 @@ class RolesController extends Controller
         if ( $id != 1 && $rol != null && $rol->users()->count() == 0)
         {
             $rol->delete();
-            \PNotify::success('Rol eliminado con éxito');
+            \Notify::success('Rol eliminado con éxito');
 
             return response()->json($rol);
         }
 
         return response()->json([
-            'status' => 500,
+            'status' => 400,
             'errors' => 'Este rol tiene usuarios asociados a el o es invalido'
         ]);
     }

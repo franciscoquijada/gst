@@ -72,7 +72,7 @@ class SettingsController extends Controller
         //Si existen errores retornamos cada uno de los errores
         if ( count( $data->errors() ) > 0)
             return response()->json([
-                'status' => 500, 
+                'status' => 400, 
                 'error'  => $data->errors()
             ]);
 
