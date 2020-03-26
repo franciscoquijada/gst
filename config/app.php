@@ -241,7 +241,7 @@ return [
         //'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables'    => Yajra\DataTables\Facades\DataTables::class,
-        'Notify'       => App\Library\Services\Notify::class,
+        'Notify'        => App\Library\Services\Notify::class,
     ],
 
 ];
