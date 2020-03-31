@@ -46,21 +46,11 @@ class DepartmentsController extends Controller
     public function store(Request $request)
     {
         //Validamos que los datos cumplan con los requisitos
-        $validar = Validator::make(
-            $request->all(),
-            [
+        $request->validate([
                 'name'          => 'required|min:3|string|unique:departments,name,NULL,id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
                 'min'           => 'Longitud minima permitida de 3 caracteres'
-            ]
-        );
-
-        //Si existen errores retornamos cada uno de los errores
-        if ( count( $validar->errors() ) > 0)
-            return response()->json([
-                'status' => 400, 
-                'errors' => $validar->errors()
             ]);
         
         $depto = Department::create( $request->all() );
@@ -95,21 +85,11 @@ class DepartmentsController extends Controller
     {
 
         //Validamos que los datos cumplan con los requisitos
-        $validar = Validator::make(
-            $request->all(),
-            [
+        $request->validate([
                 'name'          => 'required|min:3|string|unique:departments,name,'.$id.',id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
                 'min'           => 'Longitud minima permitida de 3 caracteres'
-            ]
-        );
-
-        //Si existen errores retornamos cada uno de los errores
-        if ( count( $validar->errors() ) > 0)
-            return response()->json([
-                'status' => 400, 
-                'errors' => $validar->errors()
             ]);
                  
         $depto          = Department::findOrFail($id);
@@ -140,11 +120,11 @@ class DepartmentsController extends Controller
 
             return response()->json($depto);
         }
-
+        
         return response()->json([
-            'status' => 400,
-            'errors' => 'Departamento invalido'
-        ]);
+            'message' => 'Datos invalidos', 
+            'errors'  => ['id' => 'Departamento invalido']
+        ], 422);
     }
 
     public function export()

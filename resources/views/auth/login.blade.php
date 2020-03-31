@@ -1,34 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.base')
 
-<head>
-
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-
-  <title>Login - {{ _setting('company_name', 'Compañia') }}</title>
-
-  <!-- Custom styles for this template-->
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-  <!-- Custom fonts for this template-->
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-  <style type="text/css">
-  	.btn-info {
-	    color: #fff;
-	    background-color: {{ _setting('color_primary', '#36B9CC') }} !important;
-	}
-  </style>
-
-</head>
-
-<body id="app" style="background-color: {{ _setting('color_primary', '#36B9CC') }}">
-
+@section('page')
   	<div class="container">
 
 	    <!-- Outer Row -->
@@ -40,11 +12,11 @@
 		          	<div id="login" class="card-body p-0">
 		            	<!-- Nested Row within Card Body -->
 		            	<div class="row">
-		              		<div class="col-lg-6 d-none d-lg-block bg-login-image" style=" background-image: url('{{ _setting('bg_login', 'https://source.unsplash.com/K4mSJ7kc0As/600x800') }}');" ></div>
+		              		<div id="bg-login" class="col-lg-6 d-none d-lg-block bg-login-image" ></div>
 		              		<div class="col-lg-6">
 			                	<div class="p-5">
 			                  		<div class="text-center">
-			                    		<h1 class="h4 text-gray-900 mb-4">{{ __('Hola!') }}</h1>
+			                    		<h1 class="h4 text-gray-900 mb-4">{{ __('Hola de nuevo!') }}</h1>
 			                  		</div>
 				                  	
 									<form method="POST" action="{{ route('login') }}">
@@ -68,27 +40,25 @@
 									          <button type="submit" class="btn btn-info custom submit">
 									            {{ __('Iniciar Sesión') }}<i class="fas fa-sign-in-alt"></i>
 									          </button>
-									          @if (Route::has('password.request'))
-									              <!--a class="reset_pass" href="{{ route('password.request') }}">
-									                  {{ __('Recuperar Contraseña?') }}
-									              </a-->
-									          @endif
-									        </div>
-									        <hr/>
-									        <div class="change_link text-center">
-									          <a href="{{ route('social_auth',['driver' => 'google']) }}" class="btn-default btn text-dark" style="text-decoration: none; border: 1px solid #CCC !important; color: #444 !important">{{ __('Acceder con Google') }} <i class="fab fa-google"></i>
+									          <span class="d-block m-2">{{ __('O') }}</span>
+
+									          <a href="{{ route('social_auth',['driver' => 'google']) }}" class=" d-inline-block btn-default btn text-dark" style="text-decoration: none; border: 1px solid #CCC !important; color: #444 !important">{{ __('Acceder con Google') }} <i class="fab fa-google"></i>
 									          </a>
 									        </div>
 									    </div>
 									  	<div class="clearfix"></div>
 									</form>
-			                  		<hr>
-									<div class="text-center">
-										<a class="small" href="forgot-password.html">{{ __('Olvide mi contraseña') }}</a>
-									</div>
-									<!--div class="text-center">
-										<a class="small" href="register.html">Create an Account!</a>
-									</div-->
+                                	<hr class="mt-2" />
+							        <div class="text-center mt-3">
+								        @if (Route::has('password.request'))
+								        	<a class="small m-2" href="#" data-target="#reset_password" data-toggle="modal">{{ __('Olvide mi contraseña?') }}</a>
+	                                	@endif
+	                                	@if (Route::has('register'))
+											<a class="small m-2" href="#" data-target="#new_user" data-toggle="modal">{{ __('Crear una cuenta') }}</a>
+                            			@endif
+                        			</div>
+                        			@include('auth.register')
+                        			@include('auth.passwords.email')
 			                	</div>
 							</div>
 						</div>
@@ -100,6 +70,12 @@
 
 	<!-- Core JavaScript-->
 	<script src="{{ asset('js/app.js') }}"></script>
+@endsection
 
-</body>
-</html>
+@section('styles')
+<style type="text/css">
+	#app{
+		background-color: {{ _setting('color_primary', '#36B9CC') }};
+	}
+</style>
+@endsection

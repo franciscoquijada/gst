@@ -50,8 +50,8 @@
                     @endforeach
                   @endforeach
                 @endif
-              <span id="permission-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
+            <span id="permission-error" style="display: none;" class="label label-danger ml-1 error"></span>
         </div>
         <div class="clearfix"></div>
         <div class="modal-footer">
