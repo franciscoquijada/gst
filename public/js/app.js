@@ -64836,7 +64836,7 @@ function sendForm(e) {
     //url
     data: $form.serialize(),
     success: function success(data) {
-      $form.find('.modal').modal('hide');
+      $form.parents('.modal').modal('hide');
 
       if (typeof data.redirect !== 'undefined') {
         location.href = data.redirect;

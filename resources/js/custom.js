@@ -133,7 +133,7 @@ function sendForm( e ){
     url: $form.attr('action'), //url
     data: $form.serialize(),
     success: function (data) {
-      $form.find('.modal').modal('hide');
+      $form.parents('.modal').modal('hide');
       if ( typeof data.redirect !== 'undefined' ) {
         location.href =  data.redirect;
       }else{
@@ -328,7 +328,7 @@ $(document).ready(function() {
       SelectAll ),
     });
   });
-
+  
   if (typeof NProgress != 'undefined') {
     NProgress.done();
 

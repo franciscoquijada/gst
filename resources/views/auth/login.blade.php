@@ -70,6 +70,46 @@
 
 	<!-- Core JavaScript-->
 	<script src="{{ asset('js/app.js') }}"></script>
+	<script type="text/javascript">
+		$('.send-reset').on('click', sendReset );
+		function sendReset( e ){
+		  e.preventDefault();
+		  let $form = $(this).parents('form');
+
+		  $.ajax({
+		    type: $form.attr('method'), //metodo
+		    url: $form.attr('action'), //url
+		    data: $form.serialize(),
+		    success: function (data) {
+		    	$form.parents('.modal').modal('hide');
+		    	Swal.fire(
+	              'Enviado!',
+	              'Hemos enviado las instrucciones al mail ' + $form.find('#email').val()+'.',
+	              'success'
+	            );
+	            $form.find('#email').val('');
+		    },
+		    error: function (xhr, ajaxOptions, thrownError) {
+
+		      if( xhr.status == 422 ){
+
+		       $.each(xhr.responseJSON.errors, function( index, elem ){
+
+		        let $index = index.split('.')[0];
+		        $form.find('#' + $index ).addClass('invalid');
+		        $form.find('#' + $index + '-error')
+		          .removeAttr('style')
+		          .html( elem );
+		        });
+		        setTimeout(function () {
+		          $form.find(".error").fadeOut(1500);
+		          $form.find('.invalid').removeClass('invalid')
+		        }, 6000);
+		      }
+		    }
+		  });
+		}
+	</script>
 @endsection
 
 @section('styles')

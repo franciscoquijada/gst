@@ -21,7 +21,7 @@
         <div class="clearfix"></div>
         <div class="modal-footer">
           <div class="col-12 text-center">
-            <a class="btn btn-success send-form">
+            <a class="btn btn-success send-reset">
               {{ __('Enviar') }} <i class="fas fa-envelope"></i></i>
             </a>
           </div>
