@@ -22,7 +22,6 @@
               {{ Form::select('rol_id', $roles->sort(), old('rol_id'), ['class' => 'form-control select'] ) }}
               <span id="rol_id-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
-
           </div>
           <div class="row">
             <div class="col-md-6 col-12 form-group {{ $errors->has('name') ? 'has-error' : '' }}">

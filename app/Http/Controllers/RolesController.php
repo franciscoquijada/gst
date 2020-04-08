@@ -66,14 +66,8 @@ class RolesController extends Controller
                 'required'      => 'Campo requerido',
                 'unique'        => 'Ya este nombre esta en uso'
             ]
-        );
+        )->validate();
 
-        if ( count( $validar->errors() ) > 0)
-            return response()->json([
-                'status' => 400, 
-                'errors' => $validar->errors()
-            ]);
-        
         $newRole = Role::create([ 
             'name' => strtolower( $request->name )
         ]);
@@ -131,17 +125,10 @@ class RolesController extends Controller
                 'required'      => 'Campo requerido',
                 'unique'        => 'Ya este nombre esta en uso'
             ]
-        );
-
-        if ( count( $validar->errors() ) > 0)
-            return response()->json([
-                'status' => 400, 
-                'errors' => $validar->errors()
-            ]);
+        )->validate();
 
         if( $id != 1 )
         {
-
             $role = Role::findOrFail($id);
             $role->name = strtolower( $request->name );
             $role->save();
@@ -177,8 +164,8 @@ class RolesController extends Controller
         }
 
         return response()->json([
-            'status' => 400,
-            'errors' => 'Este rol tiene usuarios asociados a el o es invalido'
-        ]);
+                'message' => 'Datos invalidos', 
+                'errors'  => ['id' => 'Este rol tiene usuarios asociados a el o es invalido'] 
+            ], 422);
     }
 }

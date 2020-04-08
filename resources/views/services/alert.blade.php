@@ -1,6 +1,6 @@
 @if (session('Notify.alert'))
 <script type="text/javascript">
-	$( {!! json_encode( session('Notify.alert') ) !!}  ).each( function(i,e){
+	$( @json( session('Notify.alert') ) ).each( function(i,e){
 
 		var speed = 3000;
 
