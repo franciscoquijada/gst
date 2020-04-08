@@ -52,14 +52,12 @@ class UsersController extends Controller
     {
         $request->merge([ 'rut' => _format_rut( $request->rut ) ]);
 
-        $validar = \Validator::make(
-            $request->all(),
-            [
+        $request->validate([
                 'department_id' => 'required',
                 'rol_id'        => 'required',
                 'rut'           => [ 'required', 'unique:users,rut,NULL,id,deleted_at,NULL', 'string', new ValidarRut ],
-                'name'          => 'required|string',
-                'password'      => 'confirmed',
+                'name'          => ['required', 'string', 'max:255'],
+                'password'      => ['required', 'string', 'min:8', 'confirmed'],
                 'email'         => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
@@ -67,12 +65,6 @@ class UsersController extends Controller
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
-
-        if ( count( $validar->errors() ) > 0)
-            return response()->json([
-                'status' => 400, 
-                'errors' => $validar->errors()
-            ]);
         
         $newUser = User::create( $request->all() )->assignRole( $request->rol_id );
 
@@ -84,7 +76,7 @@ class UsersController extends Controller
             'attr'          => $newUser
         ]);
 
-        \PNotify::success('Usuario registrado con éxito');
+        \Notify::success('Usuario registrado con éxito');
         return Response()->json($newUser);
     }
 
@@ -98,6 +90,20 @@ class UsersController extends Controller
     {
         return User::with('department')->findOrFail($id);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        return view( 'users.profile', [ 
+            'user'    => User::findOrFail( auth()->id() )
+        ]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -124,14 +130,11 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $request->merge([ 'rut' => _format_rut( $request->rut ) ]);
-
-        $validar = \Validator::make(
-            $request->all(),
-            [
+        $request->validate([
                 'department_id' => 'required',
                 'rol_id'        => 'required',
                 'rut'           => [ 'unique:users,rut,' . $id . ',id,deleted_at,NULL', 'string', new ValidarRut ],
-                'name'          => 'required|string',
+                'name'          => ['required', 'string', 'max:255'],
                 'password'      => 'confirmed',
                 'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
             ],[
@@ -140,13 +143,6 @@ class UsersController extends Controller
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
-
-        //Si existen errores            
-        if ( count( $validar->errors() ) > 0 )
-            return response()->json([
-                'status' => 400,
-                'errors' => $validar->errors()
-            ]);
         
         $user = User::findOrFail($id);
         $user->update( $request->all() );
@@ -165,8 +161,50 @@ class UsersController extends Controller
             'attr'          => $user
         ]);
 
-        \PNotify::success('Usuario actualizado con éxito');
+        \Notify::success('Usuario actualizado con éxito');
         return response()->json($user);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_profile(Request $request )
+    {
+        $id = auth()->id();
+        $request
+            ->merge([ 'rut' => _format_rut( $request->rut ) ])
+            ->validate([
+                'rut'           => [ 'unique:users,rut,' . $id . ',id,deleted_at,NULL', 'string', new ValidarRut ],
+                'name'          => ['required', 'string', 'max:255'],
+                'password'      => 'sometimes|confirmed|string|min:8',
+                'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
+            ],[
+                'required'      => 'Campo requerido', 
+                'rut.unique'    => 'Ya este rut esta registrado', 
+                'email.unique'  => 'Ya este email esta en uso'
+            ]
+        );
+        
+        $user = User::findOrFail($id);
+        $user->update( $request->all() );
+
+        log::create([
+            'user_id'       => $id ?? null,
+            'event'         => 'actualizó (ID:' . $id . ')',
+            'description'   => 'App\User',
+            'ip'            => $request->ip(),
+            'attr'          => $user
+        ]);
+
+        \Notify::success('Perfil actualizado con éxito');
+        return Response()->json([
+            'newUser'  => $user, 
+            'redirect' => route('home')
+        ]);
     }
 
     /**
@@ -191,14 +229,14 @@ class UsersController extends Controller
                 'attr'          => $user
             ]);
 
-            \PNotify::success('Usuario eliminado con éxito!');
+            \Notify::success('Usuario eliminado con éxito!');
             return response()->json($user);
         }
-
+        
         return response()->json([
-            'status' => 400,
-            'errors' => 'Usuario invalido'
-        ]);
+                'message' => 'Datos invalidos', 
+                'errors'  => ['id' => 'Usuario invalido'] 
+            ], 422);
     }
 
     public function export()

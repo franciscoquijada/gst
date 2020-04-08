@@ -7,7 +7,7 @@ Route::get('/notification', 'HomeController@markAsRead')
   ->middleware(['only_ajax']);
 
 /* Rutas de Autenticacion */
-Auth::routes();
+Auth::routes(['register' => true]);
 
 /* Socialite */
 Route::get('auth/{driver}', 'Auth\LoginController@redirectToProvider')->name('social_auth');
@@ -48,6 +48,11 @@ Route::group(['middleware' => ['auth']], function ()
   Route::get('/users/export', 'UsersController@export')
     ->name('users.export')
     ->middleware(['permission:usuarios:listado']);
+
+  Route::get('profile','UsersController@profile')
+    ->name('profile.show');
+  Route::post('profile','UsersController@update_profile')
+    ->name('profile.update');
 
   /* Roles */
   Route::get('roles','RolesController@index')

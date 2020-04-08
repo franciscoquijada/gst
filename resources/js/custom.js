@@ -133,32 +133,32 @@ function sendForm( e ){
     url: $form.attr('action'), //url
     data: $form.serialize(),
     success: function (data) {
+      $form.parents('.modal').modal('hide');
+      if ( typeof data.redirect !== 'undefined' ) {
+        location.href =  data.redirect;
+      }else{
+        location.reload();
+      }
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
 
-      if ( data.status === 400 ) {
+      if( xhr.status == 422 ){
 
-        $.each(data.errors, function( index, elem ){
+       $.each(xhr.responseJSON.errors, function( index, elem ){
 
-          let $index = index.split('.')[0];
-          $form.find('#' + $index ).addClass('invalid');
-          $form.find('#' + $index + '-error')
-            .removeAttr('style')
-                      .html( elem );
-                });
-                setTimeout(function () {
-                  $form.find(".error").fadeOut(1500);
-                  $form.find('.invalid').removeClass('invalid')
-                }, 6000);
-            } else {
-
-              $form.find('.modal').modal('hide');
-              if ( typeof data.redirect !== 'undefined' ) {
-                location.href =  data.redirect;
-              }else{
-                location.reload();
-              }
-            }
-        }
-    });
+        let $index = index.split('.')[0];
+        $form.find('#' + $index ).addClass('invalid');
+        $form.find('#' + $index + '-error')
+          .removeAttr('style')
+          .html( elem );
+        });
+        setTimeout(function () {
+          $form.find(".error").fadeOut(1500);
+          $form.find('.invalid').removeClass('invalid')
+        }, 6000);
+      }
+    }
+  });
 }
 
 function viewInfo(e) {
@@ -182,7 +182,6 @@ function viewInfo(e) {
             elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
           }
           catch(error) {
-            //console.error(error);
             elem.text( ' N/D ' );
           }
         });
@@ -256,15 +255,12 @@ function delItem(e) {
               '_token': $('input[name=_token]').val(),
             },
             success: function (data) {
-
-              if (data.status != 500) {
                 Swal.fire(
                   'Borrado!',
                   'Se ha borrado con éxito.',
                   'success'
                 )
                 location.reload();
-              }
             }
         });
       }
@@ -284,27 +280,8 @@ $( window ).on( "load", function() {
 
 $(document).ready(function() {
 
-  new PNotify({
-    title: 'Notificación',
-    text: 'mensaje',
-    type: 'success',
-    styling: 'bootstrap4',
-    icons: 'fontawesome5'
-  });
-
   input_optional();
   Inputmask().mask(document.querySelectorAll("input"));
-    
-  /*$('.datepicker').datetimepicker({
-          format: 'DD/MM/YYYY',
-      });*/
-
-  /*$('.table.table-striped').DataTable({
-      "language": {
-          url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'
-      },
-      "order": [[ 0, "desc" ]]
-  });*/
 
   let newOption = new Option( '- Seleccione -', '', true, true);
   
@@ -351,7 +328,7 @@ $(document).ready(function() {
       SelectAll ),
     });
   });
-
+  
   if (typeof NProgress != 'undefined') {
     NProgress.done();
 

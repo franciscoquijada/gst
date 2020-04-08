@@ -37,14 +37,36 @@
 	            elem.text( eval('data.' + elem.data('field') ) || ' N/D ' );
 	          });
 
-	          let permissions = new Array();
+	          let permissions = {};
 
 	          $( data.permissions ).each( function( i, e ){
-	          	//ToDo: Refactorizar
-	            permissions.push( '<li class="col-md-6">' + e.name + '</li>');
+	          	let nm = e.name.split(':');
+
+	          	if( typeof nm[2] == 'undefined' ){
+	          		if( typeof permissions[ nm[0] ] == 'undefined' ){
+		          		permissions[ nm[0] ] = '<li>' +  nm[1] + '</li>';
+		          	} else {
+		          		permissions[ nm[0] ] += '<li>' +  nm[1] + '</li>';
+		          	}
+	          	} else {
+	          		if( typeof permissions[ nm[0] ] == 'undefined' ){
+		          		permissions[ nm[0] ] = '<li>' +  nm[1] + ' - ' + nm[2] + '</li>';
+		          	} else {
+		          		permissions[ nm[0] ] += '<li>' +  nm[1] + ' - ' + nm[2] + '</li>';
+		          	}
+	          	}
+
+	          	
 	          });
 
-	          $('#permission').html( permissions.join('') );
+	          let html = '';
+
+	          $.each(permissions, function( i, e ){
+	          	html += '<div class="col-md-6"><span><b>' + i;
+	          	html += '</b></span><ul>' + e + '</ul></div>';
+	          });
+
+	          $('#permission').html( html );
 	      }
 	  });
 	}

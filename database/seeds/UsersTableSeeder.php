@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
     {
 
       DB::table('departments')->insert([
-        'name'        => 'IT',
+        'name'        => 'Default',
         'created_at'  => now()
       ]);
 

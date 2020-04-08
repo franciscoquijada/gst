@@ -46,7 +46,6 @@ class SettingsController extends Controller
         {
 
             if(is_array( $setting->field['validate']  ) )
-            {
                 foreach ( $setting->field['validate'] as $value )
                 {
                     $patron = "/^new /";
@@ -56,25 +55,16 @@ class SettingsController extends Controller
                         $validate[] = new $object();
                     }
                     else
-                    {
                         $validate[] = $value;
-                    }
+                    
                 }
-            }
+                
             else
-            {
                 $validate = $setting->field['validate'];
-            }
+            
         }
 
-        $data = Validator::make( $request->all(), [ 'value' => $validate ?? 'required'] );
-
-        //Si existen errores retornamos cada uno de los errores
-        if ( count( $data->errors() ) > 0)
-            return response()->json([
-                'status' => 500, 
-                'error'  => $data->errors()
-            ]);
+        $data = $request->validate([ 'value' => $validate ?? 'required']);
 
         $setting->value = strtolower( $request->value );
         $setting->save();

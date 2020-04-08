@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class PNotifyServiceProvider extends ServiceProvider
+class NotifyServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -13,9 +13,9 @@ class PNotifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('pnotify', function()
+        $this->app->bind('notify', function()
         {
-            return $this->app->make('App\Library\Services\PNotifier');
+            return $this->app->make('App\Library\Services\Notifier');
         });
     }
 
@@ -26,6 +26,6 @@ class PNotifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom( base_path('Resources/views/services'), 'PNotify');
+        $this->loadViewsFrom( base_path('Resources/views/services'), 'Notify');
     }
 }
