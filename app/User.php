@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Notifications\ResetPassword;
+
 use App\Traits\SaveLower;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -30,10 +32,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'rut', 
-        'department_id', 
-        'phone', 
+        'company_id', 
         'name', 
+        'rut', 
         'email', 
         'password', 
         'attr',
@@ -57,57 +58,41 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts    = [
-        'attr'              => 'json',
+        'attr'              => 'array',
         'email_verified_at' => 'datetime',
         'last_login_at'     => 'datetime',
     ];
 
-    //protected $appends  = ['is_boss'];
-
-    public function department()
-    {
-        return $this->belongsTo( Department::class );
-    }
-
-    public function logs()
-    {
-        return $this->hasMany( Log::class );
-    }
-
-    /**
-     * Encode an array to a JSON string
-     * 
-     * @param $value
-     */
-    public function setAttrAttribute( $value )
-    {
-        $this->attributes['attr'] = json_encode( $value );
-    }
-
     public function setPasswordAttribute($value)
     {
-
         if( $value != "" )
         {
             $this->attributes['password'] = bcrypt( $value );
         }
     }
 
-    public function setRutAttribute($value)
+    public function group()
     {
-        $this->attributes['rut'] = _format_rut( $value );
+        return $this->belongsTo( Group::class );
     }
 
-    public function setPhoneAttribute($value)
+    public function roles()
     {
-        if( $value != "" )
-        {
-            $this->attributes['phone'] = preg_replace( '/[^0-9]/', '', $value );
-        }
+        return $this->morphToMany(Role::class, 'model', 'model_has_roles');
     }
 
-    public function routeNotificationForSlack($notification)
+    public function logs()
     {
-        return env('SLACK_WEBHOOK_URL', '');
+        return $this->morphMany( Log::class, 'loggable');
+    }
+
+    public function identifications()
+    {
+        return $this->morphMany( Identification::class, 'identifiable');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+       $this->notify(new ResetPassword($token));
     }
 }

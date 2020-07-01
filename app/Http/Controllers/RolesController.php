@@ -26,7 +26,7 @@ class RolesController extends Controller
     public function index()
     {
          if( request()->ajax() )
-            return \DataTables::of( Role::withCount('users')->latest()->get() )
+            return \DataTables::of( Role::withCount('users')->latest() )
             ->addColumn( 'action', 'roles.partials.buttons' )
             ->toJson();
             
@@ -76,7 +76,7 @@ class RolesController extends Controller
 
         \Notify::success('Rol creado con éxito');
 
-        return Response()->json($newRole);
+        return Response()->json(true);
     }
 
     /**

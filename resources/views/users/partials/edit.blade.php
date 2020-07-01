@@ -2,7 +2,6 @@
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       {!! Form::open(['id' => 'form_edit', 'route' => 'users.index','method'=>'PUT']) !!}
-        @csrf
         <div class="modal-header text-center bg-primary">
           <h4 class="modal-title" id="myModalLabel">
             Actualizar usuario:  <span data-field="name"></span>
@@ -14,9 +13,9 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6 col-12 form-group">
-              <label class="form-group">Departamento</label>
-              {{ Form::select('department_id', $deptos->sort(), old('department_id'), ['class' => 'form-control select', 'data-field' => 'department_id'] ) }}
-              <span id="department_id-error" style="display: none;" class="label label-danger ml-1 error"></span>
+              <label class="form-group">Grupo</label>
+              {{ Form::select('group_id', $groups->sort(), old('group_id'), ['class' => 'form-control select', 'data-field' => 'group_id'] ) }}
+              <span id="group_id-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
 
             <div class="col-md-6 col-12 form-group {{ $errors->has('rol_id') ? 'has-error' : '' }}">
@@ -49,19 +48,6 @@
               <label class="form-group">Confirmar Contraseña</label>
               {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
               <span id="password_confirmation-error" style="display: none;" class="label label-danger ml-1 error"></span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 col-12 form-group" {{ $errors->has('phone') ? 'has-error' : '' }}>
-              <label class="form-group">Telefono</label>
-              <input type="text" name="phone" value="" data-field="phone" class="form-control numeric" id="phone" data-inputmask="'mask':['9 9999 9999','+(99) 9 9999 9999']">
-              <span id="phone-error" style="display: none;" class="label label-danger ml-1 error"></span>     
-            </div>
-
-            <div class="col-md-6 col-12 form-group {{ $errors->has('rut') ? 'has-error' : '' }}">
-              <label class="form-group">Rut</label>
-              <input type="text" name="rut" value="" autocomplete="off" data-inputmask="'mask':['9.999.999-9|k','99.999.999-9|k']" data-field="rut" class="form-control" id="rut" placeholder="RUT">
-              <span id="rut-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
           </div>
         </div>

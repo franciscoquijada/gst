@@ -1,6 +1,10 @@
 @extends('layouts.base')
 
 @section('page')
+    <nav class="navbar">
+        <img class="logo d-block" src="{{ _setting( 'company_logo', '' ) }}">
+    </nav>
+
     <div class="container">
 
         <!-- Outer Row -->
@@ -70,15 +74,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Core JavaScript-->
-    <script src="{{ asset('js/app.js') }}"></script>
-@endsection
-
-@section('styles')
-<style type="text/css">
-    #app{
-        background-color: {{ _setting('color_primary', '#36B9CC') }};
-    }
-</style>
 @endsection

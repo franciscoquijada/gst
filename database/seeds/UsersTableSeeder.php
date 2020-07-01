@@ -1,34 +1,28 @@
 <?php
 
+use App\User;
+use App\Group;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class UsersTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
+  /**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
 
-      DB::table('departments')->insert([
-        'name'        => 'Default',
-        'created_at'  => now()
-      ]);
+    Group::create(['name' => 'Default']);
 
-      DB::table('users')->insert([
-          'rut'               => '00000000-0',
-          'department_id'     =>  App\Department::first()->id,
-          'name'              => 'administrador',
-          'phone'             => '00000000000',
-          'email'             => 'admin@admin.cl',
-          'email_verified_at' => now(),
-          'attr'              => '',
-          'password'          => Hash::make('admin'),
-          'remember_token'    => Str::random(10),
-          'created_at'        => now()
-      ]);
-    }
+    User::create([
+        'group_id'          =>  Group::first()->id,
+        'name'              => 'administrador',
+        'email'             => 'admin@admin.cl',
+        'password'          => 'admin',
+        'remember_token'    => Str::random(10)
+    ])->assignRole(['administrador']);
+  }
 }

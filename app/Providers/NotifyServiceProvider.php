@@ -26,6 +26,6 @@ class NotifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom( base_path('Resources/views/services'), 'Notify');
+        $this->loadViewsFrom( base_path('resources/views/components'), 'Notify');
     }
 }

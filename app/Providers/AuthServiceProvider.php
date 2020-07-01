@@ -28,7 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         
         $gate->before( function ($user, $ability)
         {
-            if ( $user->hasRole('super-admin') )
+            if ( $user->hasRole('administrador') )
             {
                 return true;
             }

@@ -13,94 +13,67 @@ class SettingsTableSeeder extends Seeder
     {
         $settings = [
             [
-                'key'           => 'company_rut',
-                'name'          => 'rut de la empresa',
-                'value'         => '',
-                'description'   => 'ej. 12.345.678-9',
-                'field'         => [ 
-                    'type'      => 'text',
-                    'validate'  => [ 'unique:settings,value,NULL,id,deleted_at,NULL', 'string', 'new ValidarRut' ]
-                ]
-            ],[
                 'key'           => 'company_logo',
                 'name'          => 'logo de la empresa',
-                'value'         => '',
+                'value'         => '#',
                 'description'   => '',
                 'field'         => [ 
-                    'type'      => 'image',
-                    'validate'  => [ 'unique:settings,value,NULL,id,deleted_at,NULL', 'string', 'new ValidarRut' ]
+                    'type'      => 'text',
+                    'validate'  => [ 'string' ]
                 ]
             ],[
                 'key'           => 'company_logo_menu',
                 'name'          => 'logo de la empresa (Menu)',
-                'value'         => '',
+                'value'         => '#',
                 'description'   => '',
                 'field'         => [ 
-                    'type'      => 'image',
-                    'validate'  => [ 'unique:settings,value,NULL,id,deleted_at,NULL', 'string', 'new ValidarRut' ]
+                    'type'      => 'text',
+                    'validate'  => [ 'string' ]
                 ]
             ],[
                 'key'           => 'company_favicon',
                 'name'          => 'icono de la empresa',
-                'value'         => '',
+                'value'         => '#',
                 'description'   => '',
                 'field'         => [ 
-                    'type'      => 'image',
-                    'validate'  => [ 'unique:settings,value,NULL,id,deleted_at,NULL', 'string', 'new ValidarRut' ]
-                ]
-            ],[
-                'key'           => 'company_name',
-                'name'          => 'razon social',
-                'value'         => '',
-                'description'   => 'nombre o razon social de la empresa',
-                'field'         => [ 
-                    'type' => 'text',
-                    'validate'  => 'required|string' 
-                ]
-            ],[
-                'key'           => 'company_phone',
-                'name'          => 'telefono',
-                'value'         => '',
-                'description'   => 'telefono de la empresa',
-                'field'         => [ 
                     'type'      => 'text',
-                    'validate'  => 'required|number'
-                ]
-            ],[
-                'key'           => 'company_email',
-                'name'          => 'email',
-                'value'         => '',
-                'description'   => 'email de contacto',
-                'field'         => [ 
-                    'type'      => 'email',
-                    'validate'  => 'required|email'
-                ]
-            ],[
-                'key'           => 'bg_login',
-                'name'          => 'Imagen Login',
-                'value'         => '',
-                'description'   => 'Imagen del login',
-                'field'         => [ 
-                    'type'      => 'text',
-                    'validate'  => 'string'
+                    'validate'  => [ 'string' ]
                 ]
             ],[
                 'key'           => 'color_primary',
-                'name'          => 'Color Principal',
+                'name'          => 'color principal',
                 'value'         => '#36B9CC',
-                'description'   => 'Color de fondo',
+                'description'   => 'Color principal del tema',
                 'field'         => [ 
-                    'type'      => 'text',
+                    'type'      => 'color',
                     'validate'  => 'string'
                 ]
             ],[
-                'key'           => 'company_giro',
-                'name'          => 'giro',
-                'value'         => '',
-                'description'   => 'giro de la empresa',
+                'key'           => 'group_default',
+                'name'          => 'Grupo por defecto',
+                'value'         => '#36B9CC',
+                'description'   => 'Grupo por defecto (autoregistro)',
                 'field'         => [ 
-                    'type'      => 'text',
-                    'validate'  => 'required|string'
+                    'type'      => 'number',
+                    'validate'  => 'numeric'
+                ]
+            ],[
+                'key'           => 'role_default',
+                'name'          => 'Rol por defecto',
+                'value'         => '#36B9CC',
+                'description'   => 'Rol por defecto (autoregistro)',
+                'field'         => [ 
+                    'type'      => 'number',
+                    'validate'  => 'numeric'
+                ]
+            ],[
+                'key'           => 'auto_register',
+                'name'          => 'Auto-Registro',
+                'value'         => '#36B9CC',
+                'description'   => 'Usuarios puede autoregistrarse',
+                'field'         => [ 
+                    'type'      => 'bolean',
+                    'validate'  => 'bolean'
                 ]
             ]
         ];

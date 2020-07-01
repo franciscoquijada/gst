@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\User;
 
 class PermissionTableSeeder extends Seeder
 {
@@ -20,6 +19,7 @@ class PermissionTableSeeder extends Seeder
         Permission::create(['name' => 'usuarios:crear']);
         Permission::create(['name' => 'usuarios:actualizar']);
         Permission::create(['name' => 'usuarios:eliminar']);
+        Permission::create(['name' => 'usuarios:token']);
 
         // Roles
         Permission::create(['name' => 'roles:listado']);
@@ -28,11 +28,20 @@ class PermissionTableSeeder extends Seeder
         Permission::create(['name' => 'roles:actualizar']);
         Permission::create(['name' => 'roles:eliminar']);
 
-        // Departments
-        Permission::create(['name' => 'departamentos:listado']);
-        Permission::create(['name' => 'departamentos:crear']);
-        Permission::create(['name' => 'departamentos:actualizar']);
-        Permission::create(['name' => 'departamentos:eliminar']);
+        // Grupos
+        Permission::create(['name' => 'grupos:listado']);
+        Permission::create(['name' => 'grupos:crear']);
+        Permission::create(['name' => 'grupos:actualizar']);
+        Permission::create(['name' => 'grupos:eliminar']);
+
+        // Tipos de identificadores
+        Permission::create(['name' => 'tipos identificadores:listado']);
+        Permission::create(['name' => 'tipos identificadores:crear']);
+        Permission::create(['name' => 'tipos identificadores:actualizar']);
+        Permission::create(['name' => 'tipos identificadores:eliminar']);
+
+        // Notificaciones
+        Permission::create(['name' => 'notificaciones:sample 1']);
 
         // Logs
         Permission::create(['name' => 'registros:listado']);
@@ -40,10 +49,8 @@ class PermissionTableSeeder extends Seeder
         // Settings
         Permission::create(['name' => 'configuraciones:listado']);  
 
-        // Create Super-Admin
-        $role = Role::create(['name' => 'super-admin']);
+        // Roles
+        $role = Role::create(['name' => 'administrador']);
         $role->givePermissionTo( Permission::all() );
-
-        User::find(1)->assignRole(['super-admin']);
     }
 }

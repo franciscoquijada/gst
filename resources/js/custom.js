@@ -1,3 +1,8 @@
+/*********** NProgress Init ************/
+if (typeof NProgress != 'undefined') {
+  NProgress.start();
+}
+
 /*********** Helpers ************/
 
 window.resetForm = function( $form ){
@@ -9,7 +14,7 @@ window.resetForm = function( $form ){
 window.pressEnter = function(e){
   if( event.keyCode == 13 ) {
     e.preventDefault();
-    $(':focus').parents('.modal').find('.send-form').trigger('click');
+    $(':focus').closest('.modal').find('.send-form').trigger('click');
     return false;
   }
 }
@@ -40,26 +45,6 @@ window.lastAjaxResponse = {
   }
 };
 
-console.log('init_helpers');
-
-
-/********** Cruds Events *************/
-$('.mark_as_read').on('click', markAsRead );
-
-$('.send-form').on('click', sendForm );
-$('button.link').on('click', goTo );
-
-/**** Actions Table ******/
-$('.table').on('click', '.actions .btn_view', viewInfo );
-$('.table').on('click', '.actions .btn_edit', editItem );
-$('.table').on('click', '.actions .btn_del',  delItem );
-
-/**** Formats Inputs ******/
-$('input.numeric').on('keypress', onlyNumbers );
-$('input.alpha').on('keypress',   onlyAlphanumeric );
-$('input.letters').on('keypress', onlyLetters );
-
-$(window).on('keydown', pressEnter);
 
 /*********** Event Functions ************/
 
@@ -86,15 +71,14 @@ function onlyNumbers() {
   $(this).val( $(this).val().replace(/[^0-9]/g, '') );
 }
 
-/* Pendiente 
+ /*Pendiente 
 function onlyRUT() {
   $(this).val($(this).val().replace(/[^0-9k-]/g, ''));
 }
-
 function onlyDates() {
     var date = $(this).val().replace(/[^0-9]/g, ''),
-        d = date.substring(0,2),
-        m = date.substring(2,4) != '' ? '/' + date.substring(2,4) : '',
+        d = Math.min( parseInt( date.substring(0,2)), 31),
+        m = date.substring(2,4) != '' ? '/' + Math.min( parseInt( date.substring(2,4) ), 12) : '',
         y = date.substring(4,8) != '' ? '/' + date.substring(4,8) : '';
   $(this).val( d + m + y );
 }*/
@@ -119,21 +103,30 @@ function markAsRead(e) {
       if ( data == 'success' ) {
         $this.find('.badge-counter').text(0);
       }
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      if( [419].includes( xhr.status ) ){
+        location.reload();
+      }
     }
   });
 }
 
 
-function sendForm( e ){
+window.sendForm = function(e){
   e.preventDefault();
-  let $form = $(this).parents('form');
+  let $form = $(this).closest('form'),
+      $formData = new FormData($form[0]);
 
   $.ajax({
     type: $form.attr('method'), //metodo
     url: $form.attr('action'), //url
-    data: $form.serialize(),
+    cache       : false,
+    contentType : false,
+    processData : false,
+    data: $formData,
     success: function (data) {
-      $form.parents('.modal').modal('hide');
+      $form.closest('.modal').modal('hide');
       if ( typeof data.redirect !== 'undefined' ) {
         location.href =  data.redirect;
       }else{
@@ -146,7 +139,10 @@ function sendForm( e ){
 
        $.each(xhr.responseJSON.errors, function( index, elem ){
 
-        let $index = index.split('.')[0];
+        let $elem  = index.split('.'), 
+            $index = ( typeof $elem[1] != 'undefined' ) ? $elem[0] + '_' + $elem[1] : $elem[0];
+            $index = ( typeof $elem[2] != 'undefined' ) ? $index + '_' + $elem[2] : $index;
+
         $form.find('#' + $index ).addClass('invalid');
         $form.find('#' + $index + '-error')
           .removeAttr('style')
@@ -156,17 +152,19 @@ function sendForm( e ){
           $form.find(".error").fadeOut(1500);
           $form.find('.invalid').removeClass('invalid')
         }, 6000);
+      }else if( [419].includes( xhr.status ) ){
+        location.reload();
       }
     }
   });
 }
 
-function viewInfo(e) {
+window.viewInfo = function(e) {
   e.preventDefault();
   let id = $(this).data('item');
   $.ajax({
-    type: 'GET', //metoodo
-    url: window.location + '/' + id, //id del delete
+    type: 'GET',
+    url: location.origin + location.pathname + '/' + id,
     data: {
       '_token': $('input[name=_token]').val(),
     },
@@ -189,13 +187,13 @@ function viewInfo(e) {
   });
 }
 
-function editItem(e) {
+window.editItem = function(e) {
   e.preventDefault();
   let id = $(this).data('item');
   resetForm( $('.modal.edit form') );
   $.ajax({
     type: 'GET', //metoodo
-    url: window.location + '/' + id + '/edit',
+    url: location.origin + location.pathname + '/' + id + '/edit',
       data: {
           '_token': $('input[name=_token]').val(),
       },
@@ -205,8 +203,13 @@ function editItem(e) {
         $('.modal.edit')
             .modal('show')
             .find('[data-field]').each( function( i, e ){
-              let elem = $(e),
-              options = eval('data.fields.' + elem.data('field') ) || '';
+              let elem = $(e);
+              try{
+                options = eval('data.fields.' + elem.data('field') );
+              } catch (error) {
+                options = '';
+                console.log( 'error' + error );
+              }
 
             if( elem.is('input') || elem.is('textarea') ){ //Input
               elem.val( options );
@@ -218,18 +221,23 @@ function editItem(e) {
                 },[]);
               elem.val( plck ).trigger('change');
               }else{ //Simple
-                elem.val( options ).trigger('change');
+                elem.val( options ).data('default-value', options).trigger('change');
               }
             }else{ //Text
 
               elem.text( options || ' N/D ' );
             }
-        }).parents('form').attr('action', data.route );
+        }).closest('form').attr('action', data.route );
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      if( [419].includes( xhr.status ) ){
+        location.reload();
+      }
     }
   });
 }
 
-function delItem(e) {
+window.delItem = function(e) {
   e.preventDefault();
   let route = $(this).data('route');
   Swal.fire({
@@ -255,40 +263,57 @@ function delItem(e) {
               '_token': $('input[name=_token]').val(),
             },
             success: function (data) {
-                Swal.fire(
-                  'Borrado!',
-                  'Se ha borrado con éxito.',
-                  'success'
-                )
+                Swal.fire({
+                  title: 'Borrado!',
+                  text: 'Se ha borrado con éxito.',
+                  icon: 'success',
+                  customClass: {
+                    confirmButton: 'confirm-button-class btn custom',
+                  }
+                })
                 location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              if( [419].includes( xhr.status ) ){
+                location.reload();
+              }
             }
         });
       }
   });
 }
 
-console.log('init_crud_functions');
-
-
 /*********** Init Assets ************/
-
-$( window ).on( "load", function() {
-  if (typeof NProgress != 'undefined') {
-    NProgress.start();
-  }
-});
-
 $(document).ready(function() {
+
+  /********** Cruds Events *************/
+  $('.mark_as_read').on('click', markAsRead );
+
+  $('.send-form').on('click', sendForm );
+  $('button.link').on('click', goTo );
+
+  /**** Actions Table ******/
+  $('.table').on('click', '.actions .btn_view', window.viewInfo );
+  $('.table').on('click', '.actions .btn_edit', window.editItem );
+  $('.table').on('click', '.actions .btn_del',  window.delItem );
+
+  /**** Formats Inputs ******/
+  $('input.numeric').on('keypress', onlyNumbers );
+  $('input.alpha').on('keypress',   onlyAlphanumeric );
+  $('input.letters').on('keypress', onlyLetters );
+  //$('input.dates').on('keypress', onlyDates );
+
+  $(window).on('keydown', pressEnter);
 
   input_optional();
   Inputmask().mask(document.querySelectorAll("input"));
 
-  let newOption = new Option( '- Seleccione -', '', true, true);
+  new ClipboardJS('.btn-copy');
   
-      $('.select:not([multiple])').prepend(newOption).select2({
-          width: '100%',
-          language: "es"
-      });
+  $('.select:not([multiple])').select2({
+      width: '100%',
+      language: "es"
+  });
 
   $.fn.select2.amd.require(
     [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
@@ -331,11 +356,7 @@ $(document).ready(function() {
   
   if (typeof NProgress != 'undefined') {
     NProgress.done();
-
     $(document).ajaxStart( () => NProgress.start() );
     $(document).ajaxStop( () => NProgress.done() );
   }
-
 });
-
-console.log('init_assets');

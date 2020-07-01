@@ -17,7 +17,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script type="text/javascript">
 
 	function viewPermission(e){
@@ -122,5 +122,5 @@
 			});
 	});
 </script>
-@endsection
+@endpush
 

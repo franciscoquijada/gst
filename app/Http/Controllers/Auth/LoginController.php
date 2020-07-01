@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use App\UserSocialAccount;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -28,13 +26,6 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
      * Create a new controller instance.
      *
      * @return void
@@ -48,7 +39,7 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-      _log( Auth::user()->id, 'Inicio de sesión', 'User\Login', $request );
+      _log( Auth::user(), 'Inicio de sesión', 'User\Login', $request );
       $user->update([
           'last_login_at' => now(),
           'last_login_ip' => $request->getClientIp()
@@ -57,48 +48,19 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-      _log(Auth::user()->id, 'Cierre de sesión', 'User\Logout', $request );
+      _log( Auth::user(), 'Cierre de sesión', 'User\Logout', $request );
       auth()->logout();
       session()->flush();
       return redirect( '/login' );
     }
 
-    public function redirectToProvider ($driver)
+    /**
+     * Where to redirect users after resetting their password.
+     *
+     * @var string
+     */
+    public function redirectTo()
     {
-      return Socialite::driver($driver)->redirect();
-    }
-
-    public function handleProviderCallback (Request $request, $driver)
-    {
-      if( ! request()->has('code') || request()->has('denied'))
-      {
-        \Notify::danger( __("Inicio de sesión cancelado") );
-        return redirect( '/login' );
-      }
-
-      $socialUser = Socialite::driver($driver)->user();
-      $user       = null;
-      $email      = $socialUser->email;
-      $check      = User::whereEmail($email)->first();
-
-      if( $check )
-      {
-        $user   = $check;
-        $filtro = UserSocialAccount::where( 'user_id', $user->id )->count();
-        
-        if ( $filtro <= 0 )
-        {
-          UserSocialAccount::create([
-            "user_id"       => $user->id,
-            "provider"      => $driver,
-            "provider_uid"  => $socialUser->id
-          ]);
-        }
-      }
-      else
-        return redirect( '/login' );
-
-      auth()->loginUsingId( $user->id );
-      return redirect( route('home') );
+        return route('home');
     }
 }

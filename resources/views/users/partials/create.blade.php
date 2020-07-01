@@ -1,8 +1,7 @@
 <div class="modal fade create" tabindex="-1" role="dialog" aria-hidden="true" id="new_user">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      {!! Form::open(['id' => 'form_create', 'route' => 'users.store','method'=>'POST']) !!}
-        @csrf
+      {!! Form::open(['id' => 'form_create', 'route' => 'users.store', 'method'=>'POST']) !!}
         <div class="modal-header text-center bg-primary">
           <h4 class="modal-title">Registro de usuarios</h4>
           <button type="button" class="close" data-dismiss="modal">
@@ -12,10 +11,10 @@
         <div class="modal-body">
 
           <div class="row">
-            <div class="col-md-6 col-12 form-group {{ $errors->has('department_id') ? 'has-error' : '' }}">
-              <label class="form-group">Departamento</label>
-              {{ Form::select('department_id', $deptos->sort(), old('department_id'), ['class' => 'form-control select'] ) }}
-              <span id="department_id-error" style="display: none;" class="label label-danger ml-1 error"></span>
+            <div class="col-md-6 col-12 form-group {{ $errors->has('group_id') ? 'has-error' : '' }}">
+              <label class="form-group">Grupo</label>
+              {{ Form::select('group_id', $groups->sort(), old('group_id'), ['class' => 'form-control select'] ) }}
+              <span id="group_id-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
             <div class="col-md-6 col-12 form-group {{ $errors->has('rol_id') ? 'has-error' : '' }}">
               <label class="form-group">Rol</label>
@@ -45,18 +44,6 @@
               <label class="form-group">Confirmar Contraseña</label>
               {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
               <span id="password_confirmation-error" style="display: none;" class="label label-danger ml-1 error"></span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 col-12 form-group" {{ $errors->has('phone') ? 'has-error' : '' }}>
-              <label class="form-group">Teléfono</label>
-              <input type="text" name="phone" value="{{ old('phone') }}" class="form-control numeric" id="phone"  placeholder="Teléfono" data-inputmask="'mask':['9 9999 9999','+(99) 9 9999 9999']">
-              <span id="phone-error" style="display: none;" class="label label-danger ml-1 error"></span>     
-            </div>
-            <div class="col-md-6 col-12 form-group {{ $errors->has('rut') ? 'has-error' : '' }}">
-              <label class="form-group">Rut</label>
-              <input type="text" name="rut" value="{{ old('rut') }}" autocomplete="off" data-inputmask="'mask':['9.999.999-9|k','99.999.999-9|k']" class="form-control" id="rut" placeholder="RUT">
-              <span id="rut-error" style="display: none;" class="label label-danger ml-1 error"></span>
             </div>
           </div>
         </div>

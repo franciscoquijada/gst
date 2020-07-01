@@ -20,9 +20,16 @@ class LogsController extends Controller
     public function index()
     {
         if( request()->ajax() )
-            return \DataTables::of( Log::latest()->get() )
-                ->rawColumns([ 'id', 'user_name', 'event', 'description', 'ip', 'created_at'])
-                ->make(true);
+            return \DataTables::of( Log::latest() )
+                ->editColumn('created_at', function($col) {
+                    return [
+                        'display' => ( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ? 
+                            with( new \Carbon\Carbon($col->created_at) )->format('d/m/Y H:i:s') : '',
+                        'timestamp' =>( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ? 
+                            with( new \Carbon\Carbon($col->created_at) )->timestamp : ''
+                        ];
+                    })
+                ->toJson();
         
         return view( 'logs.index');
     }

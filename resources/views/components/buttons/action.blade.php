@@ -1,0 +1,1 @@
+<button class="btn {{ $class ?? '' }}" title="{{ $title ?? '' }}" @isset($item) data-item="{{ $item }}" @endisset @isset($route) data-route="{{ $route }}" @endisset><i class="{{ $icon ?? '' }}"></i></button>

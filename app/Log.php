@@ -4,34 +4,21 @@ namespace App;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
-//use Jenssegers\Mongodb\Eloquent\Model;
 
 class Log extends Model
 {
     protected $table     = 'logs';
-    //protected $collection = 'logs';
-    //protected $connection = 'mongodb';
-    protected $fillable  = [ 'user_id', 'event', 'description', 'ip', 'attr'];
+    protected $fillable  = [ 'loggable_id', 'loggable_type', 'event', 'description', 'ip', 'attr'];
     protected $dates     = [ 'created_at','updated_at'];
     protected $casts     = [
         'created_at' => 'date:d-m-Y h:i A',
-        'updated_at' => 'date:d-m-Y h:i A'
+        'updated_at' => 'date:d-m-Y h:i A',
+        'attr'      => 'array'
     ];
-    protected $appends   = ['user_name'];
-    protected $with      = [ 'user' ];
+    protected $with      = [ 'loggable' ];
 
-    public function getUserNameAttribute( $value )
-	{
-        return $this->user->name ?? 'N/A';
-	}
-
-    public function user()
+    public function loggable()
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-	public function setAttrAttribute( $value )
-    {
-        $this->attributes['attr'] = json_encode( $value );
+        return $this->morphTo();
     }
 }
