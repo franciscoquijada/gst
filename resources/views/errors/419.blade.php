@@ -24,11 +24,11 @@
                             <div class="col-12">
                                 <div class="p-5 text-center">
                                     <div class="code">
-                                        403     
+                                        419     
                                     </div>
 
                                     <div class="message" style="padding: 10px;">
-                                         Su usuario no tiene permisos para acceder a esta url. contacte al administrador.                       
+                                        Esta página ha caducado.                         
                                     </div>
                                     <a href="{{ route('home') }}" class="btn btn-sm btn-info mt-5" title="Ir al home ">ir al home <i class="fa fa-home"></i></a>
                                 </div>

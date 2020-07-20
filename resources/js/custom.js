@@ -283,8 +283,16 @@ window.delItem = function(e) {
   });
 }
 
+//Blur Modal
+window.polyfilter_scriptpath = 'js/css-filters-polyfill/';
+window.blur_element = '#wrapper';
+
 /*********** Init Assets ************/
 $(document).ready(function() {
+
+  /********** Modal Blur *************/
+  $('.modal.blur').on( 'show.bs.modal', (e) => $(window.blur_element).css('polyfilter','blur(4px)') );
+  $('.modal.blur').on( 'hide.bs.modal',  (e) => $(window.blur_element).css('polyfilter','blur(0px)') );
 
   /********** Cruds Events *************/
   $('.mark_as_read').on('click', markAsRead );

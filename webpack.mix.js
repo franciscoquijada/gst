@@ -13,15 +13,18 @@ const mix = require('laravel-mix');
 
 mix.js([
     'resources/js/app.js',
-    'resources/js/custom.js',
-    'resources/vendor/jquery-easing/jquery.easing.min.js',
+    'resources/js/custom.js'
+	], 'public/js/app.js')
+  .js([
     'resources/js/sb-admin-2.min.js',
     'resources/vendor/datatables/dataTables.bootstrap4.min.js',
     'resources/vendor/datatables/jquery.dataTables.min.js',
-	], 'public/js/app.js')
-   .sass('resources/sass/app.scss', 'public/css');
+    'resources/vendor/css-filters-polyfill/contentloaded.js',
+    'resources/vendor/css-filters-polyfill/cssParser.js',
+    'resources/vendor/css-filters-polyfill/css-filters-polyfill.js',
+  ], 'public/js/vendor.js')
+  .copyDirectory('resources/vendor/css-filters-polyfill/htc', 'public/js/css-filters-polyfill/htc')
+  .sass('resources/sass/app.scss', 'public/css');
 
-if ( mix.inProduction() )
-    mix.version();
-
-   //.copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/', 'public/fonts/bootstrap');
+if( mix.inProduction() )
+  mix.version();

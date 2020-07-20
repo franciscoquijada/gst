@@ -32,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
         \Blade::include('components.buttons.link',  'link');
         \Blade::include('components.buttons.modal', 'linkModal');
         \Blade::include('components.buttons.action','buttonAction');
+        \Blade::component('components.card',        'card');
     }
 }

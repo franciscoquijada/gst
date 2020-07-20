@@ -29,7 +29,9 @@
 	@yield('page')
 	<!-- Core JavaScript-->
 	<script src="{{ asset('js/app.js') }}"></script>
+	<script src="{{ asset('js/vendor.js') }}"></script>
 	@include('Notify::alert')
 	@stack('scripts')
+	@stack('cards')
 </body>
 </html>

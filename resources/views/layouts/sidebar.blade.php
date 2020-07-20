@@ -1,4 +1,3 @@
-
 <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: {{ _setting('color_primary', '#36B9CC') }}; background-image: linear-gradient(180deg, {{ _setting('color_primary', '#36B9CC') }} 10%, #064985 100%); background-size: cover;">
 
   <!-- Sidebar - Brand -->

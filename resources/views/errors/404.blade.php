@@ -1,8 +1,13 @@
 @extends('layouts.base')
 
 @section('page')
-    <nav class="navbar">
-        <img class="logo d-block" src="{{ _setting( 'company_logo', '' ) }}">
+    <nav class="navbar" style="background-color: {{ _setting( 'color_primary', '#36B9CC' ) }}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
+            <div class="sidebar-brand-icon rotate-n-15">
+                {{ substr( _setting('company_name', 'Tk'), 0, 2 ) }}
+            </div>
+            <div class="sidebar-brand-text mx-3">{{ _setting( 'company_name', 'Toolkit' ) }}</div>
+        </a>
     </nav>
 
     <div class="container">
