@@ -48,7 +48,7 @@
       <i class="fas fa-fw fa-user"></i>
       <span>Usuarios</span>
     </a>
-    <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
+    <div id="collapseUsers" class="collapse animated--grow-in" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner ">
         @can('usuarios:listado')
           <a class="collapse-item" href="{{ route('users.index') }}">Usuarios</a>
@@ -72,7 +72,7 @@
       <i class="fas fa-fw fa-cogs"></i>
       <span>Configuracion</span>
     </a>
-    <div id="collapseSettings" class="collapse" aria-labelledby="headingSettings" data-parent="#accordionSidebar">
+    <div id="collapseSettings" class="collapse animated--grow-in" aria-labelledby="headingSettings" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner ">
         @can('configuraciones:listado')
           <a class="collapse-item" href="{{ route('settings.index') }}">Opciones</a>

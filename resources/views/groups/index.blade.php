@@ -2,17 +2,22 @@
 
 @section('title')
   <h2>Grupos</h2>
-	<a class="btn btn-success float-right" href="{{ route('groups.export')}}">Exportar <i class="far fa-file-excel"></i></a>
-	@can('companias:crear')
-	<a class="btn btn-info float-right" href="#" data-target="#new_group" data-toggle="modal">Añadir <i class="fa fa-plus"></i></a>
+  	@link([ 
+  		'class' => 'btn-success float-right', 
+  		'href' 	=> route('groups.export'), 
+  		'label' => 'Exportar', 
+  		'icon' 	=> 'far fa-file-excel' 
+  	])
+	@can('grupos:crear')
+		@linkModal([ 
+			'target' => 'new_group' 
+		])
 	@endcan
 @endsection
 
 @section('content')
 
-	<div class="table-responsive">
-	  <table id="lista" class="table table-striped"></table>
-	</div>
+	@datatable()
 
 	@include('groups.partials.create')
 	@include('groups.partials.edit')

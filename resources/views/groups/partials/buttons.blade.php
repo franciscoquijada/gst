@@ -1,8 +1,18 @@
-@can('departamentos:actualizar')
-  <button class="btn btn-warning btn_edit" title="Editar" data-item="{{ $id }}"><i class="fa fa-edit"></i></button>
+@can('grupos:actualizar')
+	@button([
+		'class' => 'btn-warning btn_edit',
+		'title' => 'Editar',
+		'item'	=> $id,
+		'icon'	=> 'fa fa-edit'
+	])
 @endcan
 @if( $id != 1 ) 
-  @can('departamentos:eliminar')
-    <button class="btn btn-danger btn_del" title="Eliminar" data-route="{{ route( 'groups.destroy', $id )}}"><i class="fa fa-trash"></i></button>
+  @can('grupos:eliminar')
+  	@button([
+		'class' => 'btn-danger btn_del',
+		'title' => 'Eliminar',
+		'route'	=> route( 'groups.destroy', $id ),
+		'icon'	=> 'fa fa-trash'
+	])
   @endcan
 @endif

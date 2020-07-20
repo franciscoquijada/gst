@@ -7,7 +7,7 @@
 
 		<!-- Nav Item - Alerts -->
 	<li class="nav-item dropdown no-arrow mx-1">
-	  <a class="nav-link dropdown-toggle mark_as_read" data-route="{{ route('ajax.mark_as_read')}}" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	  <a class="nav-link dropdown-toggle mark_as_read heartBeat animated" data-route="{{ route('ajax.mark_as_read')}}" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	    <i class="fas fa-bell fa-fw"></i>
 	    @if( $alerts = auth::user()->unreadNotifications->count() )
 	    <!-- Counter - Alerts -->
@@ -15,7 +15,7 @@
 	    @endif
 	  </a>
 	  <!-- Dropdown - Alerts -->
-	  <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+	  <div class="dropdown-list dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="alertsDropdown">
 	    <h6 class="dropdown-header">Notificaciones</h6>
 	    @foreach (auth::user()->unreadNotifications as $notification)
 	    <a class="dropdown-item d-flex align-items-center" href="#">

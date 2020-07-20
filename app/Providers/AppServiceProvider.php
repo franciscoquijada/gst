@@ -25,13 +25,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        \Blade::include('components.select',        'select');
-        \Blade::include('components.input',         'input');
-        \Blade::include('components.checkbox',      'checkbox');
+        \Blade::include('components.form.select',   'select');
+        \Blade::include('components.form.input',    'input');
+        \Blade::include('components.form.checkbox', 'checkbox');
         \Blade::include('components.datatable',     'datatable');
         \Blade::include('components.buttons.link',  'link');
         \Blade::include('components.buttons.modal', 'linkModal');
-        \Blade::include('components.buttons.action','buttonAction');
+        \Blade::include('components.buttons.action','button');
         \Blade::component('components.card',        'card');
     }
 }

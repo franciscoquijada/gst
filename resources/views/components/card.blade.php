@@ -1,7 +1,7 @@
 @push('cards')
 <!-- Card -->
-<div class="modal blur fade @if( $edit ?? false ) edit @else create @endif" tabindex="-1" role="dialog" aria-hidden="true" id="{{ $id }}">
-  <div class="modal-dialog modal-md bounceIn animated">
+<div class="modal fade @if( $edit ?? false ) edit @else create @endif" tabindex="-1" role="dialog" aria-hidden="true" id="{{ $id }}">
+  <div class="modal-dialog modal-md modal-dialog-centered bounceIn animated">
     <div class="modal-content">
       {!! Form::open([ 'id' => ( $id ?? 'create' ) . '_form', 'route' => $route, 'method' => $method ?? 'POST' ]) !!}
         <div class="modal-header text-center bg-primary">
