@@ -1,5 +1,8 @@
-<?php //Paises Init
-$payload = [
+<?php
+/*
+    Listado de paises
+ */
+$countries = [
     ['0','afganistán','{"code":"AF","iso3":"AFG","name":"Afghanistan"}'],
     ['0','albania','{"code":"AL","iso3":"ALB","name":"Albania"}'],
     ['0','alemania','{"code":"DE","iso3":"DEU","name":"Germany"}'],

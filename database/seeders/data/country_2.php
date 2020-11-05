@@ -1,4 +1,7 @@
-<?php //Colombia
+<?php 
+/*
+	Pais: Colombia
+ */
 $country = 'colombia';
 
 $attr = [

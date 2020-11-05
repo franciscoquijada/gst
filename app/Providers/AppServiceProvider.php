@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,5 +34,6 @@ class AppServiceProvider extends ServiceProvider
         \Blade::include('components.buttons.modal', 'linkModal');
         \Blade::include('components.buttons.action','button');
         \Blade::component('components.card',        'card');
+        Paginator::useBootstrap();
     }
 }

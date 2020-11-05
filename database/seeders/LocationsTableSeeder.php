@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,9 +22,11 @@ class LocationsTableSeeder extends Seeder
         $now = now();
         \DB::table('locations')->truncate();
 
-        include( __DIR__ . "/countries.php" );
 
-        if( isset( $payload ) )
+        //Add Countries List
+        include( __DIR__ . "/data/countries.php" );
+
+        if( isset( $countries ) )
         {
             $insert_batch = array_map(function ($carry) use ($now)
             {
@@ -34,14 +38,15 @@ class LocationsTableSeeder extends Seeder
                     'updated_at' => $now,
                     'created_at' => $now,
                 ];
-            }, $payload);
+            }, $countries );
 
             \DB::table( 'locations' )->insert( $insert_batch );
         }
 
-        for ( $i = 1; file_exists( __DIR__ . "/country_{$i}.php"); $i++ )
+        //Add Country data
+        for ( $i = 1; file_exists( __DIR__ . "/data/country_{$i}.php"); $i++ )
         {
-            include( __DIR__ . "/country_{$i}.php" );
+            include( __DIR__ . "/data/country_{$i}.php" );
 
             if( isset( $attr, $country ) )
             {
@@ -84,10 +89,12 @@ class LocationsTableSeeder extends Seeder
             $this->country = false;
         }
 
-        //Crear idiomas
-        include('languages.php');
-        foreach ($idiomas as $idioma)
-            Language::create([ 'name' => $idioma ]);
+        //Add Languages list
+        include( __DIR__ . "/data/languages.php");
+
+        if( isset( $languages ) )
+            foreach ( $languages as $language )
+                Language::create([ 'name' => $language ]);
     }
 
     public function get_parent( $name, $level, $country )

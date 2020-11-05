@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\User;
 use App\Group;
 use Illuminate\Database\Seeder;
@@ -14,7 +16,6 @@ class UsersTableSeeder extends Seeder
    */
   public function run()
   {
-
     Group::create(['name' => 'Default']);
 
     User::create([
@@ -22,7 +23,7 @@ class UsersTableSeeder extends Seeder
         'name'              => 'administrador',
         'email'             => 'admin@admin.cl',
         'password'          => 'admin',
-        'remember_token'    => Str::random(10)
+        'remember_token'    => \Str::random(10)
     ])->assignRole([ config('permission.admin', 'administrador') ]);
   }
 }

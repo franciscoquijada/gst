@@ -1,4 +1,7 @@
-<?php //España
+<?php 
+/*
+	Pais: España
+ */
 $country = 'españa';
 $attr = [
 	'levels' => [
