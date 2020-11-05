@@ -1,7 +1,7 @@
 <div class="modal fade create" tabindex="-1" role="dialog" aria-hidden="true" id="new_user">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      {!! Form::open(['id' => 'form_create', 'route' => 'users.store', 'method'=>'POST']) !!}
+      {!! Form::open(['id' => 'form_create', 'route' => 'api.users.store', 'method'=>'POST']) !!}
         <div class="modal-header text-center bg-primary">
           <h4 class="modal-title">Registro de usuarios</h4>
           <button type="button" class="close" data-dismiss="modal">

@@ -14,10 +14,42 @@ use Illuminate\Foundation\Inspiring;
 |
 */
 
-Route::middleware('auth:api')->get('/test-token', function (Request $request) {
-    return Inspiring::quote();
-});
-
 Route::get('/test', function (Request $request) {
     return Inspiring::quote();
+})->name('api.test');	
+
+
+/* Api */
+Route::middleware(['auth:api'])
+  ->name('api.')
+  ->group( function ()
+{
+	Route::get('/test-token', function (Request $request) {
+	    return Inspiring::quote();
+	})->name('test.token');
+
+	Route::prefix('users')
+	  ->name('users.')
+	  ->group(function()
+	  {
+	  	Route::get('/', 'UsersController@list')
+	      ->name('list')
+	      ->middleware(['permission:usuarios:listado']);
+	    Route::get('/{id}','UsersController@show')
+	      ->name('show')
+	      ->middleware(['permission:usuarios:ver']);
+	    Route::post('users','UsersController@store')
+	      ->name('store')
+	      ->middleware(['permission:usuarios:crear']);
+	    Route::get('/{id}/edit','UsersController@edit')
+	      ->name('edit')
+	      ->middleware(['permission:usuarios:actualizar']);
+	    Route::put('/{id}','UsersController@update')
+	      ->name('update')
+	      ->middleware(['permission:usuarios:actualizar']);
+	    Route::delete('/{id}','UsersController@destroy')
+	      ->name('destroy')
+	      ->middleware(['permission:usuarios:eliminar']);
+	  });
+
 });

@@ -26,7 +26,15 @@
 		    processing: true,
 		    serverSide: true,
 		    responsive: true,
-		    ajax: '{!! route('users.index') !!}',
+		    ajax: {
+		        url: "{!! route('api.users.list') !!}",
+		        type: "GET",
+		        headers: { 
+			      'Accept': 'application/json',
+			      'X-Requested-With': 'XMLHttpRequest',
+			      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			    },
+		    },
 		    columns: [
 				{data: 'name', name: 'name', title: 'Nombre', className: 'text-center text-capitalize'},
 				{data: 'role_name', name: 'role_name', title: 'Permisos', className: 'text-center'},

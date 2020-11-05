@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 200)->nullable();
-            $table->string('api_token', 120)->unique()->nullable();
+            //$table->string('api_token', 120)->unique()->nullable();
             $table->json('attr')->nullable();
             $table->datetime('last_login_at')->nullable();
             $table->string('last_login_ip', 20)->nullable();

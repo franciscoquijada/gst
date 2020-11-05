@@ -120,7 +120,12 @@ window.sendForm = function(e){
 
   $.ajax({
     type: $form.attr('method'), //metodo
-    url: $form.attr('action'), //url
+    url:  $form.attr('action'), //url
+    headers: { 
+      'Accept': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
     cache       : false,
     contentType : false,
     processData : false,
@@ -282,10 +287,6 @@ window.delItem = function(e) {
       }
   });
 }
-
-//Blur Modal
-window.polyfilter_scriptpath = 'js/css-filters-polyfill/';
-window.blur_element = '#wrapper';
 
 /*********** Init Assets ************/
 $(document).ready(function() {

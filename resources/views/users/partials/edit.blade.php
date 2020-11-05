@@ -1,7 +1,7 @@
 <div class="modal fade edit" tabindex="-1" role="dialog" aria-hidden="true" id="edit_user">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      {!! Form::open(['id' => 'form_edit', 'route' => 'users.index','method'=>'PUT']) !!}
+      {!! Form::open(['id' => 'form_edit', 'route' => ['api.users.edit', 0],'method'=>'PUT']) !!}
         <div class="modal-header text-center bg-primary">
           <h4 class="modal-title" id="myModalLabel">
             Actualizar usuario:  <span data-field="name"></span>

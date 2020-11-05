@@ -36,21 +36,6 @@ Route::group(['middleware' => ['auth']], function ()
     Route::get('create','UsersController@create')
       ->name('create')
       ->middleware(['permission:usuarios:ver']);
-    Route::get('/{id}','UsersController@show')
-      ->name('show')
-      ->middleware(['permission:usuarios:ver', 'only_ajax']);
-    Route::post('users','UsersController@store')
-      ->name('store')
-      ->middleware(['permission:usuarios:crear', 'only_ajax']);
-    Route::get('/{id}/edit','UsersController@edit')
-      ->name('edit')
-      ->middleware(['permission:usuarios:actualizar', 'only_ajax']);
-    Route::put('/{id}','UsersController@update')
-      ->name('update')
-      ->middleware(['permission:usuarios:actualizar', 'only_ajax']);
-    Route::delete('/{id}','UsersController@destroy')
-      ->name('destroy')
-      ->middleware(['permission:usuarios:eliminar', 'only_ajax']);
     Route::get('/exports', 'UsersController@export')
       ->name('export')
       ->middleware(['permission:usuarios:listado']);

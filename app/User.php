@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\HasApiTokens;
 
 use App\Notifications\ResetPassword;
 
@@ -17,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SoftDeletes, SaveLower;
+    use HasApiTokens, Notifiable, HasRoles, SoftDeletes, SaveLower;
 
     protected $dates = [
         'email_verified_at',
