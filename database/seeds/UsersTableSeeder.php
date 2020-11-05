@@ -23,6 +23,6 @@ class UsersTableSeeder extends Seeder
         'email'             => 'admin@admin.cl',
         'password'          => 'admin',
         'remember_token'    => Str::random(10)
-    ])->assignRole(['administrador']);
+    ])->assignRole([ config('permission.admin', 'administrador') ]);
   }
 }

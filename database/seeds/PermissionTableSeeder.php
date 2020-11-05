@@ -50,7 +50,7 @@ class PermissionTableSeeder extends Seeder
         Permission::create(['name' => 'configuraciones:listado']);  
 
         // Roles
-        $role = Role::create(['name' => 'administrador']);
+        $role = Role::create(['name' => config('permission.admin', 'administrador') ]);
         $role->givePermissionTo( Permission::all() );
     }
 }

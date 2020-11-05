@@ -26,9 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         
-        $gate->before( function ($user, $ability)
+        $gate->before( function ( $user, $ability )
         {
-            if ( $user->hasRole('administrador') )
+            if ( $user->hasRole( config('permission.admin', 'administrador') ) )
             {
                 return true;
             }
