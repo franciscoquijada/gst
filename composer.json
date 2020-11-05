@@ -13,9 +13,11 @@
         "chriskonnertz/string-calc": "^1.0",
         "egulias/email-validator": "^2.1",
         "fideloper/proxy": "^4.0",
+        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.5",
-        "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0",
+        "laravel/framework": "^7.0",
+        "laravel/tinker": "^2.0",
+        "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
         "malahierba-lab/chile-rut": "5.1.*",
@@ -29,11 +31,11 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-dump-server": "^1.0",
-        "facade/ignition": "^1.16",
+        "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "optimize-autoloader": true,

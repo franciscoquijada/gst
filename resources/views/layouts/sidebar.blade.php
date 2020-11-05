@@ -30,7 +30,7 @@
   @forelse( $modules as $module )
     @include( strtolower( $module->getName() ) . '::index')
   @empty
-    <p style="text-align: center; color: #FFF;font-size: 12px;">No hay ningún modulo instalado</p>
+    <p style="text-align: center; color: #FFF;font-size: 12px;">No hay modulos instalados</p>
   @endforelse
   <!-- / Modules -->
 
