@@ -5,13 +5,13 @@ if (typeof NProgress != 'undefined') {
 
 /*********** Helpers ************/
 
-window.resetForm = function( $form ){
+window.resetForm = ( $form ) => {
   $form.find('[type="text"]').val('');
   $form.find('select').val(null).trigger('change');
   $form.find('[type="checkbox"]').prop('checked', false);
 }
 
-window.pressEnter = function(e){
+window.pressEnter = (e) => {
   if( event.keyCode == 13 ) {
     e.preventDefault();
     $(':focus').closest('.modal').find('.send-form').trigger('click');
@@ -19,7 +19,7 @@ window.pressEnter = function(e){
   }
 }
 
-window.fillList = function( list, data, empty = null ){
+window.fillList = ( list, data, empty = null ) => {
   list.html('');
   if( data.length ){
     data.forEach( function(e,i){
@@ -118,7 +118,7 @@ function markAsRead(e) {
 }
 
 
-window.sendForm = function(e){
+window.sendForm = (e) => {
   e.preventDefault();
   let $form = $(this).closest('form'),
       $formData = new FormData($form[0]);
@@ -128,6 +128,7 @@ window.sendForm = function(e){
     url:  $form.attr('action'), //url
     headers: { 
       'Accept': 'application/json',
+      'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
@@ -136,6 +137,7 @@ window.sendForm = function(e){
     processData : false,
     data: $formData,
     success: function (data) {
+      console.log( data );
       $form.closest('.modal').modal('hide');
       if ( typeof data.redirect !== 'undefined' ) {
         location.href =  data.redirect;
@@ -179,7 +181,7 @@ window.sendForm = function(e){
   });
 }
 
-window.viewInfo = function(e) {
+window.viewInfo = (e) => {
   e.preventDefault();
   let id = $(this).data('item');
   $.ajax({
@@ -219,7 +221,7 @@ window.viewInfo = function(e) {
   });
 }
 
-window.editItem = function(e) {
+window.editItem = (e) => {
   e.preventDefault();
   let id = $(this).data('item'),
       route = $(this).data('route');
@@ -282,7 +284,7 @@ window.editItem = function(e) {
   });
 }
 
-window.delItem = function(e) {
+window.delItem = (e) => {
   e.preventDefault();
   let route = $(this).data('route');
   Swal.fire({
@@ -330,10 +332,6 @@ window.delItem = function(e) {
 
 /*********** Init Assets ************/
 $(document).ready(function() {
-
-  /********** Modal Blur *************/
-  //$('.modal.blur').on( 'show.bs.modal', (e) => $(window.blur_element).css('polyfilter','blur(4px)') );
-  //$('.modal.blur').on( 'hide.bs.modal',  (e) => $(window.blur_element).css('polyfilter','blur(0px)') );
 
   /********** Cruds Events *************/
   $('.mark_as_read').on('click', markAsRead );

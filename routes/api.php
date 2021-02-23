@@ -13,6 +13,22 @@ use Illuminate\Foundation\Inspiring;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+/*
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('signup', 'AuthController@signUp');
+
+    Route::group([
+      'middleware' => 'auth:api'
+    ], function() {
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+    });
+});*/
+
+
 Route::group([
     'middleware' => 'api|web'
 ], function ($router) {
@@ -67,12 +83,12 @@ Route::prefix('test')
 
 
 
-
+/*
 
 Route::get('/test', function (Request $request) {
     return Inspiring::quote();
 })->name('api.test');	
-
+*/
 
 /* Api */
 Route::middleware(['auth:api'])

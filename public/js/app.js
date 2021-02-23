@@ -65732,6 +65732,8 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+var _this = this;
+
 /*********** NProgress Init ************/
 if (typeof NProgress != 'undefined') {
   NProgress.start();
@@ -65855,7 +65857,7 @@ function markAsRead(e) {
 
 window.sendForm = function (e) {
   e.preventDefault();
-  var $form = $(this).closest('form'),
+  var $form = $(_this).closest('form'),
       $formData = new FormData($form[0]);
   $.ajax({
     type: $form.attr('method'),
@@ -65864,6 +65866,7 @@ window.sendForm = function (e) {
     //url
     headers: {
       'Accept': 'application/json',
+      'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
@@ -65872,6 +65875,7 @@ window.sendForm = function (e) {
     processData: false,
     data: $formData,
     success: function success(data) {
+      console.log(data);
       $form.closest('.modal').modal('hide');
 
       if (typeof data.redirect !== 'undefined') {
@@ -65900,7 +65904,7 @@ window.sendForm = function (e) {
 
 window.viewInfo = function (e) {
   e.preventDefault();
-  var id = $(this).data('item');
+  var id = $(_this).data('item');
   $.ajax({
     type: 'GET',
     url: location.origin + location.pathname + '/' + id,
@@ -65933,8 +65937,8 @@ window.viewInfo = function (e) {
 
 window.editItem = function (e) {
   e.preventDefault();
-  var id = $(this).data('item'),
-      route = $(this).data('route');
+  var id = $(_this).data('item'),
+      route = $(_this).data('route');
   resetForm($('.modal.edit form'));
   $.ajax({
     type: 'GET',
@@ -65990,7 +65994,7 @@ window.editItem = function (e) {
 
 window.delItem = function (e) {
   e.preventDefault();
-  var route = $(this).data('route');
+  var route = $(_this).data('route');
   Swal.fire({
     title: '¿Estas seguro?',
     text: "Esta operación no puede revertirse!",
@@ -66038,10 +66042,6 @@ window.delItem = function (e) {
 
 
 $(document).ready(function () {
-  /********** Modal Blur *************/
-  //$('.modal.blur').on( 'show.bs.modal', (e) => $(window.blur_element).css('polyfilter','blur(4px)') );
-  //$('.modal.blur').on( 'hide.bs.modal',  (e) => $(window.blur_element).css('polyfilter','blur(0px)') );
-
   /********** Cruds Events *************/
   $('.mark_as_read').on('click', markAsRead);
   $('.send-form').on('click', sendForm);
@@ -66122,28 +66122,16 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ "./resources/sass/app_dark.scss":
-/*!**************************************!*\
-  !*** ./resources/sass/app_dark.scss ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ 0:
-/*!*********************************************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/js/custom.js ./resources/sass/app.scss ./resources/sass/app_dark.scss ***!
-  \*********************************************************************************************************************/
+/*!**************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/js/custom.js ./resources/sass/app.scss ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! C:\laragon\www\gst\resources\js\app.js */"./resources/js/app.js");
 __webpack_require__(/*! C:\laragon\www\gst\resources\js\custom.js */"./resources/js/custom.js");
-__webpack_require__(/*! C:\laragon\www\gst\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\laragon\www\gst\resources\sass\app_dark.scss */"./resources/sass/app_dark.scss");
+module.exports = __webpack_require__(/*! C:\laragon\www\gst\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
