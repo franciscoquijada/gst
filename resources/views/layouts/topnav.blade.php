@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light topbar mb-4 static-top">
 
 	<!-- Topbar Navbar -->
 	<ul class="navbar-nav ml-auto">
@@ -43,7 +43,7 @@
 	    <span class="badge badge-danger badge-counter">7</span>
 	  </a>
 	  <!-- Dropdown - Messages --
-	  <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+	  <div class="dropdown-list dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="messagesDropdown">
 	    <h6 class="dropdown-header">
 	      Message Center
 	    </h6>
@@ -100,7 +100,7 @@
 				<span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize"><b>{{ auth()->user()->name ?? '' }}</b></span>
 			</a>
 			<!-- Dropdown - User Information -->
-			<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+			<div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="userDropdown">
 				<a class="dropdown-item" href="{{route('profile.show')}}">
 					<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
 					Configuracion

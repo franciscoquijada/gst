@@ -2,15 +2,15 @@
 
 @section('title')
   <h2>Grupos</h2>
-  	@link([ 
-  		'class' => 'btn-success float-right', 
-  		'href' 	=> route('groups.export'), 
-  		'label' => 'Exportar', 
-  		'icon' 	=> 'far fa-file-excel' 
+  	@link([
+  		'class' => 'btn-success float-right',
+  		'href' 	=> route('groups.export'),
+  		'label' => 'Exportar',
+  		'icon' 	=> 'far fa-file-excel'
   	])
 	@can('grupos:crear')
-		@linkModal([ 
-			'target' => 'new_group' 
+		@linkModal([
+			'target' => 'new_group'
 		])
 	@endcan
 @endsection
@@ -21,7 +21,7 @@
 
 	@include('groups.partials.create')
 	@include('groups.partials.edit')
-  
+
 @endsection
 
 @push('scripts')
