@@ -24,7 +24,7 @@
 	                  		<div class="text-center">
 	                    		<h2 class="h4 text-gray-900">{{ __('Iniciar Sesion') }}</h2>
 	                  		</div>
-	                  		{!! Form::open(['id' => 'login_form', 'route' => 'login','method'=>'POST']) !!}
+	                  		{!! Form::open(['id' => 'login_form', 'route' => 'login', 'method'=>'POST']) !!}
 							  	<div class="p-3 login_content text-center">
                 					<p>Por favor completa los siguientes datos</p>
 							        <div class="mt-3">
