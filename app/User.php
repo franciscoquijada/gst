@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Spatie\Permission\Models\Role;
@@ -17,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SoftDeletes, SaveLower;
+    use HasApiTokens, Notifiable, HasRoles, SoftDeletes, SaveLower;
 
     protected $dates = [
         'email_verified_at',

@@ -19,12 +19,13 @@ mix.js([
     'resources/js/sb-admin-2.min.js',
     'resources/vendor/datatables/dataTables.bootstrap4.min.js',
     'resources/vendor/datatables/jquery.dataTables.min.js',
-    'resources/vendor/css-filters-polyfill/contentloaded.js',
-    'resources/vendor/css-filters-polyfill/cssParser.js',
-    'resources/vendor/css-filters-polyfill/css-filters-polyfill.js',
+    //'resources/vendor/css-filters-polyfill/contentloaded.js',
+    //'resources/vendor/css-filters-polyfill/cssParser.js',
+    //'resources/vendor/css-filters-polyfill/css-filters-polyfill.js',
   ], 'public/js/vendor.js')
   .copyDirectory('resources/vendor/css-filters-polyfill/htc', 'public/js/css-filters-polyfill/htc')
-  .sass('resources/sass/app.scss', 'public/css');
+  .sass('resources/sass/app.scss', 'public/css')
+  .sass('resources/sass/app_dark.scss', 'public/css');
 
 if( mix.inProduction() )
   mix.version();

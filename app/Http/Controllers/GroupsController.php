@@ -35,9 +35,9 @@ class GroupsController extends Controller
             return \DataTables::of( Group::withCount('users')->latest() )
             ->editColumn('created_at', function($col) {
                 return [
-                    'display' => ( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ? 
+                    'display' => ( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ?
                         with( new \Carbon\Carbon($col->created_at) )->format('d/m/Y H:i:s') : '',
-                    'timestamp' =>( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ? 
+                    'timestamp' =>( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ?
                         with( new \Carbon\Carbon($col->created_at) )->timestamp : ''
                     ];
                 })
@@ -58,10 +58,10 @@ class GroupsController extends Controller
         $data = $request->validate([
                 'name'          => 'required|min:3|string|unique:groups,name,NULL,id,deleted_at,NULL'
             ],[
-                'required'      => 'Campo requerido', 
+                'required'      => 'Campo requerido',
                 'min'           => 'Longitud minima permitida de 3 caracteres'
             ]);
-        
+
         Group::create( $data );
 
         \Notify::success('Grupo creado con éxito');
@@ -95,17 +95,17 @@ class GroupsController extends Controller
         $data = $request->validate([
                 'name'          => 'required|min:3|string|unique:groups,name,'.$id.',id,deleted_at,NULL'
             ],[
-                'required'      => 'Campo requerido', 
+                'required'      => 'Campo requerido',
                 'min'           => 'Longitud minima permitida de 3 caracteres'
             ]);
-                 
+
         $item = Group::findOrFail($id);
         $item->update($data);
 
         \Notify::success('Grupo actualizado con éxito');
-             
+
         return response()->json( true );
-        
+
     }
 
     /**
@@ -121,14 +121,14 @@ class GroupsController extends Controller
         if( $item != null && $id != 1 )
         {
             $item->delete();
-        
+
             \Notify::success('Grupo eliminado con éxito');
 
             return response()->json(true);
         }
-        
+
         return response()->json([
-            'message' => 'Datos invalidos', 
+            'message' => 'Datos invalidos',
             'errors'  => ['id' => 'Grupo invalido']
         ], 422);
     }

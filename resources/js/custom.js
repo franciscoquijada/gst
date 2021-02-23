@@ -71,23 +71,28 @@ function onlyNumbers() {
   $(this).val( $(this).val().replace(/[^0-9]/g, '') );
 }
 
- /*Pendiente 
-function onlyRUT() {
-  $(this).val($(this).val().replace(/[^0-9k-]/g, ''));
+function onlyRUTFormated() {
+  if( $(this).val() != '' ){
+    let rut   = $(this).val().replace(/[^0-9k]/g, ''),
+    cuerpo    = formatNumber( $rut.slice(0, -1), 0),
+    dv        = $rut.slice(-1).toUpperCase();
+
+    $(this).val( ( $(this).val().length > 7 )  ? cuerpo + '-' + dv : rut );
+  }
 }
-function onlyDates() {
-    var date = $(this).val().replace(/[^0-9]/g, ''),
-        d = Math.min( parseInt( date.substring(0,2)), 31),
-        m = date.substring(2,4) != '' ? '/' + Math.min( parseInt( date.substring(2,4) ), 12) : '',
-        y = date.substring(4,8) != '' ? '/' + date.substring(4,8) : '';
-  $(this).val( d + m + y );
-}*/
+
+function onlyRUT() {
+  if( $(this).val() != '' ){
+    let rut   = $(this).val().replace(/[^0-9k]/g, '');
+    $(this).val( rut );
+  }
+}
 
 function goTo( e ){
   e.preventDefault();
   if( $(this).data('route').length > 0 ){
     location.href =  $(this).data('route');
-  } 
+  }
 }
 
 function markAsRead(e) {
@@ -139,19 +144,29 @@ window.sendForm = function(e){
 
        $.each(xhr.responseJSON.errors, function( index, elem ){
 
-        let $elem  = index.split('.'), 
+        let $elem  = index.split('.'),
             $index = ( typeof $elem[1] != 'undefined' ) ? $elem[0] + '_' + $elem[1] : $elem[0];
             $index = ( typeof $elem[2] != 'undefined' ) ? $index + '_' + $elem[2] : $index;
 
-        $form.find('#' + $index ).addClass('invalid');
-        $form.find('#' + $index + '-error')
-          .removeAttr('style')
-          .html( elem );
+        $form
+          .find('#' + $index )
+            .addClass('invalid')
+          .end()
+          .find('#' + $index + '-error')
+            .removeAttr('style')
+            .html( elem );
+
         });
-        setTimeout(function () {
-          $form.find(".error").fadeOut(1500);
-          $form.find('.invalid').removeClass('invalid')
-        }, 6000);
+
+        setTimeout( () =>
+          $form
+            .find(".error")
+              .fadeOut(1500)
+            .end()
+            .find('.invalid')
+              .removeClass('invalid'),
+        6000);
+
       }else if( [419].includes( xhr.status ) ){
         location.reload();
       }
@@ -169,15 +184,27 @@ window.viewInfo = function(e) {
       '_token': $('input[name=_token]').val(),
     },
     success: function ( data ) {
+
+      //Update last ajax response
       lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
+
       $('.viewer.modal')
         .modal('show')
         .find('[data-field]')
         .each( function( i, e ){
           let elem = $(e);
 
+          //Try fill fields
           try {
-            elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+
+            //Fill html fields
+            if( elem.data('type') === 'raw' ){
+              elem.html( '<br/>' + eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+
+            //Fill text fields
+            }else{
+              elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+            }
           }
           catch(error) {
             elem.text( ' N/D ' );
@@ -189,17 +216,21 @@ window.viewInfo = function(e) {
 
 window.editItem = function(e) {
   e.preventDefault();
-  let id = $(this).data('item');
+  let id = $(this).data('item'),
+      route = $(this).data('route');
   resetForm( $('.modal.edit form') );
   $.ajax({
     type: 'GET', //metoodo
-    url: location.origin + location.pathname + '/' + id + '/edit',
+    url: route,
       data: {
           '_token': $('input[name=_token]').val(),
       },
       success: function (data) {
 
+        //Update last ajax response
         lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
+
+        //Open modal and fill fields
         $('.modal.edit')
             .modal('show')
             .find('[data-field]').each( function( i, e ){
@@ -211,20 +242,29 @@ window.editItem = function(e) {
                 console.log( 'error' + error );
               }
 
-            if( elem.is('input') || elem.is('textarea') ){ //Input
+            //Input field
+            if( elem.is('input') || elem.is('textarea') ){
               elem.val( options );
-            }else if( elem.is('select') ){ //Select
-              if(elem.is('[multiple]') && Array.isArray( options ) ){ //Multiple
+
+            //Select fields
+            }else if( elem.is('select') ){
+
+              //Multiple select field
+              if( elem.is('[multiple]') && Array.isArray( options ) ){
                 let plck = options.reduce( function( res,opt) {
                   res.push(opt.id);
                   return res;
                 },[]);
-              elem.val( plck ).trigger('change');
-              }else{ //Simple
-                elem.val( options ).data('default-value', options).trigger('change');
-              }
-            }else{ //Text
+                elem.val( plck ).trigger('change');
 
+              //Simple select field
+              }else{
+                elem.val( options ).data('default-value', options).trigger('change');
+
+              }
+
+            //Text field
+            }else{
               elem.text( options || ' N/D ' );
             }
         }).closest('form').attr('action', data.route );
@@ -254,7 +294,7 @@ window.delItem = function(e) {
       cancelButton: 'cancel-button-class btn custom',
     },
   }).then((result) => {
-    
+
       if (result.value) {
         $.ajax({
             type: 'DELETE', //metodo
@@ -284,15 +324,15 @@ window.delItem = function(e) {
 }
 
 //Blur Modal
-window.polyfilter_scriptpath = 'js/css-filters-polyfill/';
-window.blur_element = '#wrapper';
+//window.polyfilter_scriptpath = 'js/css-filters-polyfill/';
+//window.blur_element = '#wrapper';
 
 /*********** Init Assets ************/
 $(document).ready(function() {
 
   /********** Modal Blur *************/
-  $('.modal.blur').on( 'show.bs.modal', (e) => $(window.blur_element).css('polyfilter','blur(4px)') );
-  $('.modal.blur').on( 'hide.bs.modal',  (e) => $(window.blur_element).css('polyfilter','blur(0px)') );
+  //$('.modal.blur').on( 'show.bs.modal', (e) => $(window.blur_element).css('polyfilter','blur(4px)') );
+  //$('.modal.blur').on( 'hide.bs.modal',  (e) => $(window.blur_element).css('polyfilter','blur(0px)') );
 
   /********** Cruds Events *************/
   $('.mark_as_read').on('click', markAsRead );
@@ -309,6 +349,8 @@ $(document).ready(function() {
   $('input.numeric').on('keypress', onlyNumbers );
   $('input.alpha').on('keypress',   onlyAlphanumeric );
   $('input.letters').on('keypress', onlyLetters );
+  $('input.rut').on('keypress', onlyRUT );
+  $('input.rut-format').on('keypress', onlyRUTFormated );
   //$('input.dates').on('keypress', onlyDates );
 
   $(window).on('keydown', pressEnter);
@@ -317,14 +359,14 @@ $(document).ready(function() {
   Inputmask().mask(document.querySelectorAll("input"));
 
   new ClipboardJS('.btn-copy');
-  
+
   $('.select:not([multiple])').select2({
       width: '100%',
       language: "es"
   });
 
   $.fn.select2.amd.require(
-    [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
+    [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'],
     function (Utils, Dropdown, AttachBody) {
       function SelectAll() { }
 
@@ -340,7 +382,7 @@ $(document).ready(function() {
           $results.each( function () {
             var $result = $(this),
                 data = $result.data('data');
-            
+
             self.trigger('select', {
               data: data
             });
@@ -361,7 +403,7 @@ $(document).ready(function() {
       SelectAll ),
     });
   });
-  
+
   if (typeof NProgress != 'undefined') {
     NProgress.done();
     $(document).ajaxStart( () => NProgress.start() );

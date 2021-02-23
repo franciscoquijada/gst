@@ -1,4 +1,4 @@
-@push('cards')
+@push('modals')
 <!-- Card -->
 <div class="modal fade @if( $edit ?? false ) edit @else create @endif" tabindex="-1" role="dialog" aria-hidden="true" id="{{ $id }}">
   <div class="modal-dialog modal-md modal-dialog-centered bounceIn animated">

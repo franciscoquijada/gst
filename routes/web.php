@@ -3,6 +3,11 @@
 /* Rutas de Autenticacion */
 Auth::routes(['register' => false]);
 
+/* Socialite */
+Route::get('auth/{driver}', 'Auth\SocialAuthController@redirectToProvider')
+  ->name('social_auth');
+Route::get('auth/{driver}/callback', 'Auth\SocialAuthController@handleProviderCallback');
+
 /* Ajax */
 Route::prefix('ajax')
   ->middleware(['auth', 'only_ajax'])
@@ -131,24 +136,7 @@ Route::group(['middleware' => ['auth']], function ()
     Route::get('/','GroupsController@index')
       ->name('index')
       ->middleware(['permission:grupos:listado']);
-    Route::get('create','GroupsController@create')
-      ->name('create')
-      ->middleware(['permission:grupos:crear']);
-    Route::get('/{id}','GroupsController@show')
-      ->name('show')
-      ->middleware(['permission:grupos:ver']);
-    Route::post('groups','GroupsController@store')
-      ->name('store')
-      ->middleware(['permission:grupos:crear', 'only_ajax']);
-    Route::get('/{id}/edit','GroupsController@edit')
-      ->name('edit')
-      ->middleware(['permission:grupos:actualizar']);
-    Route::put('/{id}','GroupsController@update')
-      ->name('update')
-      ->middleware(['permission:grupos:actualizar', 'only_ajax']);
-    Route::delete('/{id}','GroupsController@destroy')
-      ->name('destroy')
-      ->middleware(['permission:grupos:eliminar', 'only_ajax']);
+
     Route::get('export', 'GroupsController@export')
       ->name('export')
       ->middleware(['permission:grupos:listado']);

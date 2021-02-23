@@ -65806,18 +65806,22 @@ function onlyAlphanumeric() {
 function onlyNumbers() {
   $(this).val($(this).val().replace(/[^0-9]/g, ''));
 }
-/*Pendiente 
-function onlyRUT() {
- $(this).val($(this).val().replace(/[^0-9k-]/g, ''));
-}
-function onlyDates() {
-   var date = $(this).val().replace(/[^0-9]/g, ''),
-       d = Math.min( parseInt( date.substring(0,2)), 31),
-       m = date.substring(2,4) != '' ? '/' + Math.min( parseInt( date.substring(2,4) ), 12) : '',
-       y = date.substring(4,8) != '' ? '/' + date.substring(4,8) : '';
- $(this).val( d + m + y );
-}*/
 
+function onlyRUTFormated() {
+  if ($(this).val() != '') {
+    var rut = $(this).val().replace(/[^0-9k]/g, ''),
+        cuerpo = formatNumber($rut.slice(0, -1), 0),
+        dv = $rut.slice(-1).toUpperCase();
+    $(this).val($(this).val().length > 7 ? cuerpo + '-' + dv : rut);
+  }
+}
+
+function onlyRUT() {
+  if ($(this).val() != '') {
+    var rut = $(this).val().replace(/[^0-9k]/g, '');
+    $(this).val(rut);
+  }
+}
 
 function goTo(e) {
   e.preventDefault();
@@ -65877,12 +65881,10 @@ window.sendForm = function (e) {
           var $elem = index.split('.'),
               $index = typeof $elem[1] != 'undefined' ? $elem[0] + '_' + $elem[1] : $elem[0];
           $index = typeof $elem[2] != 'undefined' ? $index + '_' + $elem[2] : $index;
-          $form.find('#' + $index).addClass('invalid');
-          $form.find('#' + $index + '-error').removeAttr('style').html(elem);
+          $form.find('#' + $index).addClass('invalid').end().find('#' + $index + '-error').removeAttr('style').html(elem);
         });
         setTimeout(function () {
-          $form.find(".error").fadeOut(1500);
-          $form.find('.invalid').removeClass('invalid');
+          return $form.find(".error").fadeOut(1500).end().find('.invalid').removeClass('invalid');
         }, 6000);
       } else if ([419].includes(xhr.status)) {
         location.reload();
@@ -65901,15 +65903,21 @@ window.viewInfo = function (e) {
       '_token': $('input[name=_token]').val()
     },
     success: function success(data) {
+      //Update last ajax response
       lastAjaxResponse.val = {
         'action': 'viewInfo',
         'data': data
       };
       $('.viewer.modal').modal('show').find('[data-field]').each(function (i, e) {
-        var elem = $(e);
+        var elem = $(e); //Try fill fields
 
         try {
-          elem.text(eval('data.' + elem.data('field') + " || ' N/D ' "));
+          //Fill html fields
+          if (elem.data('type') === 'raw') {
+            elem.html('<br/>' + eval('data.' + elem.data('field') + " || ' N/D ' ")); //Fill text fields
+          } else {
+            elem.text(eval('data.' + elem.data('field') + " || ' N/D ' "));
+          }
         } catch (error) {
           elem.text(' N/D ');
         }
@@ -65920,20 +65928,23 @@ window.viewInfo = function (e) {
 
 window.editItem = function (e) {
   e.preventDefault();
-  var id = $(this).data('item');
+  var id = $(this).data('item'),
+      route = $(this).data('route');
   resetForm($('.modal.edit form'));
   $.ajax({
     type: 'GET',
     //metoodo
-    url: location.origin + location.pathname + '/' + id + '/edit',
+    url: route,
     data: {
       '_token': $('input[name=_token]').val()
     },
     success: function success(data) {
+      //Update last ajax response
       lastAjaxResponse.val = {
         'action': 'editItem',
         'data': data
-      };
+      }; //Open modal and fill fields
+
       $('.modal.edit').modal('show').find('[data-field]').each(function (i, e) {
         var elem = $(e);
 
@@ -65942,26 +65953,24 @@ window.editItem = function (e) {
         } catch (error) {
           options = '';
           console.log('error' + error);
-        }
+        } //Input field
+
 
         if (elem.is('input') || elem.is('textarea')) {
-          //Input
-          elem.val(options);
+          elem.val(options); //Select fields
         } else if (elem.is('select')) {
-          //Select
+          //Multiple select field
           if (elem.is('[multiple]') && Array.isArray(options)) {
-            //Multiple
             var plck = options.reduce(function (res, opt) {
               res.push(opt.id);
               return res;
             }, []);
-            elem.val(plck).trigger('change');
+            elem.val(plck).trigger('change'); //Simple select field
           } else {
-            //Simple
             elem.val(options).data('default-value', options).trigger('change');
-          }
+          } //Text field
+
         } else {
-          //Text
           elem.text(options || ' N/D ');
         }
       }).closest('form').attr('action', data.route);
@@ -66020,22 +66029,18 @@ window.delItem = function (e) {
     }
   });
 }; //Blur Modal
+//window.polyfilter_scriptpath = 'js/css-filters-polyfill/';
+//window.blur_element = '#wrapper';
 
-
-window.polyfilter_scriptpath = 'js/css-filters-polyfill/';
-window.blur_element = '#wrapper';
 /*********** Init Assets ************/
+
 
 $(document).ready(function () {
   /********** Modal Blur *************/
-  $('.modal.blur').on('show.bs.modal', function (e) {
-    return $(window.blur_element).css('polyfilter', 'blur(4px)');
-  });
-  $('.modal.blur').on('hide.bs.modal', function (e) {
-    return $(window.blur_element).css('polyfilter', 'blur(0px)');
-  });
-  /********** Cruds Events *************/
+  //$('.modal.blur').on( 'show.bs.modal', (e) => $(window.blur_element).css('polyfilter','blur(4px)') );
+  //$('.modal.blur').on( 'hide.bs.modal',  (e) => $(window.blur_element).css('polyfilter','blur(0px)') );
 
+  /********** Cruds Events *************/
   $('.mark_as_read').on('click', markAsRead);
   $('.send-form').on('click', sendForm);
   $('button.link').on('click', goTo);
@@ -66048,7 +66053,9 @@ $(document).ready(function () {
 
   $('input.numeric').on('keypress', onlyNumbers);
   $('input.alpha').on('keypress', onlyAlphanumeric);
-  $('input.letters').on('keypress', onlyLetters); //$('input.dates').on('keypress', onlyDates );
+  $('input.letters').on('keypress', onlyLetters);
+  $('input.rut').on('keypress', onlyRUT);
+  $('input.rut-format').on('keypress', onlyRUTFormated); //$('input.dates').on('keypress', onlyDates );
 
   $(window).on('keydown', pressEnter);
   input_optional();
@@ -66113,16 +66120,28 @@ $(document).ready(function () {
 
 /***/ }),
 
+/***/ "./resources/sass/app_dark.scss":
+/*!**************************************!*\
+  !*** ./resources/sass/app_dark.scss ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 0:
-/*!**************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/js/custom.js ./resources/sass/app.scss ***!
-  \**************************************************************************************/
+/*!*********************************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/js/custom.js ./resources/sass/app.scss ./resources/sass/app_dark.scss ***!
+  \*********************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! C:\laragon\www\gst\resources\js\app.js */"./resources/js/app.js");
 __webpack_require__(/*! C:\laragon\www\gst\resources\js\custom.js */"./resources/js/custom.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\gst\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\gst\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\laragon\www\gst\resources\sass\app_dark.scss */"./resources/sass/app_dark.scss");
 
 
 /***/ })

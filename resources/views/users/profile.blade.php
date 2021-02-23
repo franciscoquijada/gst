@@ -6,7 +6,7 @@
 
 @section('content')
 	<div class="col-md-6 mx-auto">
-  <div class="card shadow border-0 mb-4">
+  <div class="card border-0 mb-4">
     <div class="card-body px-5 pt-5">
 		{!! Form::open([ 'id' => 'form_create', 'route' => 'profile.update', 'method'=>'POST' ]) !!}
       <div class="row">
