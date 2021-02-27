@@ -61,6 +61,6 @@ class LoginController extends Controller
      */
     public function redirectTo()
     {
-        return redirect()->route('home');
+        return route('home');
     }
 }

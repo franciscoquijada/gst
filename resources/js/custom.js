@@ -5,13 +5,13 @@ if (typeof NProgress != 'undefined') {
 
 /*********** Helpers ************/
 
-window.resetForm = ( $form ) => {
+window.resetForm = function( $form ){
   $form.find('[type="text"]').val('');
   $form.find('select').val(null).trigger('change');
   $form.find('[type="checkbox"]').prop('checked', false);
 }
 
-window.pressEnter = (e) => {
+window.pressEnter = function(e){
   if( event.keyCode == 13 ) {
     e.preventDefault();
     $(':focus').closest('.modal').find('.send-form').trigger('click');
@@ -19,7 +19,7 @@ window.pressEnter = (e) => {
   }
 }
 
-window.fillList = ( list, data, empty = null ) => {
+window.fillList = function( list, data, empty = null ){
   list.html('');
   if( data.length ){
     data.forEach( function(e,i){
@@ -118,7 +118,7 @@ function markAsRead(e) {
 }
 
 
-window.sendForm = (e) => {
+window.sendForm = function(e){
   e.preventDefault();
   let $form = $(this).closest('form'),
       $formData = new FormData($form[0]);
@@ -127,8 +127,6 @@ window.sendForm = (e) => {
     type: $form.attr('method'), //metodo
     url:  $form.attr('action'), //url
     headers: { 
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
@@ -137,7 +135,6 @@ window.sendForm = (e) => {
     processData : false,
     data: $formData,
     success: function (data) {
-      console.log( data );
       $form.closest('.modal').modal('hide');
       if ( typeof data.redirect !== 'undefined' ) {
         location.href =  data.redirect;
@@ -181,7 +178,7 @@ window.sendForm = (e) => {
   });
 }
 
-window.viewInfo = (e) => {
+window.viewInfo = function(e) {
   e.preventDefault();
   let id = $(this).data('item');
   $.ajax({
@@ -221,7 +218,7 @@ window.viewInfo = (e) => {
   });
 }
 
-window.editItem = (e) => {
+window.editItem = function(e) {
   e.preventDefault();
   let id = $(this).data('item'),
       route = $(this).data('route');
@@ -284,7 +281,7 @@ window.editItem = (e) => {
   });
 }
 
-window.delItem = (e) => {
+window.delItem = function(e) {
   e.preventDefault();
   let route = $(this).data('route');
   Swal.fire({

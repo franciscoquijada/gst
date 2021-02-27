@@ -65732,8 +65732,6 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var _this = this;
-
 /*********** NProgress Init ************/
 if (typeof NProgress != 'undefined') {
   NProgress.start();
@@ -65857,7 +65855,7 @@ function markAsRead(e) {
 
 window.sendForm = function (e) {
   e.preventDefault();
-  var $form = $(_this).closest('form'),
+  var $form = $(this).closest('form'),
       $formData = new FormData($form[0]);
   $.ajax({
     type: $form.attr('method'),
@@ -65865,8 +65863,6 @@ window.sendForm = function (e) {
     url: $form.attr('action'),
     //url
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
@@ -65875,7 +65871,6 @@ window.sendForm = function (e) {
     processData: false,
     data: $formData,
     success: function success(data) {
-      console.log(data);
       $form.closest('.modal').modal('hide');
 
       if (typeof data.redirect !== 'undefined') {
@@ -65904,7 +65899,7 @@ window.sendForm = function (e) {
 
 window.viewInfo = function (e) {
   e.preventDefault();
-  var id = $(_this).data('item');
+  var id = $(this).data('item');
   $.ajax({
     type: 'GET',
     url: location.origin + location.pathname + '/' + id,
@@ -65937,8 +65932,8 @@ window.viewInfo = function (e) {
 
 window.editItem = function (e) {
   e.preventDefault();
-  var id = $(_this).data('item'),
-      route = $(_this).data('route');
+  var id = $(this).data('item'),
+      route = $(this).data('route');
   resetForm($('.modal.edit form'));
   $.ajax({
     type: 'GET',
@@ -65994,7 +65989,7 @@ window.editItem = function (e) {
 
 window.delItem = function (e) {
   e.preventDefault();
-  var route = $(_this).data('route');
+  var route = $(this).data('route');
   Swal.fire({
     title: '¿Estas seguro?',
     text: "Esta operación no puede revertirse!",
