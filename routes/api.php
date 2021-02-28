@@ -99,6 +99,8 @@ Route::middleware(['auth:api'])
 	    return Inspiring::quote();
 	})->name('test.token');
 
+
+    /* User */
 	Route::prefix('users')
 	  ->name('users.')
 	  ->group(function()

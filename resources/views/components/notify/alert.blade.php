@@ -1,8 +1,11 @@
 @if (session('Notify.alert'))
 <script type="text/javascript">
+	console.log( @json( session('Notify.alert') ) );
 	$( @json( session('Notify.alert') ) ).each( function(i,e){
 
 		var speed = 5000;
+
+		console.log('hola');
 
 		setTimeout( function () {
 			Swal.mixin({
@@ -19,5 +22,5 @@
 		}, i * speed);
 	});
 </script>
-@endif
 {{ session()->forget('Notify.alert') }}
+@endif

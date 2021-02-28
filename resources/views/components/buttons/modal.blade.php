@@ -1,1 +1,0 @@
-<a class="btn {{ $class ?? 'btn-info float-right' }}" href="{{ $src ?? '#' }}" data-target="#{{ $target ?? '' }}" data-toggle="modal">{{ $label ?? 'Añadir' }} <i class="{{ $icon ?? 'fa fa-plus' }}"></i></a>

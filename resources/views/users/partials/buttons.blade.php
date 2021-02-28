@@ -1,13 +1,13 @@
 @can('usuarios:ver')
-	@button(['class' => 'btn-info btn_view', 'item' => $id, 'title' => 'Detalles', 'icon' => 'fa fa-eye'])
+	<x-button.action class="btn-info btn_view" :route="route('api.users.show', $id)" title="Detalles" icon="fa fa-eye" />
 @endcan
 
 @can('usuarios:actualizar')
-	@button(['class' => 'btn-warning btn_edit', 'item' => $id, 'title' => 'Editar', 'icon' => 'fa fa-edit'])
+	<x-button.action class="btn-warning btn_edit" :route="route('api.users.edit', $id)" title="Editar" icon="fa fa-edit" />
 @endcan
 
 @if( $id != 1 ) 
 	@can('usuarios:eliminar')
-		@button(['class' => 'btn-danger btn_del', 'route' => route( 'users.destroy', $id ), 'title' => 'Eliminar', 'icon' => 'fa fa-trash'])
+		<x-button.action class="btn-danger btn_del" :route="route('api.users.destroy', $id)"  title="Eliminar" icon="fa fa-trash" />
 	@endcan
 @endif

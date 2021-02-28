@@ -48,6 +48,8 @@ window.lastAjaxResponse = {
 
 /*********** Event Functions ************/
 
+const reloadCode = [419];
+
 function input_optional(){
   $('.optional').each(function( i, e ){
     let $this = $(this);
@@ -110,12 +112,23 @@ function markAsRead(e) {
       }
     },
     error: function (xhr, ajaxOptions, thrownError) {
-      if( [419].includes( xhr.status ) ){
+      if( reloadCode.includes( xhr.status ) ){
         location.reload();
       }
     }
   });
 }
+
+/* TODO:Placehoder animate 
+
+function labelAnimate(){
+
+  if( $(this).val().length ) {
+    $(this).closest('.label-animate').addClass('filled');
+  }else{
+    $(this).closest('.label-animate').removeClass('filled');
+  }
+}*/
 
 
 window.sendForm = function(e){
@@ -171,7 +184,7 @@ window.sendForm = function(e){
               .removeClass('invalid'),
         6000);
 
-      }else if( [419].includes( xhr.status ) ){
+      }else if( reloadCode.includes( xhr.status ) ){
         location.reload();
       }
     }
@@ -180,14 +193,18 @@ window.sendForm = function(e){
 
 window.viewInfo = function(e) {
   e.preventDefault();
-  let id = $(this).data('item');
+
+  let id = $(this).data('item'),
+      route = $(this).data('route');
+
   $.ajax({
     type: 'GET',
-    url: location.origin + location.pathname + '/' + id,
-    data: {
-      '_token': $('input[name=_token]').val(),
+    url: route,
+    headers: { 
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    success: function ( data ) {
+    success: ( data ) => {
 
       //Update last ajax response
       lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
@@ -222,59 +239,74 @@ window.editItem = function(e) {
   e.preventDefault();
   let id = $(this).data('item'),
       route = $(this).data('route');
+
   resetForm( $('.modal.edit form') );
+
   $.ajax({
-    type: 'GET', //metoodo
+    type: 'GET',
+    headers: { 
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
     url: route,
-      data: {
-          '_token': $('input[name=_token]').val(),
-      },
-      success: function (data) {
+ 
+    success: (data) => {
 
-        //Update last ajax response
-        lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
+      //Update last ajax response
+      lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
 
-        //Open modal and fill fields
-        $('.modal.edit')
-            .modal('show')
-            .find('[data-field]').each( function( i, e ){
-              let elem = $(e);
-              try{
-                options = eval('data.fields.' + elem.data('field') );
-              } catch (error) {
-                options = '';
-                console.log( 'error' + error );
-              }
+      //Open modal and fill fields
+      $('.modal.edit')
+          .modal('show')
+          .find('[data-field]').each( function( i, e ){
+            let elem = $(e);
+            
+            try{
 
-            //Input field
-            if( elem.is('input') || elem.is('textarea') ){
-              elem.val( options );
+              options = eval('data.fields.' + elem.data('field') );
+            
+            } catch (error) {
 
-            //Select fields
-            }else if( elem.is('select') ){
+              options = '';
+              console.log( 'error' + error );
 
-              //Multiple select field
-              if( elem.is('[multiple]') && Array.isArray( options ) ){
-                let plck = options.reduce( function( res,opt) {
-                  res.push(opt.id);
-                  return res;
-                },[]);
-                elem.val( plck ).trigger('change');
-
-              //Simple select field
-              }else{
-                elem.val( options ).data('default-value', options).trigger('change');
-
-              }
-
-            //Text field
-            }else{
-              elem.text( options || ' N/D ' );
             }
-        }).closest('form').attr('action', data.route );
+
+          //Input field
+          if( elem.is('input') || elem.is('textarea') ){
+
+            elem.val( options );
+
+          //Select fields
+          }else if( elem.is('select') ){
+
+            //Multiple select field
+            if( elem.is('[multiple]') && Array.isArray( options ) ){
+
+              let plck = options.reduce( function( res, opt ) {
+                res.push(opt.id);
+                return res;
+              },[]);
+
+              elem.val( plck ).trigger('change');
+
+            //Simple select field
+            }else{
+
+              elem.val( options ).data('default-value', options).trigger('change');
+
+            }
+
+          //Text field
+          }else{
+            elem.text( options || ' N/D ' );
+
+          }
+
+      }).closest('form').attr('action', data.route );
     },
     error: function (xhr, ajaxOptions, thrownError) {
-      if( [419].includes( xhr.status ) ){
+      if( reloadCode.includes( xhr.status ) ){
         location.reload();
       }
     }
@@ -297,33 +329,34 @@ window.delItem = function(e) {
       confirmButton: 'confirm-button-class btn custom',
       cancelButton: 'cancel-button-class btn custom',
     },
-  }).then((result) => {
+  }).then( (result) => {
 
-      if (result.value) {
-        $.ajax({
-            type: 'DELETE', //metodo
-            url: route, //id del delete
-            data: {
-              '_token': $('input[name=_token]').val(),
-            },
-            success: function (data) {
-                Swal.fire({
-                  title: 'Borrado!',
-                  text: 'Se ha borrado con éxito.',
-                  icon: 'success',
-                  customClass: {
-                    confirmButton: 'confirm-button-class btn custom',
-                  }
-                })
-                location.reload();
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-              if( [419].includes( xhr.status ) ){
-                location.reload();
-              }
+    if (result.value) {
+      $.ajax({
+          type: 'DELETE', //metodo
+          url: route, //id del delete
+          headers: { 
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: (data) => {
+              Swal.fire({
+                title: 'Borrado!',
+                text: 'Se ha borrado con éxito.',
+                icon: 'success',
+                customClass: {
+                  confirmButton: 'confirm-button-class btn custom',
+                }
+              })
+              location.reload();
+          },
+          error: (xhr, ajaxOptions, thrownError) => {
+            if( reloadCode.includes( xhr.status ) ){
+              location.reload();
             }
-        });
-      }
+          }
+      });
+    }
   });
 }
 
@@ -347,6 +380,7 @@ $(document).ready(function() {
   $('input.letters').on('keypress', onlyLetters );
   $('input.rut').on('keypress', onlyRUT );
   $('input.rut-format').on('keypress', onlyRUTFormated );
+  //$('.label-animate input').on('focus change', labelAnimate );
   //$('input.dates').on('keypress', onlyDates );
 
   $(window).on('keydown', pressEnter);

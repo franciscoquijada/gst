@@ -65785,6 +65785,8 @@ window.lastAjaxResponse = {
 };
 /*********** Event Functions ************/
 
+var reloadCode = [419];
+
 function input_optional() {
   $('.optional').each(function (i, e) {
     var $this = $(this);
@@ -65846,12 +65848,23 @@ function markAsRead(e) {
       }
     },
     error: function error(xhr, ajaxOptions, thrownError) {
-      if ([419].includes(xhr.status)) {
+      if (reloadCode.includes(xhr.status)) {
         location.reload();
       }
     }
   });
 }
+/* TODO:Placehoder animate 
+
+function labelAnimate(){
+
+  if( $(this).val().length ) {
+    $(this).closest('.label-animate').addClass('filled');
+  }else{
+    $(this).closest('.label-animate').removeClass('filled');
+  }
+}*/
+
 
 window.sendForm = function (e) {
   e.preventDefault();
@@ -65890,7 +65903,7 @@ window.sendForm = function (e) {
         setTimeout(function () {
           return $form.find(".error").fadeOut(1500).end().find('.invalid').removeClass('invalid');
         }, 6000);
-      } else if ([419].includes(xhr.status)) {
+      } else if (reloadCode.includes(xhr.status)) {
         location.reload();
       }
     }
@@ -65899,12 +65912,14 @@ window.sendForm = function (e) {
 
 window.viewInfo = function (e) {
   e.preventDefault();
-  var id = $(this).data('item');
+  var id = $(this).data('item'),
+      route = $(this).data('route');
   $.ajax({
     type: 'GET',
-    url: location.origin + location.pathname + '/' + id,
-    data: {
-      '_token': $('input[name=_token]').val()
+    url: route,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
     success: function success(data) {
       //Update last ajax response
@@ -65937,11 +65952,11 @@ window.editItem = function (e) {
   resetForm($('.modal.edit form'));
   $.ajax({
     type: 'GET',
-    //metoodo
-    url: route,
-    data: {
-      '_token': $('input[name=_token]').val()
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
+    url: route,
     success: function success(data) {
       //Update last ajax response
       lastAjaxResponse.val = {
@@ -65980,7 +65995,7 @@ window.editItem = function (e) {
       }).closest('form').attr('action', data.route);
     },
     error: function error(xhr, ajaxOptions, thrownError) {
-      if ([419].includes(xhr.status)) {
+      if (reloadCode.includes(xhr.status)) {
         location.reload();
       }
     }
@@ -66010,8 +66025,9 @@ window.delItem = function (e) {
         //metodo
         url: route,
         //id del delete
-        data: {
-          '_token': $('input[name=_token]').val()
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function success(data) {
           Swal.fire({
@@ -66025,7 +66041,7 @@ window.delItem = function (e) {
           location.reload();
         },
         error: function error(xhr, ajaxOptions, thrownError) {
-          if ([419].includes(xhr.status)) {
+          if (reloadCode.includes(xhr.status)) {
             location.reload();
           }
         }
@@ -66052,7 +66068,8 @@ $(document).ready(function () {
   $('input.alpha').on('keypress', onlyAlphanumeric);
   $('input.letters').on('keypress', onlyLetters);
   $('input.rut').on('keypress', onlyRUT);
-  $('input.rut-format').on('keypress', onlyRUTFormated); //$('input.dates').on('keypress', onlyDates );
+  $('input.rut-format').on('keypress', onlyRUTFormated); //$('.label-animate input').on('focus change', labelAnimate );
+  //$('input.dates').on('keypress', onlyDates );
 
   $(window).on('keydown', pressEnter);
   input_optional();

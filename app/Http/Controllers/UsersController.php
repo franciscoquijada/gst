@@ -21,9 +21,47 @@ class UsersController extends Controller
 {
     public function index()
     {
+        $columns = [
+            [
+                'data'      => 'name', 
+                'name'      => 'name', 
+                'title'     => 'Nombre', 
+                'className' => 'text-center text-capitalize'
+            ],
+            [
+                'data'      => 'role_name', 
+                'name'      => 'role_name', 
+                'title'     => 'Permisos', 
+                'className' => 'text-center'
+            ],
+            [
+                'data'      => 'email', 
+                'name'      => 'email', 
+                'title'     => 'Email', 
+                'className' => 'text-center'
+            ],
+            [
+                'name'      => 'last_login_at.timestamp', 
+                'title'     => 'Ult. Ingreso', 
+                'className' => 'text-center', 
+                'data'      => [ 
+                    '_'     => 'last_login_at.display', 
+                    'sort'  => 'last_login_at.timestamp' 
+                ] 
+            ],
+            [
+                'data'          => 'action', 
+                'name'          => 'acciones', 
+                'orderable'     => false, 
+                'searchable'    => false, 
+                'className'     => 'text-center actions'
+            ]
+        ];
+
         return view( 'users.index', [ 
             'groups'    => Group::pluck('name', 'id'),
-            'roles'     => Role::pluck('name', 'id')
+            'roles'     => Role::pluck('name', 'id'),
+            'columns'   => $columns
         ]);
     }
 
@@ -120,7 +158,7 @@ class UsersController extends Controller
         $user = User::with( 'group','roles' )->findOrFail($id);
         return [
             'fields' => $user,
-            'route'  => route( 'users.update', $id )
+            'route'  => route( 'api.users.update', $id )
         ];
     }
 

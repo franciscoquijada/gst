@@ -15,7 +15,7 @@
                 @empty 
                         Usuario sin id externa registrada
                 @endforelse</td>
-                <td>{{ $user->company->name }}</td>
+                <td>{{ $user->group->name }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->created_at }}</td>
