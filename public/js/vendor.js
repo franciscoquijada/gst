@@ -30598,9 +30598,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\gst\resources\js\sb-admin-2.min.js */"./resources/js/sb-admin-2.min.js");
-__webpack_require__(/*! C:\laragon\www\gst\resources\vendor\datatables\dataTables.bootstrap4.min.js */"./resources/vendor/datatables/dataTables.bootstrap4.min.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\gst\resources\vendor\datatables\jquery.dataTables.min.js */"./resources/vendor/datatables/jquery.dataTables.min.js");
+__webpack_require__(/*! C:\laragon\www\code\gestion\resources\js\sb-admin-2.min.js */"./resources/js/sb-admin-2.min.js");
+__webpack_require__(/*! C:\laragon\www\code\gestion\resources\vendor\datatables\dataTables.bootstrap4.min.js */"./resources/vendor/datatables/dataTables.bootstrap4.min.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\code\gestion\resources\vendor\datatables\jquery.dataTables.min.js */"./resources/vendor/datatables/jquery.dataTables.min.js");
 
 
 /***/ })
