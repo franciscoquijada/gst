@@ -69,21 +69,19 @@ class UsersController extends Controller
     {
         $data = User::with(['group', 'roles'])->latest();
         
-        if( request()->ajax() )
-            return \DataTables::of( $data )
-                ->addColumn( 'action', 'users.partials.buttons' )
-                ->addColumn( 'role_name', function( $data ){ return $data->roles[0]->name ?? ''; })
-                ->editColumn('last_login_at', function($col) {
-                    return [
-                        'display' => ( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ? 
-                            with( new \Carbon\Carbon($col->last_login_at) )->format('d/m/Y H:i:s') : '',
-                        'timestamp' =>( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ? 
-                            with( new \Carbon\Carbon($col->last_login_at) )->timestamp : ''
-                        ];
-                    })
-                ->toJson();
 
-        return response()->json( $data->toJson() );
+        return \DataTables::of( $data )
+            ->addColumn( 'action', 'users.partials.buttons' )
+            ->addColumn( 'role_name', function( $data ){ return $data->roles[0]->name ?? ''; })
+            ->editColumn('last_login_at', function($col) {
+                return [
+                    'display' => ( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ? 
+                        with( new \Carbon\Carbon($col->last_login_at) )->format('d/m/Y H:i:s') : '',
+                    'timestamp' =>( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ? 
+                        with( new \Carbon\Carbon($col->last_login_at) )->timestamp : ''
+                    ];
+                })
+            ->toJson();
     }
 
     /**

@@ -1,4 +1,4 @@
-@props(['label', 'type', 'placeholder', 'attr', 'label', 'name', 'value'])
+@props(['label', 'type', 'placeholder', 'attributes', 'label', 'name', 'value'])
 @isset( $label )
 	<label class="form-group">{{ ucfirst( $label ) }}</label>
 @endisset

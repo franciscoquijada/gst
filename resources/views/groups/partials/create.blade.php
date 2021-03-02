@@ -1,23 +1,10 @@
-@card([ 
-  'id'    => 'new_group', 
-  'route' => 'groups.store', 
-  'title' => 'Registro de grupo' 
-])
+<x-modal id="new_group" size="lg" route="api.groups.store" >
+  <x-slot name="title">
+    Registro de grupo
+  </x-slot>
   <div class="row">
-    <div class="col-md-12 form-group">
-      @input([ 
-        'label' => 'Nombre', 
-        'name'  => 'name', 
-        'class' => 'alpha' 
-      ])
+    <div class="col-12 form-group">
+      <x-form.input label="Nombre" name="name" class="alpha" />
     </div>
   </div>
-
-  @slot('footer')
-    @link([ 
-      'class' => 'btn-success send-form', 
-      'label' => 'Guardar', 
-      'icon'  => 'far fa-save' 
-    ])
-  @endslot
-@endcard
+</x-modal>

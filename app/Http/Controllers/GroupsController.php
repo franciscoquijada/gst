@@ -31,8 +31,48 @@ class GroupsController extends Controller
 
     public function index()
     {
-        if( request()->ajax() )
-            return \DataTables::of( Group::withCount('users')->latest() )
+        $columns = [
+            [
+                'data'      => 'name',
+                'name'      => 'name', 
+                'title'     => 'Grupo', 
+                'className' => 'text-center text-capitalize'
+            ],
+            [
+                'data'       => 'users_count', 
+                'name'       => 'users_count', 
+                'title'      => 'Usuarios', 
+                'searchable' => false,
+                'className'  => 'text-center'
+            ],
+            [
+                'name'      => 'created_at', 
+                'title'     => 'Fecha', 
+                'className' => 'text-center', 
+                'data'      => [ 
+                    '_'     => 'created_at.display', 
+                    'sort'  => 'created_at.timestamp' 
+                ]
+            ],
+            [
+                'data'       => 'action', 
+                'name'       => 'acciones', 
+                'orderable'  => false, 
+                'searchable' => false, 
+                'className'  => 'text-center actions'
+            ]
+        ];
+            
+        return view('groups.index', [
+            'columns'   => $columns
+        ]);
+    }
+
+    public function list()
+    {
+        $data = Group::withCount('users')->latest();
+
+        return \DataTables::of( $data )
             ->editColumn('created_at', function($col) {
                 return [
                     'display' => ( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ?
@@ -43,8 +83,6 @@ class GroupsController extends Controller
                 })
             ->addColumn( 'action', 'groups.partials.buttons' )
             ->toJson();
-
-        return view('groups.index');
     }
 
     /**
@@ -79,7 +117,7 @@ class GroupsController extends Controller
     {
         return [
             'fields' => Group::findOrFail($id),
-            'route'  => route( 'groups.update', $id )
+            'route'  => route( 'api.groups.update', $id )
         ];
     }
 

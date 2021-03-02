@@ -1,30 +1,10 @@
-@card([ 
-  'id'    => 'edit_group', 
-  'route' => 'groups.index', 
-  'edit'  => true 
-])
-  @slot('title')
+<x-modal id="edit_group" type="edit" size="lg" method="PUT">
+  <x-slot name="title">
     Actualizar grupo:  <span data-field="name"></span>
-  @endslot
-
+  </x-slot>
   <div class="row">
-    <div class="col-md-12 form-group">
-      @input([ 
-        'label' => 'Nombre', 
-        'name'  => 'name', 
-        'class' => 'alpha', 
-        'attr'  => [ 
-          'data-field' => 'name' 
-        ] 
-      ])
+    <div class="col-12 form-group">
+      <x-form.input label="Nombre" name="name" class="alpha" data-field="name" />
     </div>
   </div>
-
-  @slot('footer')
-    @link([ 
-      'class' => 'btn-success send-form', 
-      'label' => 'Guardar', 
-      'icon'  => 'far fa-save' 
-    ])
-  @endslot
-@endcard
+</x-modal>

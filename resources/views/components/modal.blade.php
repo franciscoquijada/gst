@@ -20,9 +20,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="modal-footer">
-          <div class="text-right">
-          	<x-button.link class="btn-success send-form" label="Guardar" icon="far fa-save" />
-          </div>
+          <x-button.link class="btn-success send-form" label="Guardar" icon="far fa-save" />
         </div>
       {!! Form::close() !!}
     </div>

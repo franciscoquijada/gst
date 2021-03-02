@@ -13,6 +13,7 @@ use Illuminate\Foundation\Inspiring;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 /*
 Route::group([
     'prefix' => 'auth'
@@ -28,19 +29,33 @@ Route::group([
     });
 });*/
 
+/* Test Connections */
+Route::prefix('test')
+    ->group(function()
+    {
+        Route::get('/', function (Request $request) {
+            return Inspiring::quote();
+        });
+    });
 
-Route::group([
-    'middleware' => 'api|web'
-], function ($router) {
+
+/* Api */
+Route::middleware(['auth:api'])
+  ->name('api.')
+  ->group( function ()
+{
+	Route::get('/test-token', function (Request $request) {
+	    return Inspiring::quote();
+	})->name('test.token');
 
     /* Grupos */
     Route::prefix('groups')
         ->name('groups.')
         ->group(function()
         {
-            /*Route::get('/list','GroupsController@list')
-                ->name('list');
-            // ->middleware(['permission:grupos:listado'])*/
+            Route::get('/list','GroupsController@list')
+                ->name('list')
+                ->middleware(['permission:grupos:listado']);
 
             Route::post('groups','GroupsController@store')
                 ->name('store')
@@ -61,68 +76,35 @@ Route::group([
                 ->middleware(['permission:grupos:eliminar', 'only_ajax']);
         });
 
-    });
-
-
-
-/* Test Connections */
-Route::prefix('test')
-    ->group(function()
-    {
-        Route::get('/', function (Request $request) {
-            return Inspiring::quote();
-        });
-
-        Route::middleware('auth:api')
-            ->get('/token', function (Request $request) {
-            return Inspiring::quote();
-        });
-    });
-
-
-
-
-
-/*
-
-Route::get('/test', function (Request $request) {
-    return Inspiring::quote();
-})->name('api.test');	
-*/
-
-/* Api */
-Route::middleware(['auth:api'])
-  ->name('api.')
-  ->group( function ()
-{
-	Route::get('/test-token', function (Request $request) {
-	    return Inspiring::quote();
-	})->name('test.token');
-
 
     /* User */
 	Route::prefix('users')
-	  ->name('users.')
-	  ->group(function()
-	  {
-	  	Route::get('/', 'UsersController@list')
-	      ->name('list')
-	      ->middleware(['permission:usuarios:listado']);
-	    Route::get('/{id}','UsersController@show')
-	      ->name('show')
-	      ->middleware(['permission:usuarios:ver']);
-	    Route::post('users','UsersController@store')
-	      ->name('store')
-	      ->middleware(['permission:usuarios:crear']);
-	    Route::get('/{id}/edit','UsersController@edit')
-	      ->name('edit')
-	      ->middleware(['permission:usuarios:actualizar']);
-	    Route::put('/{id}','UsersController@update')
-	      ->name('update')
-	      ->middleware(['permission:usuarios:actualizar']);
-	    Route::delete('/{id}','UsersController@destroy')
-	      ->name('destroy')
-	      ->middleware(['permission:usuarios:eliminar']);
-	  });
+        ->name('users.')
+        ->group(function()
+        {
+        	Route::get('/', 'UsersController@list')
+              ->name('list')
+              ->middleware(['permission:usuarios:listado']);
+
+            Route::get('/{id}','UsersController@show')
+              ->name('show')
+              ->middleware(['permission:usuarios:ver']);
+
+            Route::post('users','UsersController@store')
+              ->name('store')
+              ->middleware(['permission:usuarios:crear']);
+
+            Route::get('/{id}/edit','UsersController@edit')
+              ->name('edit')
+              ->middleware(['permission:usuarios:actualizar']);
+
+            Route::put('/{id}','UsersController@update')
+              ->name('update')
+              ->middleware(['permission:usuarios:actualizar']);
+
+            Route::delete('/{id}','UsersController@destroy')
+              ->name('destroy')
+              ->middleware(['permission:usuarios:eliminar']);
+        });
 
 });
