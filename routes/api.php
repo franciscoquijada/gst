@@ -106,5 +106,10 @@ Route::middleware(['auth:api'])
               ->name('destroy')
               ->middleware(['permission:usuarios:eliminar']);
         });
+        
+    /* Registros */
+    Route::get('logs','LogsController@list')
+        ->name('logs.list')
+        ->middleware(['permission:registros:listado']);
 
 });
