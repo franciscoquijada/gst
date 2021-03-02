@@ -1,2 +1,2 @@
 @props(['class', 'title', 'item', 'route', 'icon'])
-<button class="btn {{ $class ?? '' }}" title="{{ $title ?? 'Editar' }}" @isset($item) data-item="{{ $item }}" @endisset @isset($route) data-route="{{ $route }}" @endisset><i class="{{ $icon ?? 'fa fa-edit' }}"></i></button>
+<button class="btn {{ $class ?? '' }}" title="{{ $title ?? 'Editar' }}" @isset($item) data-item="{{ $item }}" @endisset @isset($route) data-route="{{ $route }}" @endisset {{ $attributes->whereStartsWith('data') }}><i class="{{ $icon ?? 'fa fa-edit' }}"></i></button>

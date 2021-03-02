@@ -12,12 +12,11 @@ class IdentificationsTypesController extends Controller
         $this->middleware(['permission:tipos identificadores:listado|tipos identificadores:crear|tipos identificadores:editar|tipos identificadores:eliminar']);
     }
 
-    public function index()
+    public function list()
     {
-    	$models = collect( $this->getClassesList( app_path() ) )->pluck('classname','classname');
+        $data = IdentificationType::latest();
 
-        if( request()->ajax() )
-            return \DataTables::of( IdentificationType::latest() )
+        return \DataTables::of( $data )
             ->addColumn( 'action', 'identifications_types.partials.buttons' )
             ->editColumn('created_at', function($col) {
                 return [
@@ -28,15 +27,51 @@ class IdentificationsTypesController extends Controller
                     ];
                 })
             ->toJson();
+    }
 
+    public function index()
+    {
+    	$models     = $this->getClassesList();
+        $columns    = [
+            [
+                'data'      => 'name', 
+                'name'      => 'name', 
+                'title'     => 'Tipo', 
+                'className' => 'text-center text-capitalize'
+            ],
+            [
+                'data'      => 'model', 
+                'name'      => 'model', 
+                'title'     => 'Modelo', 
+                'className' => 'text-center'
+            ],
+            [
+                'name'      => 'created_at', 
+                'title'     => 'Fecha', 
+                'className' => 'text-center',
+                'data'      => [
+                    '_'     => 'created_at.display',
+                    'sort'  => 'created_at.timestamp'
+                ]
+            ],
+            [
+                'data'       => 'action', 
+                'name'       => 'acciones', 
+                'orderable'  => false, 
+                'searchable' => false, 
+                'className'  => 'text-center actions'
+            ]
+        ];
+        
         return view( 'identifications_types.index', [
-        	'models' => $models
+        	'models'    => $models,
+            'columns'   => $columns
         ]);
     }
 
-    public function getClassesList($dir)
+    public function getClassesList()
     {
-    	$classes = \File::files($dir);
+    	$classes = \File::files( app_path() );
     	foreach ($classes as $class)
     	{
     		$class->classname = str_replace(
@@ -45,7 +80,7 @@ class IdentificationsTypesController extends Controller
     			$class->getRealPath()
     		);
     	}
-    	return $classes;
+    	return collect($classes)->pluck( 'classname', 'classname' );
     }
 
     /**
@@ -81,7 +116,7 @@ class IdentificationsTypesController extends Controller
     {
         return [
             'fields' => IdentificationType::findOrFail($id),
-            'route'  => route( 'id_types.update', $id )
+            'route'  => route( 'api.id_types.update', $id )
         ];
     }
 
