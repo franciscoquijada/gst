@@ -24,7 +24,6 @@
           <!-- Page Heading -->
           <div class="d-block mb-4">
             @yield('title')
-            <hr>
           </div>
           
           @yield('content')

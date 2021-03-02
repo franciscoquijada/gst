@@ -67,8 +67,9 @@ class UsersController extends Controller
 
     public function list()
     {
-        $data = User::with(['group', 'roles'])->latest();
-        
+        $data = ( request()->has('trashed') ) ?
+            User::onlyTrashed()->with(['group', 'roles'])->latest():
+            User::with(['group', 'roles'])->latest();
 
         return \DataTables::of( $data )
             ->addColumn( 'action', 'users.partials.buttons' )

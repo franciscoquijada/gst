@@ -10,7 +10,7 @@
 
 @section('content')
 
-	<x-datatable :route="route('api.groups.list')" :columns="$columns" />
+	<x-datatable :route="route('api.groups.list')" trash="true" :columns="$columns" />
 
 	@include('groups.partials.create')
 	@include('groups.partials.edit')

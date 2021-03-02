@@ -11,7 +11,7 @@
 
 @section('content')
 
-	<x-datatable :route="route('api.users.list')" :columns="$columns" />
+	<x-datatable :route="route('api.users.list')" trash="true" :columns="$columns" />
 
 	@include('users.partials.show')
 	@include('users.partials.create')

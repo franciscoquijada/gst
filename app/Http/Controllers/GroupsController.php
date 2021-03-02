@@ -70,7 +70,9 @@ class GroupsController extends Controller
 
     public function list()
     {
-        $data = Group::withCount('users')->latest();
+        $data = ( request()->has('trashed') ) ?
+            Group::onlyTrashed()->withCount('users')->latest():
+            Group::withCount('users')->latest();
 
         return \DataTables::of( $data )
             ->editColumn('created_at', function($col) {

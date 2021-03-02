@@ -342,6 +342,22 @@
 		 border-radius: $border-radius;
 	}
 
+	/************ Tabs ************/
+
+	.table-tabs{
+		a.nav-link{
+			color: $gray-500;
+			font-size: 12px;
+
+			&.active,
+			&:hover{
+				color: $gray-900;
+				background: transparent;
+				border-bottom-color: $gray-100;
+			}
+		}
+	}
+
 	/************ DataTable ************/
 
 	.table-responsive{
