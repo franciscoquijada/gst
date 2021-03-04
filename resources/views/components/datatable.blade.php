@@ -2,12 +2,12 @@
 
 <ul class="nav nav-tabs table-tabs" id="table-tabs-{{ \Str::random(5) }}" role="tablist">
   <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">Todo <span id="table_all_count"></span></a>
+    <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">Activos <span id="table_all_count"></span></a>
   </li>
 
   @isset( $trash )
 	  <li class="nav-item" role="presentation">
-	    <a class="nav-link" id="trash-tab" data-toggle="tab" href="#trash" role="tab" aria-controls="trash" aria-selected="false">Papelera <span id="table_trash_count"></span></a>
+	    <a class="nav-link" id="trash-tab" data-toggle="tab" href="#trash" role="tab" aria-controls="trash" aria-selected="false">Eliminados <span id="table_trash_count"></span></a>
 	  </li>
   @endisset
 
