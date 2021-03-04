@@ -1,40 +1,55 @@
 @extends('layouts.app')
 
 @section('title')
-  <h2>Usuarios</h2>
-    <a class="btn btn-success float-right" href="{{ route('users.export')}}">Exportar <i class="far fa-file-excel"></i></a>
+	<h2>Usuarios</h2>
+	<x-button.link :href="route('users.export')" class="btn-success float-right" label="Exportar" icon="far fa-file-excel"/>
+
 	@can('usuarios:crear')
-	<a class="btn btn-info float-right" href="#" data-target="#new_user" data-toggle="modal">Añadir <i class="fa fa-plus"></i></a>
+		<x-button.modal target="new_user" />
 	@endcan
 @endsection
 
 @section('content')
-	<div class="table-responsive">	
-		<table id="lista" class="table table-striped"></table>
-	</div>
+
+	<x-datatable :route="route('api.users.list')" trash="true" :columns="$columns" />
 
 	@include('users.partials.show')
 	@include('users.partials.create')
 	@include('users.partials.edit')
+
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 	$(function () {
-	  $('#lista').DataTable({
-	    processing: true,
-	    serverSide: true,
-	    responsive: true,
-	    ajax: '{!! route('users.index') !!}',
-	    columns: [
-			{data: 'name', name: 'name', title: 'Nombre', className: 'text-center text-capitalize'},
-			{data: 'role_name', name: 'role_name', title: 'Rol', className: 'text-center'},
-			{data: 'email', name: 'email', title: 'Email', className: 'text-center'},
-			{data: 'department.name', name: 'department', title: 'Departamento', className: 'text-center'},
-			{data: 'action', name: 'acciones', orderable: false, searchable: false, className: 'text-center actions'}
-		],
-	    language: { url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json' }
-	  });
+
+		$('.get-token').on('click', function(e){
+			e.preventDefault();
+			let $this = $(this);
+			$this.find('i').addClass('fa-spin');
+
+			$.ajax({
+				type: 'POST',
+				url: '{{ route('ajax.generate_token') }}',
+				headers: { 
+			      'X-Requested-With': 'XMLHttpRequest',
+			      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			    },
+				data: {
+					'user_id': $('span.user_id').text(),
+				},
+				success: function (data) {
+					$('span[data-field=api_token]').text( data.token || 'error');
+					$this.find('i').removeClass('fa-spin');
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					if( xhr.status == 422 ){
+						console.log( xhr );
+					}
+					$this.find('i').removeClass('fa-spin');
+				}
+			});
+	  	});
 	});
 </script>
-@endsection
+@endpush

@@ -12,7 +12,7 @@ use App\Rules\ValidarRut;
 
 use App\User;
 use App\Log;
-use App\Department;
+use App\Group;
 
 class RegisterController extends Controller
 {
@@ -26,13 +26,6 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
-   
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -44,6 +37,12 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+
+    public function showRegistrationForm()
+    {
+        return view( 'auth.register');
+    }
+
     /**
      * Create a new user instance after a valid registration.
      *
@@ -52,40 +51,31 @@ class RegisterController extends Controller
      */
     protected function register(Request $request)
     {
-        $request->merge([ 'rut' => _format_rut( $request->rut ) ]);
-
-        $validar = \Validator::make(
-            $request->all(),
-            [
-                'rut'           => [ 'required', 'unique:users,rut,NULL,id,deleted_at,NULL', 'string', new ValidarRut ],
+        $data = $request
+            ->validate([
                 'name'          => ['required', 'string', 'max:255'],
                 'password'      => ['required', 'string', 'min:8', 'confirmed'],
                 'email'         => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
+                'min'           => 'Es muy corto',
+                'max'           => 'Es muy largo',
                 'rut.unique'    => 'Ya este rut esta registrado', 
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
 
-        if ( count( $validar->errors() ) > 0)
-            return response()->json([
-                'status' => 400, 
-                'errors' => $validar->errors()
-            ]);
-        
-        $newUser = User::create([
-            'rut'               => $request->rut,
-            'department_id'     => _setting( 'depto_default', 1 ),
-            'phone'             => $request->phone,
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'attr'              => '',
-            'password'          => Hash::make( $request->password ),
-        ])->assignRole( _setting( 'role_default', 2 ) );
+        $data['group_id']       = _setting( 'group_default', 1 );
+        $role_default           = _setting( 'role_default', false );
+        $data['last_login_at']  = now();
+        $data['last_login_ip']  = $request->getClientIp();
 
-        log::create([
-            'user_id'       => $newUser->id,
+        $newUser = User::create( $data );
+
+        if( $role_defaul )
+            $newUser->assignRole( $role_default );
+
+        $newUser->logs()->create([
             'event'         => 'se registró (ID:' . $newUser->id . ')',
             'description'   => 'App\User',
             'ip'            => $request->ip(),
@@ -95,6 +85,20 @@ class RegisterController extends Controller
         auth()->loginUsingId( $newUser->id );
 
         \Notify::success('Se ha creado tu cuenta con éxito');
-        return Response()->json([ 'newUser' => $newUser, 'redirect' => $this->redirectTo ]);
+
+        return Response()->json([ 
+            'newUser'  => true, 
+            'redirect' => $this->redirectTo 
+        ], 200, array('Content-Type'=>'application/json; charset=utf-8' ));
+    }
+
+    /**
+     * Where to redirect users after resetting their password.
+     *
+     * @var string
+     */
+    public function redirectTo()
+    {
+        return route('home');
     }
 }

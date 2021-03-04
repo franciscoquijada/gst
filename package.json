@@ -11,26 +11,28 @@
     },
     "devDependencies": {
         "axios": "^0.18.1",
-        "bootstrap": "^4.1.0",
+        "bootstrap": "^4.5.0",
         "cross-env": "^5.2.1",
-        "jquery": "^3.4.1",
+        "jquery": "3.4.1",
         "laravel-mix": "^4.1.4",
         "lodash": "^4.17.19",
         "popper.js": "^1.16.1",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.26.3",
+        "sass": "^1.26.9",
         "sass-loader": "^7.3.1",
         "vue": "^2.6.11",
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.13.0",
+        "@fortawesome/fontawesome-free": "^5.13.1",
         "animate.css": "^3.7.2",
-        "datatables.net": "^1.10.19",
+        "clipboard": "^2.0.6",
+        "datatables.net": "^1.10.21",
         "inputmask": "^5.0.3",
+        "jquery.easing": "^1.4.1",
         "nprogress": "^0.2.0",
         "select2": "^4.0.13",
-        "sweetalert2": "^9.10.6",
+        "sweetalert2": "^9.15.1",
         "toastr": "^2.1.4"
     }
 }

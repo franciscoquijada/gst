@@ -1,49 +1,13 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-	<!-- Sidebar Toggle (Topbar) -->
-	<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-	<i class="fa fa-bars"></i>
-	</button>
-	<!--div class="d-none d-md-inline text-gray-600 small text-capitalize"><b><i class="fas fa-fw fa-user mr-2"></i> {{ auth::user()->name }}</b></div-->
-
-	<!-- Topbar Search -->
-	<!--form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-	<div class="input-group">
-	  <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-	  <div class="input-group-append">
-	    <button class="btn btn-primary" type="button">
-	      <i class="fas fa-search fa-sm"></i>
-	    </button>
-	  </div>
-	</div>
-	</form-->
+<nav class="navbar navbar-expand navbar-light topbar mb-4 static-top">
 
 	<!-- Topbar Navbar -->
 	<ul class="navbar-nav ml-auto">
 
-	<!-- Nav Item - Search Dropdown (Visible Only XS) -->
-	<li class="nav-item dropdown no-arrow d-sm-none">
-	  <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	    <i class="fas fa-search fa-fw"></i>
-	  </a>
-	  <!-- Dropdown - Messages -->
-	  <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-	    <form class="form-inline mr-auto w-100 navbar-search">
-	      <div class="input-group">
-	        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-	        <div class="input-group-append">
-	          <button class="btn btn-primary" type="button">
-	            <i class="fas fa-search fa-sm"></i>
-	          </button>
-	        </div>
-	      </div>
-	    </form>
-	  </div>
-	</li>
+		@auth
 
-	<!-- Nav Item - Alerts -->
+		<!-- Nav Item - Alerts -->
 	<li class="nav-item dropdown no-arrow mx-1">
-	  <a class="nav-link dropdown-toggle mark_as_read" data-route="{{ route('markAsRead')}}" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	  <a class="nav-link dropdown-toggle mark_as_read heartBeat animated" data-route="{{ route('ajax.mark_as_read')}}" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	    <i class="fas fa-bell fa-fw"></i>
 	    @if( $alerts = auth::user()->unreadNotifications->count() )
 	    <!-- Counter - Alerts -->
@@ -51,7 +15,7 @@
 	    @endif
 	  </a>
 	  <!-- Dropdown - Alerts -->
-	  <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+	  <div class="dropdown-list dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="alertsDropdown">
 	    <h6 class="dropdown-header">Notificaciones</h6>
 	    @foreach (auth::user()->unreadNotifications as $notification)
 	    <a class="dropdown-item d-flex align-items-center" href="#">
@@ -79,7 +43,7 @@
 	    <span class="badge badge-danger badge-counter">7</span>
 	  </a>
 	  <!-- Dropdown - Messages --
-	  <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+	  <div class="dropdown-list dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="messagesDropdown">
 	    <h6 class="dropdown-header">
 	      Message Center
 	    </h6>
@@ -127,62 +91,52 @@
 	  </div>
 	</li>-->
 
-	<div class="topbar-divider d-none d-sm-block"></div>
+		<div class="topbar-divider d-none d-sm-block"></div>
 
-	<!-- Nav Item - User Information -->
-	<li class="nav-item dropdown no-arrow">
-	  <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	  	<i class="fas fa-chevron-down mr-2 text-gray-400"></i>
-	    <span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize"><b>{{ auth::user()->name }}</b></span>
-	    <!--img class="img-profile rounded-circle" src="https://source.unsplash.com/random/60x60" -->
-	  </a>
-	  <!--a class="nav-link dropdown-toggle" href="#" data-toggle="modal" data-target="#logoutModal">
-	      <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-	      <span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize">Cerrar Sesión</span>
-	    </a-->
-	  <!-- Dropdown - User Information -->
-	  <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-	    <a class="dropdown-item" href="{{route('profile.show')}}">
-	      <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-	      Profile
-	    </a>
-	    <!--a class="dropdown-item" href="#">
-	      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-	      Settings
-	    </a-->
-	    <!--div class="dropdown-divider"></div-->
-	    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-	      <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-	      Cerrar Sesión
-	    </a>
-	  </div>
-	</li>
-
+		<!-- Nav Item - User Information -->
+		<li class="nav-item dropdown no-arrow">
+			<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<i class="fas fa-chevron-down mr-2 text-gray-400"></i>
+				<span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize"><b>{{ auth()->user()->name ?? '' }}</b></span>
+			</a>
+			<!-- Dropdown - User Information -->
+			<div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="userDropdown">
+				<a class="dropdown-item" href="{{route('profile.show')}}">
+					<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+					Configuracion
+				</a>
+				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+					<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+					Cerrar Sesión
+				</a>
+			</div>
+		</li>
+		<!-- / Nav Item - User Information -->
+		@endauth
 	</ul>
-
-	</nav>
+</nav>
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
-	  <div class="modal-content">
-	    <div class="modal-header">
-	      <h5>Cerrar Sesión</h5>
-	      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-	        <span aria-hidden="true">×</span>
-	      </button>
-	    </div>
-	    <div class="modal-body">¿Estas seguro que deseas cerrar sesión?.</div>
-	    <div class="modal-footer">
-	    	<a class="btn btn-primary" type="button" data-dismiss="modal"><i class="fas fa-undo"></i>Cancel</a>
-	      	<a class="btn btn-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
-	              document.getElementById('logout-form').submit();">
-	              <i class="fas fa-sign-out-alt"></i> {{ __('Continuar') }}
-	              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf
-	              </form>
-	        </a>
-	    </div>
-	  </div>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Cerrar Sesión</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">¿Estas seguro que deseas cerrar sesión?.</div>
+			<div class="modal-footer">
+				<a class="btn btn-primary" type="button" data-dismiss="modal"><i class="fas fa-undo"></i>Cancel</a>
+				<a class="btn btn-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
+				document.getElementById('logout-form').submit();">
+				<i class="fas fa-sign-out-alt"></i> {{ __('Continuar') }}
+				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf
+				</form>
+			</a>
+		</div>
 	</div>
+</div>
 </div>
 <!-- / Logout Modal-->

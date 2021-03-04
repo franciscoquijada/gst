@@ -1,3 +1,8 @@
+/*********** NProgress Init ************/
+if (typeof NProgress != 'undefined') {
+  NProgress.start();
+}
+
 /*********** Helpers ************/
 
 window.resetForm = function( $form ){
@@ -9,7 +14,7 @@ window.resetForm = function( $form ){
 window.pressEnter = function(e){
   if( event.keyCode == 13 ) {
     e.preventDefault();
-    $(':focus').parents('.modal').find('.send-form').trigger('click');
+    $(':focus').closest('.modal').find('.send-form').trigger('click');
     return false;
   }
 }
@@ -40,28 +45,10 @@ window.lastAjaxResponse = {
   }
 };
 
-console.log('init_helpers');
-
-
-/********** Cruds Events *************/
-$('.mark_as_read').on('click', markAsRead );
-
-$('.send-form').on('click', sendForm );
-$('button.link').on('click', goTo );
-
-/**** Actions Table ******/
-$('.table').on('click', '.actions .btn_view', viewInfo );
-$('.table').on('click', '.actions .btn_edit', editItem );
-$('.table').on('click', '.actions .btn_del',  delItem );
-
-/**** Formats Inputs ******/
-$('input.numeric').on('keypress', onlyNumbers );
-$('input.alpha').on('keypress',   onlyAlphanumeric );
-$('input.letters').on('keypress', onlyLetters );
-
-$(window).on('keydown', pressEnter);
 
 /*********** Event Functions ************/
+
+const reloadCode = [419];
 
 function input_optional(){
   $('.optional').each(function( i, e ){
@@ -86,24 +73,28 @@ function onlyNumbers() {
   $(this).val( $(this).val().replace(/[^0-9]/g, '') );
 }
 
-/* Pendiente 
-function onlyRUT() {
-  $(this).val($(this).val().replace(/[^0-9k-]/g, ''));
+function onlyRUTFormated() {
+  if( $(this).val() != '' ){
+    let rut   = $(this).val().replace(/[^0-9k]/g, ''),
+    cuerpo    = formatNumber( $rut.slice(0, -1), 0),
+    dv        = $rut.slice(-1).toUpperCase();
+
+    $(this).val( ( $(this).val().length > 7 )  ? cuerpo + '-' + dv : rut );
+  }
 }
 
-function onlyDates() {
-    var date = $(this).val().replace(/[^0-9]/g, ''),
-        d = date.substring(0,2),
-        m = date.substring(2,4) != '' ? '/' + date.substring(2,4) : '',
-        y = date.substring(4,8) != '' ? '/' + date.substring(4,8) : '';
-  $(this).val( d + m + y );
-}*/
+function onlyRUT() {
+  if( $(this).val() != '' ){
+    let rut   = $(this).val().replace(/[^0-9k]/g, '');
+    $(this).val( rut );
+  }
+}
 
 function goTo( e ){
   e.preventDefault();
   if( $(this).data('route').length > 0 ){
     location.href =  $(this).data('route');
-  } 
+  }
 }
 
 function markAsRead(e) {
@@ -119,21 +110,45 @@ function markAsRead(e) {
       if ( data == 'success' ) {
         $this.find('.badge-counter').text(0);
       }
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      if( reloadCode.includes( xhr.status ) ){
+        location.reload();
+      }
     }
   });
 }
 
+/* TODO:Placehoder animate 
 
-function sendForm( e ){
+function labelAnimate(){
+
+  if( $(this).val().length ) {
+    $(this).closest('.label-animate').addClass('filled');
+  }else{
+    $(this).closest('.label-animate').removeClass('filled');
+  }
+}*/
+
+
+window.sendForm = function(e){
   e.preventDefault();
-  let $form = $(this).parents('form');
+  let $form = $(this).closest('form'),
+      $formData = new FormData($form[0]);
 
   $.ajax({
     type: $form.attr('method'), //metodo
-    url: $form.attr('action'), //url
-    data: $form.serialize(),
+    url:  $form.attr('action'), //url
+    headers: { 
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    cache       : false,
+    contentType : false,
+    processData : false,
+    data: $formData,
     success: function (data) {
-      $form.parents('.modal').modal('hide');
+      $form.closest('.modal').modal('hide');
       if ( typeof data.redirect !== 'undefined' ) {
         location.href =  data.redirect;
       }else{
@@ -146,40 +161,71 @@ function sendForm( e ){
 
        $.each(xhr.responseJSON.errors, function( index, elem ){
 
-        let $index = index.split('.')[0];
-        $form.find('#' + $index ).addClass('invalid');
-        $form.find('#' + $index + '-error')
-          .removeAttr('style')
-          .html( elem );
+        let $elem  = index.split('.'),
+            $index = ( typeof $elem[1] != 'undefined' ) ? $elem[0] + '_' + $elem[1] : $elem[0];
+            $index = ( typeof $elem[2] != 'undefined' ) ? $index + '_' + $elem[2] : $index;
+
+        $form
+          .find('#' + $index )
+            .addClass('invalid')
+          .end()
+          .find('#' + $index + '-error')
+            .removeAttr('style')
+            .html( elem );
+
         });
-        setTimeout(function () {
-          $form.find(".error").fadeOut(1500);
-          $form.find('.invalid').removeClass('invalid')
-        }, 6000);
+
+        setTimeout( () =>
+          $form
+            .find(".error")
+              .fadeOut(1500)
+            .end()
+            .find('.invalid')
+              .removeClass('invalid'),
+        6000);
+
+      }else if( reloadCode.includes( xhr.status ) ){
+        location.reload();
       }
     }
   });
 }
 
-function viewInfo(e) {
+window.viewInfo = function(e) {
   e.preventDefault();
-  let id = $(this).data('item');
+
+  let id = $(this).data('item'),
+      route = $(this).data('route');
+
   $.ajax({
-    type: 'GET', //metoodo
-    url: window.location + '/' + id, //id del delete
-    data: {
-      '_token': $('input[name=_token]').val(),
+    type: 'GET',
+    url: route,
+    headers: { 
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    success: function ( data ) {
+    success: ( data ) => {
+
+      //Update last ajax response
       lastAjaxResponse.val = { 'action': 'viewInfo', 'data': data };
+
       $('.viewer.modal')
         .modal('show')
         .find('[data-field]')
         .each( function( i, e ){
           let elem = $(e);
 
+          //Try fill fields
           try {
-            elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+
+            //Fill html fields
+            if( elem.data('type') === 'raw' ){
+              elem.html( '<br/>' + eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+
+            //Fill text fields
+            }else{
+              elem.text( eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+            }
           }
           catch(error) {
             elem.text( ' N/D ' );
@@ -189,47 +235,85 @@ function viewInfo(e) {
   });
 }
 
-function editItem(e) {
+window.editItem = function(e) {
   e.preventDefault();
-  let id = $(this).data('item');
+  let id = $(this).data('item'),
+      route = $(this).data('route');
+
   resetForm( $('.modal.edit form') );
+
   $.ajax({
-    type: 'GET', //metoodo
-    url: window.location + '/' + id + '/edit',
-      data: {
-          '_token': $('input[name=_token]').val(),
-      },
-      success: function (data) {
+    type: 'GET',
+    headers: { 
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    url: route,
+ 
+    success: (data) => {
 
-        lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
-        $('.modal.edit')
-            .modal('show')
-            .find('[data-field]').each( function( i, e ){
-              let elem = $(e),
-              options = eval('data.fields.' + elem.data('field') ) || '';
+      //Update last ajax response
+      lastAjaxResponse.val = { 'action': 'editItem', 'data': data };
 
-            if( elem.is('input') || elem.is('textarea') ){ //Input
-              elem.val( options );
-            }else if( elem.is('select') ){ //Select
-              if(elem.is('[multiple]') && Array.isArray( options ) ){ //Multiple
-                let plck = options.reduce( function( res,opt) {
-                  res.push(opt.id);
-                  return res;
-                },[]);
-              elem.val( plck ).trigger('change');
-              }else{ //Simple
-                elem.val( options ).trigger('change');
-              }
-            }else{ //Text
+      //Open modal and fill fields
+      $('.modal.edit')
+          .modal('show')
+          .find('[data-field]').each( function( i, e ){
+            let elem = $(e);
+            
+            try{
 
-              elem.text( options || ' N/D ' );
+              options = eval('data.fields.' + elem.data('field') );
+            
+            } catch (error) {
+
+              options = '';
+              console.log( 'error' + error );
+
             }
-        }).parents('form').attr('action', data.route );
+
+          //Input field
+          if( elem.is('input') || elem.is('textarea') ){
+
+            elem.val( options );
+
+          //Select fields
+          }else if( elem.is('select') ){
+
+            //Multiple select field
+            if( elem.is('[multiple]') && Array.isArray( options ) ){
+
+              let plck = options.reduce( function( res, opt ) {
+                res.push(opt.id);
+                return res;
+              },[]);
+
+              elem.val( plck ).trigger('change');
+
+            //Simple select field
+            }else{
+
+              elem.val( options ).data('default-value', options).trigger('change');
+
+            }
+
+          //Text field
+          }else{
+            elem.text( options || ' N/D ' );
+
+          }
+
+      }).closest('form').attr('action', data.route );
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      if( reloadCode.includes( xhr.status ) ){
+        location.reload();
+      }
     }
   });
 }
 
-function delItem(e) {
+window.delItem = function(e) {
   e.preventDefault();
   let route = $(this).data('route');
   Swal.fire({
@@ -245,53 +329,74 @@ function delItem(e) {
       confirmButton: 'confirm-button-class btn custom',
       cancelButton: 'cancel-button-class btn custom',
     },
-  }).then((result) => {
-    
-      if (result.value) {
-        $.ajax({
-            type: 'DELETE', //metodo
-            url: route, //id del delete
-            data: {
-              '_token': $('input[name=_token]').val(),
-            },
-            success: function (data) {
-                Swal.fire(
-                  'Borrado!',
-                  'Se ha borrado con éxito.',
-                  'success'
-                )
-                location.reload();
+  }).then( (result) => {
+
+    if (result.value) {
+      $.ajax({
+          type: 'DELETE', //metodo
+          url: route, //id del delete
+          headers: { 
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: (data) => {
+              Swal.fire({
+                title: 'Borrado!',
+                text: 'Se ha borrado con éxito.',
+                icon: 'success',
+                customClass: {
+                  confirmButton: 'confirm-button-class btn custom',
+                }
+              })
+              location.reload();
+          },
+          error: (xhr, ajaxOptions, thrownError) => {
+            if( reloadCode.includes( xhr.status ) ){
+              location.reload();
             }
-        });
-      }
+          }
+      });
+    }
   });
 }
 
-console.log('init_crud_functions');
-
-
 /*********** Init Assets ************/
-
-$( window ).on( "load", function() {
-  if (typeof NProgress != 'undefined') {
-    NProgress.start();
-  }
-});
-
 $(document).ready(function() {
+
+  /********** Cruds Events *************/
+  $('.mark_as_read').on('click', markAsRead );
+
+  $('.send-form').on('click', sendForm );
+  $('button.link').on('click', goTo );
+
+  /**** Actions Table ******/
+  $('.table').on('click', '.actions .btn_view', window.viewInfo );
+  $('.table').on('click', '.actions .btn_edit', window.editItem );
+  $('.table').on('click', '.actions .btn_del',  window.delItem );
+
+  /**** Formats Inputs ******/
+  $('input.numeric').on('keypress', onlyNumbers );
+  $('input.alpha').on('keypress',   onlyAlphanumeric );
+  $('input.letters').on('keypress', onlyLetters );
+  $('input.rut').on('keypress', onlyRUT );
+  $('input.rut-format').on('keypress', onlyRUTFormated );
+  //$('.label-animate input').on('focus change', labelAnimate );
+  //$('input.dates').on('keypress', onlyDates );
+
+  $(window).on('keydown', pressEnter);
 
   input_optional();
   Inputmask().mask(document.querySelectorAll("input"));
 
-  let newOption = new Option( '- Seleccione -', '', true, true);
-  
-      $('.select:not([multiple])').prepend(newOption).select2({
-          width: '100%',
-          language: "es"
-      });
+  new ClipboardJS('.btn-copy');
+
+  $('.select:not([multiple])').select2({
+      width: '100%',
+      language: "es"
+  });
 
   $.fn.select2.amd.require(
-    [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'], 
+    [ 'select2/utils', 'select2/dropdown', 'select2/dropdown/attachBody'],
     function (Utils, Dropdown, AttachBody) {
       function SelectAll() { }
 
@@ -307,7 +412,7 @@ $(document).ready(function() {
           $results.each( function () {
             var $result = $(this),
                 data = $result.data('data');
-            
+
             self.trigger('select', {
               data: data
             });
@@ -328,14 +433,10 @@ $(document).ready(function() {
       SelectAll ),
     });
   });
-  
+
   if (typeof NProgress != 'undefined') {
     NProgress.done();
-
     $(document).ajaxStart( () => NProgress.start() );
     $(document).ajaxStop( () => NProgress.done() );
   }
-
 });
-
-console.log('init_assets');

@@ -12,7 +12,7 @@ class UsersExport implements FromView
     public function view(): View
     {
         return view('exports.users', [
-            'users' => User::with('department')->get()
+            'users' => User::all()
         ]);
     }
 }

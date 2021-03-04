@@ -1,6 +1,8 @@
 <?php
 
 return [
+    //Rol por defecto del administrador
+    'admin' => 'administrador',
 
     'models' => [
 

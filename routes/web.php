@@ -1,127 +1,109 @@
 <?php
 
-// ********** Rutas creadas por Laravel ****************
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/notification', 'HomeController@markAsRead')
-  ->name('markAsRead')
-  ->middleware(['only_ajax']);
-
 /* Rutas de Autenticacion */
-Auth::routes(['register' => true]);
+Auth::routes(['register' => false]);
 
 /* Socialite */
-Route::get('auth/{driver}', 'Auth\LoginController@redirectToProvider')->name('social_auth');
-Route::get('auth/{driver}/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('auth/{driver}', 'Auth\SocialAuthController@redirectToProvider')
+  ->name('social_auth');
+Route::get('auth/{driver}/callback', 'Auth\SocialAuthController@handleProviderCallback');
+
+/* Ajax */
+Route::prefix('ajax')
+  ->middleware(['auth', 'only_ajax'])
+  ->name('ajax.')
+  ->group( function ()
+{
+  Route::match(['get', 'post'], 'locations','AjaxController@get_locations')
+    ->name('locations');
+  Route::match(['get', 'post'], 'country','AjaxController@get_country')
+    ->name('country');
+  Route::match(['get', 'post'], 'notification', 'AjaxController@mark_as_read')
+    ->name('mark_as_read');
+  Route::match(['get', 'post'], 'token', 'AjaxController@generate_token')
+    ->name('generate_token');
+});
 
 Route::group(['middleware' => ['auth']], function ()
 {
   /* Home */
-  Route::get('/home', 'HomeController@index')
+  Route::get('/', 'HomeController@index')
     ->name('home');
 
   /* Users */
-  Route::get('users','UsersController@index')
-    ->name('users.index')
-    ->middleware(['permission:usuarios:listado']);
-  Route::get('users/create','UsersController@create')
-    ->name('users.create')
-    ->middleware(['permission:usuarios:ver']);
-  Route::get('users/{id}','UsersController@show')
-    ->where('id', '[0-9]+')
-    ->name('users.show')
-    ->middleware(['permission:usuarios:ver', 'only_ajax']);
-  Route::post('users','UsersController@store')
-    ->name('users.store')
-    ->middleware(['permission:usuarios:crear', 'only_ajax']);
-  Route::get('users/{id}/edit','UsersController@edit')
-    ->where('id', '[0-9]+')
-    ->name('users.edit', 'only_ajax')
-    ->middleware(['permission:usuarios:actualizar']);
-  Route::put('users/{id}','UsersController@update')
-    ->where('id', '[0-9]+')
-    ->name('users.update')
-    ->middleware(['permission:usuarios:actualizar', 'only_ajax']);
-  Route::delete('users/{id}','UsersController@destroy')
-    ->where('id', '[0-9]+')
-    ->name('users.destroy')
-    ->middleware(['permission:usuarios:eliminar', 'only_ajax']);
-  Route::get('/users/export', 'UsersController@export')
-    ->name('users.export')
-    ->middleware(['permission:usuarios:listado']);
+  Route::prefix('users')
+  ->name('users.')
+  ->group(function()
+  {
+    Route::get('/','UsersController@index')
+      ->name('index')
+      ->middleware(['permission:usuarios:listado']);
 
-  Route::get('profile','UsersController@profile')
-    ->name('profile.show');
-  Route::post('profile','UsersController@update_profile')
-    ->name('profile.update');
+    Route::get('/exports', 'UsersController@export')
+      ->name('export')
+      ->middleware(['permission:usuarios:listado']);
+  });
+
+  /* Users - Profile */
+  Route::prefix('profile')
+  ->name('profile.')
+  ->group(function()
+  {
+    Route::get('/','UsersController@profile')
+      ->name('show');
+      
+    Route::post('/','UsersController@update_profile')
+      ->name('update');
+  });
+
+  /*Tipos de identificacion*/
+  Route::prefix('identifications/types')
+  ->name('id_types.')
+  ->group(function()
+  {
+    Route::get('/','IdentificationsTypesController@index')
+      ->name('index')
+      ->middleware(['permission:tipos identificadores:listado']);
+
+    Route::get('export', 'IdentificationsTypesController@export')
+      ->name('export')
+      ->middleware(['permission:tipos identificadores:listado']);
+  });
+
+  /*Grupos*/
+  Route::prefix('groups')
+  ->name('groups.')
+  ->group(function()
+  {
+    Route::get('/','GroupsController@index')
+      ->name('index')
+      ->middleware(['permission:grupos:listado']);
+
+    Route::get('export', 'GroupsController@export')
+      ->name('export')
+      ->middleware(['permission:grupos:listado']);
+  });
+
+  /* Registros */
+  Route::get('logs','LogsController@index')
+    ->name('logs.index')
+    ->middleware(['permission:registros:listado']);
 
   /* Roles */
   Route::get('roles','RolesController@index')
     ->name('roles.index')
     ->middleware(['permission:roles:listado']);
-  Route::get('roles/create','RolesController@create')
-    ->name('roles.create')
-    ->middleware(['permission:roles:crear']);
-  Route::get('roles/{id}','RolesController@show')
-    ->where('id', '[0-9]+')
-    ->name('roles.show')
-    ->middleware(['permission:roles:ver', 'only_ajax']);
-  Route::post('roles','RolesController@store')
-    ->name('roles.store')
-    ->middleware(['permission:roles:crear', 'only_ajax']);
-  Route::get('roles/{role}/edit','RolesController@edit')
-    ->name('roles.edit')
-    ->middleware(['permission:roles:actualizar']);
-  Route::put('roles/{id}','RolesController@update')
-    ->where('id', '[0-9]+')
-    ->name('roles.update')
-    ->middleware(['permission:roles:actualizar', 'only_ajax']);
-  Route::delete('roles/{role}','RolesController@destroy')
-    ->name('roles.destroy')
-    ->middleware(['permission:roles:eliminar', 'only_ajax']);
-
-  /*Departments*/
-  Route::get('departments','DepartmentsController@index')
-    ->name('departments.index')
-    ->middleware(['permission:departamentos:listado']);
-  Route::get('departments/create','DepartmentsController@create')
-    ->name('departments.create')
-    ->middleware(['permission:departamentos:crear']);
-  Route::get('departments/{id}','DepartmentsController@show')
-    ->where('id', '[0-9]+')
-    ->name('departments.show')
-    ->middleware(['permission:departamentos:ver']);
-  Route::post('departments','DepartmentsController@store')
-    ->name('departments.store')
-    ->middleware(['permission:departamentos:crear', 'only_ajax']);
-  Route::get('departments/{id}/edit','DepartmentsController@edit')
-    ->where('id', '[0-9]+')
-    ->name('departments.edit')
-    ->middleware(['permission:departamentos:actualizar']);
-  Route::put('departments/{id}','DepartmentsController@update')
-    ->where('id', '[0-9]+')
-    ->name('departments.update')
-    ->middleware(['permission:departamentos:actualizar', 'only_ajax']);
-  Route::delete('departments/{id}','DepartmentsController@destroy')
-    ->where('id', '[0-9]+')
-    ->name('departments.destroy')
-    ->middleware(['permission:departamentos:eliminar', 'only_ajax']);
-  Route::get('/departments/export', 'DepartmentsController@export')
-    ->name('department.export')
-    ->middleware(['permission:departamentos:listado']);
-
-  /* Registros */ 
-  Route::get('logs','LogsController@index')
-    ->name('logs.index')
-    ->middleware(['permission:registros:listado']);
-  Route::get('/indexData','LogsController@indexData')
-        ->name('logs.indexData');
 
   /*Configuracion*/
-  Route::get('settings','SettingsController@index')
-    ->name('settings.index')
-    ->middleware(['permission:configuraciones:listado']);
-  Route::post('settings/{id}','SettingsController@update')
-    ->name('settings.store')
-    ->middleware(['permission:configuraciones:listado', 'only_ajax']);
-
+  Route::prefix('settings')
+  ->name('settings.')
+  ->group(function()
+  {
+    Route::get('/','SettingsController@index')
+      ->name('index')
+      ->middleware(['permission:configuraciones:listado']);
+    Route::post('{id}','SettingsController@update')
+      ->name('store')
+      ->middleware(['permission:configuraciones:listado', 'only_ajax']);
+  });
 });

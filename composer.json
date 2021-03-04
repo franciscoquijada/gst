@@ -10,33 +10,34 @@
     "require": {
         "php": "^7.2",
         "barryvdh/laravel-dompdf": "^0.8.4",
+        "chriskonnertz/string-calc": "^1.0",
         "egulias/email-validator": "^2.1",
         "fideloper/proxy": "^4.0",
-        "guzzlehttp/guzzle": "^6.5",
-        "laravel/framework": "^6.0",
-        "laravel/slack-notification-channel": "^2.0",
-        "laravel/socialite": "^4.1",
-        "laravel/tinker": "^1.0",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/framework": "^8.0",
+        "laravel/legacy-factories": "^1.1",
+        "laravel/passport": "^10.0",
+        "laravel/tinker": "^2.0",
+        "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
         "malahierba-lab/chile-rut": "5.1.*",
         "mpdf/mpdf": "^8.0",
         "nwidart/laravel-modules": "^6.2",
-        "yajra/laravel-datatables-oracle": "~9.0",
-        "silviolleite/laravelpwa": "^1.0.4",
         "spatie/laravel-permission": "^3.6",
         "staudenmeir/eloquent-has-many-deep": "^1.11",
-        "staudenmeir/eloquent-json-relations": "^1.3"
-
+        "staudenmeir/eloquent-json-relations": "^1.3",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-dump-server": "^1.0",
-        "facade/ignition": "^1.16",
+        "facade/ignition": "^2.3.6",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "nunomaduro/collision": "^5.0",
+        "phpunit/phpunit": "^9.0"
     },
     "config": {
         "optimize-autoloader": true,
@@ -51,14 +52,12 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Modules\\": "modules/"
+            "Modules\\": "modules/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
             "app/Helpers.php"
-        ],
-        "classmap": [
-            "database/seeds",
-            "database/factories"
         ]
     },
     "autoload-dev": {

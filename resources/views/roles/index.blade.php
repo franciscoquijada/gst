@@ -2,14 +2,12 @@
 @section('title')
 <h2>Roles</h2>
     @can('roles:crear')
-        <a class="btn btn-info float-right" href="#" data-target="#new_role" data-toggle="modal">Añadir <i class="fa fa-plus"></i></a>
+    	<x-button.modal target="new_role" />
     @endcan
 @endsection
 
 @section('content')
-	<div class="table-responsive">
-		<table id="lista" class="table table-striped"></table>
-	</div>
+	<x-datatable :route="route('api.roles.list')" :columns="$columns" />
 
 	@include('roles.partials.show')
 	@include('roles.partials.create')
@@ -17,18 +15,25 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script type="text/javascript">
+	$(function () {
+		$('#lista')
+			.on( 'click', '.btn_view_permission', window.viewPermission )
+			.on( 'click', '.btn_edit_permission', window.editPermission )
+	});
 
 	function viewPermission(e){
 	  e.preventDefault();
-	  let id = $(this).data('item');
+	  let route = $(this).data('route');
 
 	  $.ajax({
 	      type: 'GET', //metoodo
-	      url: window.location + '/' + id, //id del delete
-	      data: {
-	          '_token': $('input[name=_token]').val(),
+	      url: route,
+	      headers: {
+	      	'Accept': 'application/json',
+	      	'X-Requested-With': 'XMLHttpRequest',
+	      	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	      },
 	      success: function ( data ) {
 	          $('.viewer.modal').modal('show')
@@ -65,6 +70,7 @@
 	          	html += '<div class="col-md-6"><span><b>' + i;
 	          	html += '</b></span><ul>' + e + '</ul></div>';
 	          });
+	          console.log( html )
 
 	          $('#permission').html( html );
 	      }
@@ -73,15 +79,17 @@
 
 	function editPermission(e) {
 	  e.preventDefault();
-	  let id = $(this).data('item');
+	  let route = $(this).data('route');
 
 	  resetForm( $('.modal.edit form') );
 
 	  $.ajax({
 	    type: 'GET', //metoodo
-	    url: window.location + '/' + id + '/edit',
-	    data: {
-	        '_token': $('input[name=_token]').val(),
+	    url: route,
+	    headers: { 
+	      'Accept': 'application/json',
+	      'X-Requested-With': 'XMLHttpRequest',
+	      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	    },
 	    success: function (data) {
 	      $('.modal.edit')
@@ -101,26 +109,6 @@
 	      }
 	    });
 	}
-
-	$(function () {
-		$('#lista')
-			.off('click', '.btn_view',  window.viewInfo )
-			.on( 'click',  '.btn_view', window.viewPermission )
-			.off('click', '.btn_edit',  window.editItem )
-			.on( 'click',  '.btn_edit', window.editPermission )
-			.DataTable({
-				processing: true,
-				serverSide: true,
-				responsive: true,
-				ajax: '{!! route('roles.index') !!}',
-				columns: [
-					{data: 'name', name: 'name', title: 'Nombre', className: 'text-center text-capitalize'},
-					{data: 'users_count', name: 'users', title: 'Usuarios', className: 'text-center'},
-					{data: 'action', name: 'acciones', orderable: false, searchable: false, className: 'text-center actions'}
-				],
-				language: { url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json' }
-			});
-	});
 </script>
-@endsection
+@endpush
 
