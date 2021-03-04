@@ -2,21 +2,21 @@
 
 _Sistema de gestión base_
 
-### Pre-requisitos 📋
+### Pre-requisitos
 
 _Php 7.2 o superior_
 
-### Instalación 🔧
+### Instalación
 
 * Script instalacion **php -r "file_exists('.env') || copy('.env.example', '.env');"**
 * Configurar entorno archivo **.env**
-* Ejecutar las migraciones **composer install && php artisan key:generate && php artisan storage:link && chmod -R 777 storage bootstrap/cache && php artisan migrate --seed**
+* Ejecutar las migraciones **composer install && php artisan key:generate && php artisan storage:link && chmod -R 777 storage bootstrap/cache && php artisan passport:install && php artisan migrate --seed**
 
-### Adicionales 🔧
+### Adicionales
 
 * (Opcional) MongoDB para los logs: configurar controlador y ejecutar **composer require "mongodb/mongodb" && composer require "jenssegers/mongodb"**
 
-## Construido con 🛠️
+## Construido con 
 
 * [Laravel](https://laravel.com/) - El framework web usado
 * [DataTable](https://datatables.net/) - Manejo de Tablas HTML

@@ -14,6 +14,11 @@ window.Swal			= require('sweetalert2')
 window.NProgress  	= require('NProgress');
 window.select2 	 	= require('select2');
 window.Inputmask  	= require('inputmask');
+window.dataTables  	= require('datatables.net');
+window.ClipboardJS  = require('clipboard');
+
+//require( 'datatables.net' )( window, $ );
+//require('jquery.easing')( window, $ );
 
 /**
  * The following block of code may be used to automatically register your

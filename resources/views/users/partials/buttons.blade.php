@@ -1,11 +1,15 @@
-@can('usuarios:ver')
-	<button class="btn btn-info btn_view" title="Detalles" data-item="{{ $id }}" ><i class="fa fa-eye"></i></button>
-@endcan
-@can('usuarios:actualizar')
-	<button class="btn btn-warning btn_edit" title="Editar" data-item="{{ $id }}"><i class="fa fa-edit"></i></button>
-@endcan
-@if( $id != 1 ) 
-	@can('usuarios:eliminar')
-		<button class="btn btn-danger btn_del" title="Eliminar" data-route="{{ route( 'users.destroy', $id )}}"><i class="fa fa-trash"></i></button>
+@if( $deleted_at == null )
+	@can('usuarios:ver')
+		<x-button.action class="btn-info btn_view" :route="route('api.users.show', $id)" title="Detalles" icon="fa fa-eye" />
 	@endcan
+
+	@can('usuarios:actualizar')
+		<x-button.action class="btn-warning btn_edit" :route="route('api.users.edit', $id)" title="Editar" icon="fa fa-edit" />
+	@endcan
+
+	@if( $id != 1 ) 
+		@can('usuarios:eliminar')
+			<x-button.action class="btn-danger btn_del" :route="route('api.users.destroy', $id)"  title="Eliminar" icon="fa fa-trash" />
+		@endcan
+	@endif
 @endif

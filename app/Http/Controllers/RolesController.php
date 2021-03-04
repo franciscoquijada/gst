@@ -23,13 +23,40 @@ class RolesController extends Controller
         $this->middleware(['permission:roles:listado|roles:ver|roles:crear|roles:editar|roles:eliminar']);
     }
 
-    public function index()
+    public function list()
     {
-         if( request()->ajax() )
-            return \DataTables::of( Role::withCount('users')->latest()->get() )
+        $data = Role::withCount('users')->latest();
+
+        return \DataTables::of( $data )
             ->addColumn( 'action', 'roles.partials.buttons' )
             ->toJson();
-            
+    }
+
+    public function index()
+    {
+        $columns = [
+            [
+                'data'      => 'name', 
+                'name'      => 'name', 
+                'title'     => 'Nombre', 
+                'className' => 'text-center text-capitalize'
+            ],
+            [
+                'data'      => 'users_count', 
+                'name'      => 'users', 
+                'title'     => 'Usuarios',
+                'searchable' => false,
+                'className' => 'text-center'
+            ],
+            [
+                'data'       => 'action', 
+                'name'       => 'acciones', 
+                'orderable'  => false, 
+                'searchable' => false, 
+                'className'  => 'text-center actions'
+            ]
+        ];
+
         $system = [];
         $modules = [];
 
@@ -45,7 +72,8 @@ class RolesController extends Controller
         return view('roles.index', [ 
             'permissions'   => Permission::all(),
             'system'        => $system,
-            'mod'           => $modules
+            'mod'           => $modules,
+            'columns'       => $columns
         ]);
     }
 
@@ -76,7 +104,7 @@ class RolesController extends Controller
 
         \Notify::success('Rol creado con éxito');
 
-        return Response()->json($newRole);
+        return Response()->json(true);
     }
 
     /**
@@ -102,7 +130,7 @@ class RolesController extends Controller
         $role = Role::with('permissions')->findOrFail($id);
         return [
             'fields' => $role,
-            'route'  => route( 'roles.update', $id )
+            'route'  => route( 'api.roles.update', $id )
         ];
     }
 

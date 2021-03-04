@@ -4,8 +4,11 @@ use App\Setting;
 
 function _log($user, $event, $descripcion, $request)
 {
-    log::create([
-        'user_id'       => $user,
+    if(! $user instanceof \App\User )
+        $user = \App\User::findOrFail($user);
+
+    if($user)
+            $user->logs()->create([
         'event'         => $event,
         'description'   => $descripcion,
         'ip'            => $request->ip(),

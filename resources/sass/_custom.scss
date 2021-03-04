@@ -1,296 +1,547 @@
-/************ Login Page ************/
-#login{
-	.login_content{
-		input[type="text"],
-		input[type="email"],
-		input[type="password"] {
-		    border-radius: 2px;
-			-ms-box-shadow: none;
-			-o-box-shadow: none;
-			box-shadow: none;
-			border: 0;
-			border-bottom: 1px solid $gray-400;
-			color: #777;
-			margin: 0 0 20px;
-			width: 100%;
-
-		    &:focus {
-			    border: 0;
-  				border-bottom: 2px solid $blue;
-			}
-		}
-
-		.btn{
-			padding: 10px 20px;
-			margin:auto;
-			display: inline-block; 
-		}
-	}
-}
+/**
+ * Custom Style
+ * Autor: Lpinto
+ * Version: v1.3
+ */
 
 
-/************ Progress Bar ************/
-#nprogress{
-	pointer-events: none;
-
-	.bar {
-	    background: #FFF;
-	    position: fixed;
-		  z-index: 1031;
-		  top: 0;
-		  left: 0;
-
-		  width: 100%;
-		  height: 4px;
-	}
-	.peg {
-	    display: block;
-		position: absolute;
-		right: 0px;
-		width: 100px;
-		height: 100%;
-		box-shadow: 0 0 10px #1ABB9C, 0 0 5px #1ABB9C;
-		opacity: 1.0;
-
-		-webkit-transform: rotate(3deg) translate(0px, -4px);
-		  -ms-transform: rotate(3deg) translate(0px, -4px);
-		      transform: rotate(3deg) translate(0px, -4px);
-	}
-	.spinner {
-		display: block;
-		position: fixed;
-		z-index: 1031;
-		top: 15px;
-		right: 15px;
-	}
-	.spinner-icon {
-		width: 18px;
-		height: 18px;
-		box-sizing: border-box;
-
-		border: solid 2px transparent;
-		border-top-color: #FFF;
-	    border-left-color: #FFF;
-		border-radius: 50%;
-
-		-webkit-animation: nprogress-spinner 400ms linear infinite;
-		      animation: nprogress-spinner 400ms linear infinite;
-	}
-}
-.nprogress-custom-parent {
-	overflow: hidden;
-	position: relative;
-
-	#nprogress {
-		
-		.spinner,
-		.bar {
-			position: absolute;
-		}
-	}
+@mixin meter-line {
+  	content: "";
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 7px;
+	left: 0;
+	bottom: 10px;
 }
 
 @-webkit-keyframes nprogress-spinner {
 	0%   { -webkit-transform: rotate(0deg); }
 	100% { -webkit-transform: rotate(360deg); }
 }
+
 @keyframes nprogress-spinner {
 	0%   { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
 }
 
-/************ Buttons ************/
-a.btn,
-button.btn.custom {
+#app{
+	background: $light;
 
-	color: #FFF !important;
-    border: 0;
-    padding: 6px 12px 6px 25px;
-    margin: 0 5px 5px 10px;
-    position: relative;
-    overflow: hidden;
+	/************ Header & Sidebar ************/
 
-    i.fa,
-    i.far,
-    i.fas,
-    i.fab{
-	    position: absolute;
-	    left: 2px;
-	    top: 10%;
-	    font-size: 35px;
-	    opacity: 0.2;
-	    transition: all ease-in-out 0.3s
+	.navbar{
+		min-height: 50px;
+		background-color: $dark;
 	}
 
-	&.btn-default:hover{
-		background: $gray-100;
+	#accordionSidebar{
+		background-color: $primary;
+		background-image: linear-gradient(180deg,  $secondary 10%, $dark 100%);
+		background-size: cover;
+		color: $white;
+
+		.sidebar-brand{
+			color: $white;
+		}
+		.nav-item {
+				.collapse-item,
+				.nav-link{
+					white-space: nowrap;
+				  	overflow: hidden;
+				  	text-overflow: ellipsis;
+				}
+		}
+
+		#sidebarToggle{
+			border-radius: $border-radius;
+		}
+
+		.collapse-inner{
+			border-radius: $border-radius;
+		}
 	}
 
-	&:hover i.fa,
-    &:hover i.far,
-    &:hover i.fas,
-    &:hover i.fab{
-	    color: #30373A;
-	    transform: rotate(5deg);
-	}
-}
+	/************ Texts ************/
 
-/************ Select2 ************/
-.select2-container--default{
-
-    .select2-selection--single{
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 0;
-        min-height: 38px;
-
-        .select2-selection__arrow {
-            top: 7px;
-        }
-
-        .select2-selection__rendered {
-            color: #73879C;
-            padding-top: 5px;
-        }
-
-        .select2-selection__arrow {
-            height: 36px;
-        }
-    }
-
-    .select2-selection--multiple {
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 0;
-        min-height: 38px;
-
-        .select2-selection__arrow {
-            top: 7px;
-        }
-
-        .select2-selection__rendered {
-            padding-top: 3px;
-        }
-
-        .select2-selection__choice,
-        .select2-selection__clear {
-            margin-top: 2px;
-            border: none;
-            border-radius: 0;
-            padding: 3px 5px;
-        }
-
-        .select2-container--default.select2-container--focus .select2-selection--multiple {
-            border: 1px solid #ccc;
-        }
-    }
-}
-
-/************ Error Label ************/
-.label.error,
-.label-error {
-    color: red;
-    font-weight: 700;
-    font-size: 12px;
-}
-
-/************ Modal ************/
-.modal-dialog{
-
-    .modal-content{
-
-    	border: 0;
-
-        .modal-header{
-
-            .close {
-                margin: 0;
-                padding: 0;
-                float: right;
-            }
-            .modal-title{
-                color: #FFF;
-            }
-        }
-    }
-}
-
-
-/************ DataTable ************/
-
-.table-responsive{
-	overflow-x: unset;
-
-	.dataTables_wrapper {
+	.title {
+	    background: $dark;
+	    /*font-family: 'Porter Medium';*/
 	    position: relative;
-	    clear: both;
-	    padding-top: 20px;
+	    display: inline-block;
+	    padding: 10px 20px;
+	    margin-bottom: 30px;
+	    font-weight: 700;
+	    color: #FFF;
+	    margin-left: -18px;
 
-	    .dataTables_length {
-		    width: 40%;
-		    float: left
+	    b{
+	    	color: $primary;
+	    }
+
+	    &:after {
+		    content: '';
+		    display: block;
+		    position: absolute;
+		    border-width: 15px;
+		    border-style: solid;
+		    border-top-color: $dark;
+		    border-bottom-color: transparent;
+		    border-left-color: transparent;
+		    border-right-color: transparent;
+		    bottom: -28px;
 		}
-		.dataTables_processing{
-			font-weight: 700;
-			color: #444;
-			text-align: center;
-			width: 100%;
-			height: 100%;
-			z-index: 999;
-			background: rgba(255,255,255,0.8);
+	}
+
+	.sub_title{
+		color:  $secondary;
+		font-weight: 700;
+	}
+
+
+	/************ Progress Bar ************/
+	#nprogress{
+		pointer-events: none;
+
+		.bar {
+		    background:  $secondary;
+		    position: fixed;
+			  z-index: 1031;
+			  top: 0;
+			  left: 0;
+
+			  width: 100%;
+			  height: 2px;
+		}
+		.peg {
+		    display: block;
 			position: absolute;
-			padding: 2%;
-		}
-		.dataTables_filter {
-		    width: 50%;
-		    float: right;
-		    text-align: right;
+			right: 0px;
+			width: 100px;
+			height: 100%;
+			opacity: 1.0;
 
-		    input[type="search"] {
-			    border: 1px solid  #a6a6a6;
-			    margin-left: 10px
+			-webkit-transform: rotate(3deg) translate(0px, -4px);
+			  -ms-transform: rotate(3deg) translate(0px, -4px);
+			      transform: rotate(3deg) translate(0px, -4px);
+		}
+		.spinner {
+			display: block;
+			position: fixed;
+			z-index: 1031;
+			top: 15px;
+			right: 15px;
+		}
+		.spinner-icon {
+			width: 18px;
+			height: 18px;
+			box-sizing: border-box;
+
+			border: solid 2px transparent;
+			border-top-color:  $secondary;
+		    border-left-color:  $secondary;
+			border-radius: 50%;
+
+			-webkit-animation: nprogress-spinner 400ms linear infinite;
+			      animation: nprogress-spinner 400ms linear infinite;
+		}
+	}
+	.nprogress-custom-parent {
+		overflow: hidden;
+		position: relative;
+
+		#nprogress {
+
+			.spinner,
+			.bar {
+				position: absolute;
 			}
 		}
-		.dataTables_info {
-		    width: 60%;
-		    float: left
+	}
+
+	/************ Modal ************/
+	.modal-content {
+		border-radius: $border-radius !important;
+
+		.modal-header {
+		    border-top-left-radius: $border-radius !important;
+		    border-top-right-radius: $border-radius !important;
+		}
+		.modal-footer {
+		    border-bottom-right-radius: $border-radius !important;
+		    border-bottom-left-radius: $border-radius !important;
 		}
 	}
 
-	.dataTables_paginate{
-		float: right;
-	    text-align: right;
-	    background: #ff0000;
 
-		a,
-		.ellipsis {
-		    padding: 6px 9px !important;
-		    background: #ddd !important;
-		    border-color: #ddd !important
+	/************ Buttons ************/
+
+	a{
+		&.nav-link{
+			color: #FFF;
+		}
+		color: $dark;
+	}
+
+	.btn,
+	.swal2-actions button{
+		border-radius: $border-radius !important;
+	}
+
+	a.btn,
+	button.btn.custom {
+
+		color: #FFF !important;
+	    border: 0;
+	    padding: 10px 20px;
+	    margin: 0 5px 5px 10px;
+	    display: inline-block;
+		border-radius: $border-radius !important;
+	    position: relative;
+	    overflow: hidden;
+
+	    i.fa,
+	    i.far,
+	    i.fas,
+	    i.fab{
+		    position: absolute;
+		    left: 2px;
+		    top: 10%;
+		    font-size: 35px;
+		    opacity: 0.2;
+		    transition: all ease-in-out 0.3s
+		}
+
+		&.btn-default:hover{
+			background: $gray-100;
+		}
+		&.btn-info{
+			color: #fff;
+			background-color: $primary !important;
+		}
+
+		&:hover i.fa,
+	    &:hover i.far,
+	    &:hover i.fas,
+	    &:hover i.fab{
+		    color: #30373A;
+		    transform: rotate(5deg);
 		}
 	}
 
-	.dataTables_empty {
-	    text-align: center;
+	.dropdown-header {
+		color: #fff;
+		background-color: $primary !important;
 	}
-}
+
+	.dropdown-list{
+
+		.dropdown-header{
+			background-color: $dark !important;
+			border: 0;
+		}
+	}
+
+	.dropdown-menu{
+		background: $light !important;
+	}
+
+	/************ Select2 ************/
+	.select2-container--default{
+
+	    .select2-selection--single{
+	        background-color: $light;
+	        border: 0;
+	        padding: 6px 9px;
+	        border-radius: $border-radius;
+	        min-height: 38px;
+
+	        .select2-selection__arrow {
+	            top: 7px;
+	        }
+
+	        .select2-selection__rendered {
+	            color: #73879C;
+	        }
+
+	        .select2-selection__arrow {
+	            height: 36px;
+	            position: absolute;
+				top: 2px;
+				right: 2px;
+	        }
+	    }
+
+	    .select2-selection--multiple {
+	        background-color: $light;
+	        border: 0;
+	        border-radius: $border-radius;
+	        min-height: 38px;
+
+	        .select2-selection__arrow {
+	            top: 7px;
+	        }
+
+	        .select2-selection__rendered {
+	            padding-top: 3px;
+	        }
+
+	        .select2-selection__choice,
+	        .select2-selection__clear {
+	            margin-top: 2px;
+	            border: none;
+	            border-radius: $border-radius;
+	            padding: 3px 5px;
+	        }
+
+	        .select2-container--default.select2-container--focus .select2-selection--multiple {
+	            border: 1px solid #ccc;
+	        }
+	    }
+
+	    .select2-results__option {
+		    text-transform: capitalize;
+		}
+	}
+
+	/************ Error Label ************/
+	.label.error,
+	.label-error {
+	    color: #ff0000;
+	    font-weight: 700;
+	    font-size: 12px;
+	}
+
+	/************ Modal ************/
+	.modal-dialog{
+
+	    .modal-content{
+
+	    	border: 0;
+
+	        .modal-header{
+	        	color: #fff !important;
+				background-color: $dark !important;
+
+	            .close {
+	                margin: 0;
+	                padding: 0;
+	                float: right;
+	                color: #FFF;
+	                text-shadow: none !important;
+	            }
+	            .modal-title{
+	                color: #FFF;
+	            }
+	        }
+	    }
+	}
+
+	.swal2-popup.swal2-modal,
+	.swal2-popup.swal2-toast{
+		 border-radius: $border-radius;
+	}
+
+	/************ Tabs ************/
+
+	.table-tabs{
+		a.nav-link{
+			color: $gray-500;
+			font-size: 12px;
+
+			&.active,
+			&:hover{
+				color: $gray-900;
+				background: transparent;
+				border-bottom-color: $gray-100;
+			}
+		}
+	}
+
+	/************ DataTable ************/
+
+	.table-responsive{
+		overflow-x: unset;
+
+		.dataTables_wrapper {
+		    position: relative;
+		    clear: both;
+		    padding-top: 20px;
+
+		    .dataTables_length {
+			    width: 40%;
+			    float: left;
+			    select{
+			    	background: $light;
+				    padding: 6px 9px;
+				    border: 0px;
+			    }
+			}
+			.dataTables_processing{
+				font-weight: 700;
+				color: #444;
+				text-align: center;
+				width: 100%;
+				height: 100%;
+				z-index: 999;
+				background: rgba(255,255,255,0.8);
+				position: absolute;
+				padding: 2%;
+			}
+			.dataTables_filter {
+			    width: 50%;
+			    float: right;
+			    text-align: right;
+
+			    input[type="search"] {
+				    border: 0;
+				    background: $light;
+				    margin-left: 10px;
+				    padding: 6px 9px;
+				}
+			}
+			.dataTables_info {
+			    width: 60%;
+			    float: left
+			}
+		}
+
+		.dataTables_paginate{
+			float: right;
+		    text-align: right;
+
+			a,
+			.ellipsis {
+			    padding: 6px 9px !important;
+			    background: #ddd !important;
+			    border: 0 !important
+			}
+		}
+
+		.dataTables_empty {
+		    text-align: center;
+		}
+		.actions{
+			.btn{
+				padding: 6px 12px !important;
+				border-radius: $border-radius !important;
+			}
+		}
+	}
+
+	.dtsp-panesContainer{
+
+		.dtsp-searchPanes .dtsp-searchPane{
+
+			.dataTables_wrapper{
+				border: 0;
+			}
+
+			.dataTables_scrollBody .dtsp-pill {
+				background: $dark;
+				color: $white;
+			}
+		}
+	}
 
 
-/************ Forms ************/
-.container-fluid{
-	min-height: 75vh;
-}
+	/************ Forms ************/
+	.container-fluid{
+		min-height: 75vh;
+	}
 
-.toggle.btn{
+	.toggle.btn{
 
-	border: 1px solid #CCC;
-	background: #FFF !important;
-	box-shadow: inset 0 0px 5px rgba(0,0,0,.125);
-	min-width: 100px !important;
-
-	.toggle-handle.btn-default{
-		background-color: #fff !important;
 		border: 1px solid #CCC;
-		box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+		background: #FFF !important;
+		min-width: 100px !important;
+
+		.toggle-handle.btn-default{
+			background-color: #fff !important;
+			border: 1px solid #CCC;
+		}
 	}
+
+	.form-control{
+		border-radius: $border-radius !important;
+		background: $light;
+		border: 0;
+	}
+
+	/************ Animate Label ***********
+	.label-animate{
+		label{
+			position: absolute;
+			top: 30px;
+			left: 25px;
+			z-index: -1;
+			font-size: 14px;
+			font-weight: 700;
+			transition: all 0.3s ease-in-out;
+		}
+
+		input{
+			margin-top: 30px;
+		}
+
+		&.filled label{
+			top: 0;
+			z-index: 1;
+		}
+	}*/
+
+	input[disabled],
+	select[disabled],
+	.select2-selection--single[aria-disabled=true]{
+		background: #CCC;
+		color: #999;
+	}
+
+	input[type=color]{
+		width: 50px;
+	}
+
+	.upload {
+      background-color: $light;
+      display: inline-block;
+      height: auto;
+      padding: 3px 40px 3px 3px;
+      position: relative;
+      width: 100%;
+    }
+
+    .upload:hover {
+      opacity:0.95;
+    }
+
+    .upload input[type="file"] {
+        display: input-block;
+        width: 100%;
+        height: 30px;
+        opacity: 0;
+        cursor:pointer;
+        position:absolute;
+        left:0;
+    }
+    .upload-btn {
+        background-color: $primary;
+        border: none;
+        border-radius: 3px;
+        color: #FFF;
+        cursor:pointer;
+        display: inline-block;
+        height: 30px;
+        margin-right:15px;
+        width: auto;
+        padding:0 20px;
+        box-sizing: content-box;
+    }
+
+    .file-name {
+        font-size:14px;
+    }
+
+    .upload + .upload-btn {
+        height:38px;
+    }
 }

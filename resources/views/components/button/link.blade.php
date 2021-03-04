@@ -1,0 +1,2 @@
+@props(['href' => '#', 'label', 'icon', 'class'])
+<a class="btn {{ $class ?? '' }}" href="{{ $href }}" {{ $attributes->whereStartsWith('data') }}>{{ $label ?? '' }} @isset($icon)<i class="{{ $icon }}"></i>@endisset</a>

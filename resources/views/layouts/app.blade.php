@@ -3,11 +3,11 @@
 @section('page')
   <!-- Page Wrapper -->
   <div id="wrapper">
-
+    
     <!-- Sidebar -->
     @include('layouts.sidebar')
     <!-- /Sidebar -->
-
+    
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -24,7 +24,6 @@
           <!-- Page Heading -->
           <div class="d-block mb-4">
             @yield('title')
-            <hr>
           </div>
           
           @yield('content')
@@ -50,9 +49,4 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
-  <!-- Core JavaScript-->
-  <script src="{{ asset('js/app.js') }}"></script>
-  @yield('scripts')
-  @include('Notify::alert')
 @endsection

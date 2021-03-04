@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Spatie\Permission\Models\Permission;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,10 +27,18 @@ class AuthServiceProvider extends ServiceProvider
     public function boot( GateContract $gate )
     {
         $this->registerPolicies();
+
+        Passport::routes();
         
-        $gate->before( function ($user, $ability)
+        $gate->before( function ( $user, $ability )
         {
-            if ( $user->hasRole('super-admin') )
+            if( app()->environment() === 'local' )
+            {
+                if( Permission::where( 'name', $ability )->count() == 0 )
+                    Permission::create(['name' => $ability]);
+            }
+
+            if ( $user->hasRole( config('permission.admin', 'administrador') ) )
             {
                 return true;
             }

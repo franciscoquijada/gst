@@ -13,17 +13,15 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        /*
-        Migrate to MongoDB
         Schema::create('logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->morphs('loggable');
             $table->string('event');
             $table->string('description');
             $table->string('ip')->nullable();
-            $table->text('attr')->nullable();
+            $table->longText('attr')->nullable();
             $table->timestamps();
-        });*/
+        });
     }
 
     /**
@@ -33,6 +31,6 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        //Schema::dropIfExists('logs');
+        Schema::dropIfExists('logs');
     }
 }
