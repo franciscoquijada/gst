@@ -18,9 +18,9 @@
 @push('scripts')
 <script type="text/javascript">
 	$(function () {
-		$('#lista')
-			.on( 'click', '.btn_view_permission', window.viewPermission )
-			.on( 'click', '.btn_edit_permission', window.editPermission )
+		$('.table')
+			.on( 'click', '.btn_view_permission', viewPermission )
+			.on( 'click', '.btn_edit_permission', editPermission )
 	});
 
 	function viewPermission(e){

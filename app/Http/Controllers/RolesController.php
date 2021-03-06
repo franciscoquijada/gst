@@ -6,23 +6,8 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-
-use Validator;
-
 class RolesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function __construct()
-    {
-        $this->middleware(['permission:roles:listado|roles:ver|roles:crear|roles:editar|roles:eliminar']);
-    }
-
     public function list()
     {
         $data = Role::withCount('users')->latest();
@@ -85,8 +70,7 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        $validar = Validator::make(
-            $request->all(),
+        $data = $request->validate(
             [
                 'name'       => 'required|unique:roles,name,NULL,id,deleted_at,NULL',
                 'permission' => 'required',
@@ -94,10 +78,11 @@ class RolesController extends Controller
                 'required'      => 'Campo requerido',
                 'unique'        => 'Ya este nombre esta en uso'
             ]
-        )->validate();
+        );
 
-        $newRole = Role::create([ 
-            'name' => strtolower( $request->name )
+        $newRole = Role::create([
+            'guard_name'    => 'web',  
+            'name'          => strtolower( $request->name )
         ]);
 
         $newRole->syncPermissions( $request->permission );

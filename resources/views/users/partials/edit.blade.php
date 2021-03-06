@@ -4,10 +4,13 @@
   </x-slot>
 
   <div class="row">
-    <div class="col-md-6 col-12 form-group">
-      <x-form.select label="Grupo" name="group_id" :options="$groups->sort()" data-field="group_id" />
+    <div class="col-md-4 col-12 form-group">
+      <x-external />
     </div>
-    <div class="col-md-6 col-12 form-group">
+    <div class="col-md-4 col-12 form-group">
+      <x-form.select label="Compañia" name="company_id" :options="$companies->sort()" data-field="company_id" />
+    </div>
+    <div class="col-md-4 col-12 form-group">
       <x-form.select label="Rol" name="rol_id" :options="$roles->sort()" data-field="roles[0]['id']" />
     </div>
   </div>

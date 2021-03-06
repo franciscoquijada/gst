@@ -22,6 +22,7 @@ class User extends Authenticatable
 
     protected $dates = [
         'email_verified_at',
+        'last_login_at',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -33,7 +34,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'group_id', 
+        'company_id', 
         'name', 
         'rut', 
         'email', 
@@ -60,9 +61,14 @@ class User extends Authenticatable
      */
     protected $casts    = [
         'attr'              => 'array',
-        'email_verified_at' => 'datetime',
-        'last_login_at'     => 'datetime',
+        'email_verified_at' => 'date:d-m-Y h:i A',
+        'last_login_at'     => 'date:d-m-Y h:i A',
+        'created_at'        => 'date:d-m-Y h:i A',
+        'updated_at'        => 'date:d-m-Y h:i A',
+        'deleted_at'        => 'date:d-m-Y h:i A',
     ];
+
+    protected $appends = ['external_html', 'externals'];
 
     public function setPasswordAttribute($value)
     {
@@ -72,9 +78,28 @@ class User extends Authenticatable
         }
     }
 
-    public function group()
+    public function getExternalsAttribute()
     {
-        return $this->belongsTo( Group::class );
+        $return = [];
+
+        $this->identifications->each( function( $el ) use( &$return){
+            $return['type'][]  = $el->id;
+            $return['value'][] = $el->pivot->value;
+        });
+
+        return $return;
+    }
+
+    public function getExternalHtmlAttribute()
+    {
+        return view('users.partials.externals', [ 
+            'identifications' => $this->identifications 
+        ])->render();
+    }
+
+    public function company()
+    {
+        return $this->belongsTo( Company::class );
     }
 
     public function roles()
@@ -89,7 +114,8 @@ class User extends Authenticatable
 
     public function identifications()
     {
-        return $this->morphMany( Identification::class, 'identifiable');
+        return $this->morphToMany( IdentificationType::class, 'identifications')
+            ->withPivot(['value']);
     }
 
     public function sendPasswordResetNotification($token)

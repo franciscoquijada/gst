@@ -24,7 +24,7 @@ class ResetPassword extends ResetPasswordNotification
             ->subject('Cambio de contraseña')
             ->line('Hemos recibido tu solicitud para cambiar tu contraseña.')
             ->action('Restablecer contraseña', url(config('app.url').route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
-            ->line(Lang::get('Este link caducara en :count minutos.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
+            ->line(\Lang::get('Este link caducara en :count minutos.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
             ->line('Si no solicitaste cambiar tu contraseña o ya no necesitas hacerlos omite este mail.');
     }
 }

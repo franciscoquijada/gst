@@ -15,7 +15,7 @@ class IdentificationType extends Model
      * @var string
      */
     protected $table    = 'identifications_types';
-    protected $fillable = [ 'model', 'name' ];
+    protected $fillable = [ 'model', 'name', 'attr' ];
     protected $dates    = [ 'created_at', 'updated_at', 'deleted_at' ];
     protected $casts    = [
         'created_at' => 'date:d-m-Y h:i A',
@@ -24,9 +24,13 @@ class IdentificationType extends Model
         'attr'       => 'array',
     ];
 
-    public function identifications()
+    public function users()
     {
-        return $this->hasMany( Identification::class );
+        return $this->morphedByMany('App\User', 'identifications');
     }
-  
+
+    public function clients()
+    {
+        return $this->morphedByMany('App\Client', 'identifications');
+    } 
 }

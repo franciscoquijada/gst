@@ -29,8 +29,8 @@ class Identification extends Model
         return $this->belongsTo( IdentificationType::class, 'identification_type_id' );
     }
 
-    public function identifiable()
+    public function clients()
     {
-        return $this->morphTo();
+        return $this->morphedByMany( 'App\Client', 'identifications');
     }
 }

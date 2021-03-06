@@ -40,3 +40,36 @@ function _format_rut($value)
 
     return $value;
 }
+
+function _encrypt($string) 
+{ 
+    /* Defina la palabra secreta para encriptar */
+    $key="w3he+1+!";
+    $result = ''; 
+    for($i=0; $i<strlen($string); $i++)
+        {
+            $char = substr($string, $i, 1);
+            $keychar = substr($key, ($i % strlen($key))-1, 1);
+            $char = chr(ord($char)+ord($keychar));
+            $result.=$char;
+        }
+    $tmpencode=base64_encode($result);
+    return str_replace("=", "EQ", str_replace("&", "AND", str_replace("+","PLUS", $tmpencode)));
+}
+
+function _decrypt($string) 
+{ 
+    /* La palabra secreta para desencriptar igual que la de encriptar */
+    $key="w3he+1+!";
+    $result = ''; 
+    $string=str_replace("EQ", "=", str_replace("AND", "&", str_replace("PLUS","+", $string)));
+    $string = base64_decode($string); 
+    for($i=0; $i<strlen($string); $i++) 
+        { 
+            $char = substr($string, $i, 1); 
+            $keychar = substr($key, ($i % strlen($key))-1, 1); 
+            $char = chr(ord($char)-ord($keychar)); 
+            $result.=$char; 
+        } 
+    return $result; 
+}

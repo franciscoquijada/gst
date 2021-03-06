@@ -3,10 +3,13 @@
     Registro de usuarios
   </x-slot>
   <div class="row">
-    <div class="col-md-6 col-12 form-group">
-      <x-form.select label="Grupo" name="group_id" :options="$groups->sort()" />
+    <div class="col-md-4 col-12 form-group">
+      <x-external />
     </div>
-    <div class="col-md-6 col-12 form-group">
+    <div class="col-md-4 col-12 form-group">
+      <x-form.select label="Compañia" name="company_id" :options="$companies->sort()" />
+    </div>
+    <div class="col-md-4 col-12 form-group">
       <x-form.select label="Rol" name="rol_id" :options="$roles->sort()" />
     </div>
   </div>

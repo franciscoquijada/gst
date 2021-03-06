@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Log;
-use App\Group;
+use App\Company;
 use App\Identification;
+use App\IdentificationType;
 
 use App\Rules\ValidarRut;
 use App\Exports\UsersExport;
@@ -41,12 +42,13 @@ class UsersController extends Controller
                 'className' => 'text-center'
             ],
             [
-                'name'      => 'last_login_at.timestamp', 
-                'title'     => 'Ult. Ingreso', 
-                'className' => 'text-center', 
-                'data'      => [ 
-                    '_'     => 'last_login_at.display', 
-                    'sort'  => 'last_login_at.timestamp' 
+                'name'          => 'last_login_at.timestamp', 
+                'title'         => 'Ult. Ingreso', 
+                'className'     => 'text-center',
+                'searchable'    => false,
+                'data'          => [ 
+                    '_'         => 'last_login_at.display', 
+                    'sort'      => 'last_login_at.timestamp' 
                 ] 
             ],
             [
@@ -59,7 +61,7 @@ class UsersController extends Controller
         ];
 
         return view( 'users.index', [ 
-            'groups'    => Group::pluck('name', 'id'),
+            'companies' => Company::pluck('name', 'id'),
             'roles'     => Role::pluck('name', 'id'),
             'columns'   => $columns
         ]);
@@ -68,8 +70,8 @@ class UsersController extends Controller
     public function list()
     {
         $data = ( request()->has('trashed') ) ?
-            User::onlyTrashed()->with(['group', 'roles'])->latest():
-            User::with(['group', 'roles'])->latest();
+            User::onlyTrashed()->with(['company', 'roles', 'identifications'])->latest():
+            User::with(['company', 'roles', 'identifications'])->latest();
 
         return \DataTables::of( $data )
             ->addColumn( 'action', 'users.partials.buttons' )
@@ -93,32 +95,45 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request
-            ->validate([
-                'group_id'    => 'required|exists:groups,id',
-                'rol_id'        => 'required',
-                'name'          => ['required', 'string', 'max:255'],
-                'password'      => ['required', 'string', 'min:8', 'confirmed'],
-                'email'         => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
+        $data = $request->validate([
+                'company_id'        => 'required|exists:companies,id',
+                'rol_id'            => 'required',
+                'name'              => ['required', 'string', 'max:255'],
+                'external.type.*'   => 'required|exists:identifications_types,id',
+                'external.value.*'  => ['required', new ValidarRut ],
+                'password'          => ['required', 'string', 'min:8', 'confirmed'],
+                'email'             => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido',
                 'rut.unique'    => 'Ya este rut esta registrado',  
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
+
+        $external = [];
+
+        foreach ( $request->external['value'] AS $i => $value)
+        {
+            /* Falta crear validaciones personalizadas y refactorizar para que quede decente */ 
+            $external[] = [
+                'identification_type_id' => $i,
+                'value'                  => $value
+            ];
+        }  
         
         $newUser = User::create( $data )->assignRole( $request->rol_id );
+        $newUser->identifications()->sync($external);
 
         if( $user = auth()->user() )
             $user->logs()->create([
                 'event'         => 'creó (ID:' . $newUser->id . ')',
                 'description'   => 'App\User',
                 'ip'            => $request->ip(),
-                'attr'          => $newUser
+                'attr'         => $newUser
             ]);
 
         \Notify::success('Usuario registrado con éxito');
-        return Response()->json(true);
+        return response()->json(true);
     }
 
     /**
@@ -129,7 +144,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        return User::with(['group','roles'])->findOrFail($id);
+        return User::with(['company','roles'])->findOrFail($id);
     }
 
     /**
@@ -154,7 +169,7 @@ class UsersController extends Controller
      */
     public function edit( $id )
     {
-        $user = User::with( 'group','roles' )->findOrFail($id);
+        $user = User::with( 'company','roles' )->findOrFail($id);
         return [
             'fields' => $user,
             'route'  => route( 'api.users.update', $id )
@@ -172,20 +187,34 @@ class UsersController extends Controller
     {
         $data = $request
             ->validate([
-                'group_id' => 'required|exists:groups,id',
-                'rol_id'        => 'required',
-                'name'          => ['required', 'string', 'max:255'],
-                'password'      => 'confirmed',
-                'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
+                'company_id'        => 'required|exists:companies,id',
+                'rol_id'            => 'required',
+                'name'              => 'required|string|max:255',
+                'external.type.*'   => 'required|exists:identifications_types,id',
+                'external.value.*'  => ['required', new ValidarRut ],
+                'password'          => 'confirmed',
+                'email'             => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
                 'rut.unique'    => 'Ya este rut esta registrado', 
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
+
+        $external = [];
+
+        foreach ( $request->external['value']  as $i => $value)
+        {
+            // Falta crear validaciones personalizadas y refactorizar para que quede decente 
+            $external[] = [
+                'identification_type_id' => $i,
+                'value'                  => $value
+            ];
+        }
         
         $user = User::findOrFail($id);
         $user->update( $data );
+        $user->identifications()->sync($external);
 
         if( $id != 1 )
         {
@@ -195,11 +224,11 @@ class UsersController extends Controller
 
         if( $login_user = auth()->user() )
             $login_user->logs()->create([
-            'event'         => 'actualizó (ID:' . $id . ')',
-            'description'   => 'App\User',
-            'ip'            => $request->ip(),
-            'attr'          => $user
-        ]);
+                'event'         => 'actualizó (ID:' . $id . ')',
+                'description'   => 'App\User',
+                'ip'            => $request->ip(),
+                'attr'         => $user
+            ]);
 
         \Notify::success('Usuario actualizado con éxito');
         return response()->json(true);
@@ -235,10 +264,11 @@ class UsersController extends Controller
                 'event'         => 'actualizó (ID:' . $id . ')',
                 'description'   => 'App\User',
                 'ip'            => $request->ip(),
-                'attr'          => $user
+                'attr'         => $user
             ]);
 
         \Notify::success('Perfil actualizado con éxito');
+
         return Response()->json([
             'newUser'  => $user, 
             'redirect' => route('home')
@@ -255,7 +285,7 @@ class UsersController extends Controller
     {
         $user = User::findOrFail( $id );
 
-        if ($user != null && $id != 1)
+        if( $user != null && $id != 1 )
         {
             $user->delete();
 

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\User;
-use App\Group;
+use App\Company;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,10 +16,10 @@ class UsersTableSeeder extends Seeder
    */
   public function run()
   {
-    Group::create(['name' => 'Default']);
+    Company::create(['name' => 'Centribal']);
 
     User::create([
-        'group_id'          =>  Group::first()->id,
+        'company_id'        =>  Company::first()->id,
         'name'              => 'administrador',
         'email'             => 'admin@admin.cl',
         'password'          => 'admin',
