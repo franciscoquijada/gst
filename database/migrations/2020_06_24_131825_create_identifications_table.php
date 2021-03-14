@@ -14,8 +14,8 @@ class CreateIdentificationsTable extends Migration
     public function up()
     {
         Schema::create('identifications', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->morphs('identifiable');
+            $table->id();
+            $table->morphs('identifications');
             $table->unsignedInteger('identification_type_id');
             $table->string('value');
             $table->timestamps();
@@ -23,7 +23,7 @@ class CreateIdentificationsTable extends Migration
         });
 
         Schema::create('identifications_types', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('model');
             $table->string('name');
             $table->json('attr')->nullable();

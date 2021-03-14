@@ -1,0 +1,22 @@
+usuarios:listado
+usuarios:ver
+usuarios:crear
+usuarios:actualizar
+usuarios:eliminar
+usuarios:token
+roles:listado
+roles:ver
+roles:crear
+roles:actualizar
+roles:eliminar
+company:listado
+company:crear
+company:actualizar
+company:eliminar
+tipos identificadores:listado
+tipos identificadores:crear
+tipos identificadores:actualizar
+tipos identificadores:eliminar
+meta data:listado
+registros:listado
+configuraciones:listado

@@ -22,7 +22,6 @@
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
-        "malahierba-lab/chile-rut": "5.1.*",
         "mpdf/mpdf": "^8.0",
         "nwidart/laravel-modules": "^6.2",
         "spatie/laravel-permission": "^3.6",

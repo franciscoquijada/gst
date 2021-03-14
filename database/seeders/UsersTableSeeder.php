@@ -16,10 +16,7 @@ class UsersTableSeeder extends Seeder
    */
   public function run()
   {
-    Company::create(['name' => 'Centribal']);
-
     User::create([
-        'company_id'        =>  Company::first()->id,
         'name'              => 'administrador',
         'email'             => 'admin@admin.cl',
         'password'          => 'admin',

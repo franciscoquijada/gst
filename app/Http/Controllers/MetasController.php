@@ -3,21 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\IdentificationType;
 
-class IdentificationsTypesController extends Controller
+use App\Meta;
+
+class MetasController extends Controller
 {
-	public function __construct()
+	public function list()
     {
-        $this->middleware(['permission:tipos identificadores:listado|tipos identificadores:crear|tipos identificadores:editar|tipos identificadores:eliminar']);
-    }
-
-    public function list()
-    {
-        $data = IdentificationType::latest();
+    	$data = ( request()->has('trashed') ) ?
+            Meta::onlyTrashed()->latest():
+            Meta::latest();
 
         return \DataTables::of( $data )
-            ->addColumn( 'action', 'identifications_types.partials.buttons' )
+            ->addColumn( 'action', 'metadata.partials.buttons' )
             ->editColumn('created_at', function($col) {
                 return [
                     'display' => ( $col->created_at && $col->created_at != '0000-00-00 00:00:00' ) ? 
@@ -36,8 +34,14 @@ class IdentificationsTypesController extends Controller
             [
                 'data'      => 'name', 
                 'name'      => 'name', 
-                'title'     => 'Tipo', 
+                'title'     => 'Nombre', 
                 'className' => 'text-center text-capitalize'
+            ],
+            [
+                'data'      => 'key', 
+                'name'      => 'key', 
+                'title'     => 'Llave', 
+                'className' => 'text-center'
             ],
             [
                 'data'      => 'model', 
@@ -63,7 +67,7 @@ class IdentificationsTypesController extends Controller
             ]
         ];
         
-        return view( 'identifications_types.index', [
+        return view( 'metadata.index', [
         	'models'    => $models,
             'columns'   => $columns
         ]);
@@ -78,18 +82,37 @@ class IdentificationsTypesController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+                'key'           => 'required|min:3|string',
                 'name'          => 'required|min:3|string',
+                'rules'         => 'required|min:3|string',
                 'model'         => 'required|min:3|string'
             ],[
                 'required'      => 'Campo requerido', 
                 'min'           => 'Longitud minima permitida de 3 caracteres'
             ]);
-        
-        $id = IdentificationType::create( $data );
 
-        \Notify::success('Tipo de identificación creado con éxito');
+        array_walk($data, function( &$i, $k )
+            {
+                $i = ( $k != 'model' ) ? 
+                    strtolower( $i ) : $i;
+            }, $data);
 
-        return response()->json($id);
+        $newMeta = Meta::create( $data );
+
+        \Notify::success('Metadata creada con éxito');
+
+        return response()->json( $newMeta );
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show( $id )
+    {
+        return Meta::findOrFail($id);
     }
 
     /**
@@ -101,8 +124,8 @@ class IdentificationsTypesController extends Controller
     public function edit($id)
     {
         return [
-            'fields' => IdentificationType::findOrFail($id),
-            'route'  => route( 'api.id_types.update', $id )
+            'fields' => Meta::findOrFail($id),
+            'route'  => route( 'api.metadata.update', $id )
         ];
     }
 
@@ -116,19 +139,27 @@ class IdentificationsTypesController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
+                'key'           => 'required|min:3|string',
                 'name'          => 'required|min:3|string',
+                'rules'         => 'required|min:3|string',
                 'model'         => 'required|min:3|string'
             ],[
                 'required'      => 'Campo requerido', 
                 'min'           => 'Longitud minima permitida de 3 caracteres'
             ]);
-                 
-        $item = IdentificationType::findOrFail($id);
-        $item->update( $data );
 
-        \Notify::success('Tipo de identificación actualizado con éxito');
+        array_walk($data, function( &$i, $k )
+            {
+                $i = ( $k != 'model' ) ? 
+                    strtolower( $i ) : $i;
+            }, $data);
+
+        $meta = Meta::findOrFail($id)
+        	->update( $data );
+
+        \Notify::success('Metadata actualizada con éxito');
              
-        return response()->json( $item );
+        return response()->json( $meta );
         
     }
 
@@ -140,20 +171,20 @@ class IdentificationsTypesController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $item = IdentificationType::findOrFail($id);
+        $item = Meta::findOrFail($id);
 
         if( $item != null )
         {
             $item->delete();
         
-            \Notify::success('Tipo de identificación eliminado con éxito');
+            \Notify::success('Metadata eliminada con éxito');
 
             return response()->json( true );
         }
         
         return response()->json([
             'message' => 'Datos invalidos', 
-            'errors'  => ['id' => 'Tipo de identificación invalido']
+            'errors'  => ['id' => 'Metadata invalida']
         ], 422);
     }
 }

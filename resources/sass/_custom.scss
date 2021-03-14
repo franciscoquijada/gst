@@ -373,6 +373,23 @@
 		    clear: both;
 		    padding-top: 20px;
 
+		    table{
+
+		    	td{
+
+		    		.actions{
+						.btn{
+							padding: 6px 12px !important;
+							border-radius: $border-radius !important;
+						}
+					}
+
+					ul{
+						list-style: square;
+					}
+		    	}
+		    }
+
 		    .dataTables_length {
 			    width: 40%;
 			    float: left;
@@ -425,12 +442,6 @@
 
 		.dataTables_empty {
 		    text-align: center;
-		}
-		.actions{
-			.btn{
-				padding: 6px 12px !important;
-				border-radius: $border-radius !important;
-			}
 		}
 	}
 

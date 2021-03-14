@@ -16,11 +16,12 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         //Add Permissions
-        include( __DIR__ . "/data/permissions.php");
+        $permissions_file = config( 'permission.folder', __DIR__ . "/data/permissions.csv" );
+        $permissions      = array_map('str_getcsv', file($permissions_file));
 
         if( isset( $permissions ) )
             foreach ( $permissions as $permission )
-                Permission::create($permission);  
+                Permission::create(['name' => $permission[0] ]);  
 
         //Add Admin Rol
         $role = Role::create(['name' => config('permission.admin', 'administrador') ]);

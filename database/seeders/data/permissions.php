@@ -19,11 +19,11 @@ $permissions = [
     ['name' => 'roles:actualizar'],
     ['name' => 'roles:eliminar'],
 
-    // Grupos
-    ['name' => 'grupos:listado'],
-    ['name' => 'grupos:crear'],
-    ['name' => 'grupos:actualizar'],
-    ['name' => 'grupos:eliminar'],
+    // Categorias
+    ['name' => 'categorias:listado'],
+    ['name' => 'categorias:crear'],
+    ['name' => 'categorias:actualizar'],
+    ['name' => 'categorias:eliminar'],
 
     // Tipos de identificadores
     ['name' => 'tipos identificadores:listado'],

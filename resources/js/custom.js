@@ -76,12 +76,33 @@ function onlyNumbers() {
 function onlyRUTFormated() {
   if( $(this).val() != '' ){
     let rut   = $(this).val().replace(/[^0-9k]/g, ''),
-    cuerpo    = formatNumber( $rut.slice(0, -1), 0),
-    dv        = $rut.slice(-1).toUpperCase();
+    cuerpo    = formatNumber( rut.slice(0, -1), 0),
+    dv        = rut.slice(-1).toUpperCase();
 
-    $(this).val( ( $(this).val().length > 7 )  ? cuerpo + '-' + dv : rut );
+    $(this).val( ( $(this).val().length > 1 )  ? cuerpo + '-' + dv : rut );
   }
 }
+
+function formatNumber(amount, decimals) {
+
+    amount += '';
+    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); 
+    decimals = decimals || 0; 
+
+    if ( isNaN(amount) || amount === 0 )
+    return parseFloat(0).toFixed(decimals);
+
+    amount = '' + amount.toFixed(decimals);
+
+    let amount_parts = amount.split('.'),
+    regexp = /(\d+)(\d{3})/;
+
+    while (regexp.test(amount_parts[0]))
+      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + '.' + '$2');
+
+    return amount_parts.join(',');
+}
+
 
 function onlyRUT() {
   if( $(this).val() != '' ){
@@ -149,11 +170,9 @@ window.sendForm = function(e){
     data: $formData,
     success: function (data) {
       $form.closest('.modal').modal('hide');
-      if ( typeof data.redirect !== 'undefined' ) {
-        location.href =  data.redirect;
-      }else{
-        location.reload();
-      }
+
+      ( typeof data.redirect !== 'undefined' ) ?
+        location.href = data.redirect : location.reload();
     },
     error: function (xhr, ajaxOptions, thrownError) {
 
@@ -375,11 +394,11 @@ $(document).ready(function() {
   $('.table').on('click', '.actions .btn_del',  window.delItem );
 
   /**** Formats Inputs ******/
-  $('input.numeric').on('keypress', onlyNumbers );
-  $('input.alpha').on('keypress',   onlyAlphanumeric );
-  $('input.letters').on('keypress', onlyLetters );
-  $('input.rut').on('keypress', onlyRUT );
-  $('input.rut-format').on('keypress', onlyRUTFormated );
+  $('input.numeric').on('keyup mouseup input', onlyNumbers );
+  $('input.alpha').on('keyup mouseup input',   onlyAlphanumeric );
+  $('input.letters').on('keyup mouseup input', onlyLetters );
+  $('input.rut').on('keyup mouseup input', onlyRUT );
+  $('input.rut-format').on('keyup mouseup input', onlyRUTFormated );
   //$('.label-animate input').on('focus change', labelAnimate );
   //$('input.dates').on('keypress', onlyDates );
 

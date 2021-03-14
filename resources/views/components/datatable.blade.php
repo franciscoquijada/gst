@@ -56,7 +56,7 @@
 			$('#trash-tab').on('show.bs.tab', function (event) {
 
 				if(! $.fn.dataTable.isDataTable("#table_trash") ){
-					$('#table_trash').DataTable({
+					let table = $('#table_trash').DataTable({
 					    processing: true,
 					    serverSide: true,
 					    responsive: true,
@@ -72,9 +72,9 @@
 				                d.trashed = true;
 				            }
 					    },
-					    columns: @json( $columns ),
+					    columns: @json( $columns ).filter( el => el.data !== "action" ),
 					    language: { url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json' },
-					    fnDrawCallback: function () {
+					    fnDrawCallback: function ( oSettings  ) {
 							$('#table_trash_count')
 								.text( '(' + this.fnSettings().fnRecordsTotal() + ')' );
 						}

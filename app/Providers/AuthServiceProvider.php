@@ -35,7 +35,7 @@ class AuthServiceProvider extends ServiceProvider
             if( app()->environment() === 'local' )
             {
                 if( Permission::where( 'name', $ability )->count() == 0 )
-                    Permission::create(['name' => $ability]);
+                    $this->savePermission($ability);
             }
 
             if ( $user->hasRole( config('permission.admin', 'administrador') ) )
@@ -43,5 +43,17 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
         });
+    }
+
+    public function savePermission( $permission )
+    {
+        $permission_file = config( 'permission.folder', __DIR__ . '/../../database/seeders/data/permissions.csv');
+        $permissions     = \Arr::flatten( array_map('str_getcsv', file($permission_file)));
+
+        if( ! \Arr::exists( $permissions, $permission ) &&
+            file_exists( $permission_file ) && 
+            is_writable( $permission_file ) 
+        )
+            file_put_contents( $permission_file , "{$permission}\n", FILE_APPEND );
     }
 }

@@ -10,12 +10,12 @@ use App\Traits\SaveLower;
 
 class Meta extends Model
 {
-    use SoftDeletes, SaveLower;
+    use SoftDeletes;
 
-    protected $table 	= 'meta';
+    protected $table 	= 'metas';
     protected $dates 	= [ 'created_at', 'updated_at', 'deleted_at' ];
 
-    protected $fillable = ['key', 'value'];
+    protected $fillable = [ 'model', 'key', 'name', 'rules', 'value' ];
 
     protected $casts     = [
         'created_at' => 'date:d-m-Y h:i A',
@@ -29,7 +29,7 @@ class Meta extends Model
 
     public function setValueAttribute( $value )
     {
-        $this->attributes['value'] = strtolower( json_encode($value) ?? $value );
+        $this->attributes['value'] = json_encode($value) ?? $value;
     }
 
     public function getValueAttribute( $value )

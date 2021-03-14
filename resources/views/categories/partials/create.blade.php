@@ -1,4 +1,4 @@
-<x-modal id="new_group" size="lg" route="api.groups.store" >
+<x-modal id="new_group" size="lg" route="api.categories.store" >
   <x-slot name="title">
     Registro de grupo
   </x-slot>

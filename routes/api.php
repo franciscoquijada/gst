@@ -48,32 +48,32 @@ Route::middleware(['auth:api'])
 	    return Inspiring::quote();
 	})->name('test.token');
 
-  /* Grupos */
-  Route::prefix('groups')
-    ->name('groups.')
+  /* Compañias */
+  Route::prefix('companies')
+    ->name('companies.')
     ->group(function()
     {
-      Route::get('/list','GroupsController@list')
+      Route::get('/list','CompaniesController@list')
         ->name('list')
-        ->middleware(['permission:grupos:listado']);
+        ->middleware(['permission:companias:listado']);
 
-      Route::post('groups','GroupsController@store')
+      Route::post('/','CompaniesController@store')
         ->name('store')
-        ->middleware(['permission:grupos:crear']);
+        ->middleware(['permission:companias:crear']);
 
-      Route::get('/{id}/edit','GroupsController@edit')
+      Route::get('/{id}/edit','CompaniesController@edit')
         ->name('edit')
-        ->middleware(['permission:grupos:actualizar']);
+        ->middleware(['permission:companias:actualizar']);
 
-      Route::put('/{id}','GroupsController@update')
+      Route::put('/{id}','CompaniesController@update')
         ->name('update')
-        ->middleware(['permission:grupos:actualizar']);
-      Route::delete('/{id}','GroupsController@destroy')
+        ->middleware(['permission:companias:actualizar']);
+      Route::delete('/{id}','CompaniesController@destroy')
         ->name('destroy')
-        ->middleware(['permission:grupos:eliminar']);
-      Route::delete('/{id}','GroupsController@destroy')
+        ->middleware(['permission:companias:eliminar']);
+      Route::delete('/{id}','CompaniesController@destroy')
         ->name('destroy')
-        ->middleware(['permission:grupos:eliminar']);
+        ->middleware(['permission:companias:eliminar']);
     });
 
 
@@ -90,7 +90,7 @@ Route::middleware(['auth:api'])
         ->name('show')
         ->middleware(['permission:usuarios:ver']);
 
-      Route::post('users','UsersController@store')
+      Route::post('/','UsersController@store')
         ->name('store')
         ->middleware(['permission:usuarios:crear']);
 
@@ -120,7 +120,7 @@ Route::middleware(['auth:api'])
         ->name('show')
         ->middleware(['permission:tipos identificadores:ver']);
 
-      Route::post('types','IdentificationsTypesController@store')
+      Route::post('/','IdentificationsTypesController@store')
         ->name('store')
         ->middleware(['permission:tipos identificadores:crear']);
 
@@ -135,6 +135,36 @@ Route::middleware(['auth:api'])
       Route::delete('/{id}','IdentificationsTypesController@destroy')
         ->name('destroy')
         ->middleware(['permission:tipos identificadores:eliminar']);
+    });
+
+  /* Metadata */
+  Route::prefix('metadata')
+    ->name('metadata.')
+    ->group( function()
+    {
+      Route::get('/','MetasController@list')
+        ->name('list')
+        ->middleware(['permission:metadata:listado']);
+      
+      Route::get('/{id}','MetasController@show')
+        ->name('show')
+        ->middleware(['permission:metadata:ver']);
+
+      Route::post('/','MetasController@store')
+        ->name('store')
+        ->middleware(['permission:metadata:crear']);
+
+      Route::get('/{id}/edit','MetasController@edit')
+        ->name('edit')
+        ->middleware(['permission:metadata:actualizar']);
+
+      Route::put('/{id}','MetasController@update')
+        ->name('update')
+        ->middleware(['permission:metadata:actualizar']);
+
+      Route::delete('/{id}','MetasController@destroy')
+        ->name('destroy')
+        ->middleware(['permission:metadata:eliminar']);
     });
 
   /* Registros */
@@ -155,7 +185,7 @@ Route::middleware(['auth:api'])
         ->name('show')
         ->middleware(['permission:roles:ver']);
 
-      Route::post('roles','RolesController@store')
+      Route::post('/','RolesController@store')
         ->name('store')
         ->middleware(['permission:roles:crear']);
 

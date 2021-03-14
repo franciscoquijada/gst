@@ -29,5 +29,12 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();
         Passport::routes();
+        
+        \Validator::extend('rut', function( $attr, $value, $params, $validator )
+            {
+                $rut = preg_replace( '/[^0-9|k|K]/', '', $value );
+                return _check_rut($rut);
+
+            }, 'Numero de RUT Invalido.');
     }
 }

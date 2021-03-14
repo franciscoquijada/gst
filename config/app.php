@@ -167,8 +167,6 @@ return [
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
         //Spatie\Permission\PermissionServiceProvider::class,
-        //Collective\Html\HtmlServiceProvider::class,
-        Malahierba\ChileRut\ChileRutServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
 
@@ -236,9 +234,6 @@ return [
         'URL'           => Illuminate\Support\Facades\URL::class,
         'Validator'     => Illuminate\Support\Facades\Validator::class,
         'View'          => Illuminate\Support\Facades\View::class,
-        'RUT'           => Malahierba\ChileRut\Facades\ChileRut::class,
-        //'Form'          => Collective\Html\FormFacade::class,
-        //'Html'          => Collective\Html\HtmlFacade::class,
         'Excel'         => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables'    => Yajra\DataTables\Facades\DataTables::class,
         'Notify'        => App\Library\Services\Notify::class,

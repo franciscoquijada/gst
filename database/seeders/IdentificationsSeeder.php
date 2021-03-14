@@ -15,7 +15,13 @@ class IdentificationsSeeder extends Seeder
     public function run()
     {
         IdentificationType::create([
-            'model' => 'App\User', 'name' => 'RUT',
+            'model' => 'App\User', 
+            'name'  => 'RUT',
+            'attr'  => [
+                'rules'         => [ 'required', 'rut' ],
+                'input_params'  => [ 'maxlength:12' ],
+                'input_classes' => [ 'rut-format' ],
+            ]
         ]);
     }
 }

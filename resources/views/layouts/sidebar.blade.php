@@ -56,8 +56,8 @@
         @can('roles:listado')
           <a class="collapse-item" href="{{ route('roles.index') }}">Roles</a>
         @endcan
-        @can('grupos:listado')
-          <a class="collapse-item" href="{{ route('groups.index') }}">Grupos</a>
+        @can('categorias:listado')
+          <a class="collapse-item" href="{{ route('categories.index') }}">Categorias</a>
         @endcan
         @can('registros:listado')
           <a class="collapse-item" href="{{ route('logs.index') }}">Registros</a>

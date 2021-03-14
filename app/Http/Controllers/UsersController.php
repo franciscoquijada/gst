@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Client;
 use App\Log;
 use App\Company;
 use App\Identification;
 use App\IdentificationType;
 
-use App\Rules\ValidarRut;
 use App\Exports\UsersExport;
 
 use Illuminate\Http\Request;
@@ -99,30 +99,23 @@ class UsersController extends Controller
                 'company_id'        => 'required|exists:companies,id',
                 'rol_id'            => 'required',
                 'name'              => ['required', 'string', 'max:255'],
-                'external.type.*'   => 'required|exists:identifications_types,id',
-                'external.value.*'  => ['required', new ValidarRut ],
                 'password'          => ['required', 'string', 'min:8', 'confirmed'],
                 'email'             => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido',
-                'rut.unique'    => 'Ya este rut esta registrado',  
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
 
-        $external = [];
+        $identifications = new Identification();
 
-        foreach ( $request->external['value'] AS $i => $value)
-        {
-            /* Falta crear validaciones personalizadas y refactorizar para que quede decente */ 
-            $external[] = [
-                'identification_type_id' => $i,
-                'value'                  => $value
-            ];
-        }  
-        
-        $newUser = User::create( $data )->assignRole( $request->rol_id );
-        $newUser->identifications()->sync($external);
+        $identifications = $identifications->validateIdentifications( $request->all(), 'App\User' );
+
+        $newUser = User::create( $data )
+            ->assignRole( $request->rol_id );
+
+        $newUser->identificationstypes()
+            ->sync($identifications);
 
         if( $user = auth()->user() )
             $user->logs()->create([
@@ -133,7 +126,7 @@ class UsersController extends Controller
             ]);
 
         \Notify::success('Usuario registrado con éxito');
-        return response()->json(true);
+        return response()->json( $newUser );
     }
 
     /**
@@ -169,9 +162,8 @@ class UsersController extends Controller
      */
     public function edit( $id )
     {
-        $user = User::with( 'company','roles' )->findOrFail($id);
         return [
-            'fields' => $user,
+            'fields' => User::with( 'company','roles' )->findOrFail($id),
             'route'  => route( 'api.users.update', $id )
         ];
     }
@@ -190,31 +182,26 @@ class UsersController extends Controller
                 'company_id'        => 'required|exists:companies,id',
                 'rol_id'            => 'required',
                 'name'              => 'required|string|max:255',
-                'external.type.*'   => 'required|exists:identifications_types,id',
-                'external.value.*'  => ['required', new ValidarRut ],
                 'password'          => 'confirmed',
                 'email'             => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
             ],[
                 'required'      => 'Campo requerido', 
-                'rut.unique'    => 'Ya este rut esta registrado', 
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
 
-        $external = [];
+        $identifications = new Identification();
 
-        foreach ( $request->external['value']  as $i => $value)
-        {
-            // Falta crear validaciones personalizadas y refactorizar para que quede decente 
-            $external[] = [
-                'identification_type_id' => $i,
-                'value'                  => $value
-            ];
-        }
-        
+        $identifications = $identifications->validateIdentifications( 
+            $request->all(), 
+            'App\User',
+            $id
+        );
+
         $user = User::findOrFail($id);
         $user->update( $data );
-        $user->identifications()->sync($external);
+        $user->identificationstypes()
+             ->sync($identifications);
 
         if( $id != 1 )
         {
@@ -231,7 +218,7 @@ class UsersController extends Controller
             ]);
 
         \Notify::success('Usuario actualizado con éxito');
-        return response()->json(true);
+        return response()->json($user);
     }
 
     /**

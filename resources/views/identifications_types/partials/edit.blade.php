@@ -1,6 +1,6 @@
 <x-modal id="edit_user" type="edit" size="md" route="api.id_types.store" method="PUT" >
   <x-slot name="title">
-    Registro de tipo de identificador
+    Actualizar tipo de identificador:  <span data-field="name"></span>
   </x-slot>
   <div class="row">
     <div class="col-12 form-group">

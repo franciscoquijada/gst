@@ -14,11 +14,17 @@ use Laravel\Passport\HasApiTokens;
 use App\Notifications\ResetPassword;
 
 use App\Traits\SaveLower;
+use App\Traits\Identifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, HasRoles, SoftDeletes, SaveLower;
+    use HasApiTokens, 
+        Notifiable, 
+        HasRoles, 
+        SoftDeletes, 
+        SaveLower,
+        Identifiable;
 
     protected $dates = [
         'email_verified_at',
@@ -68,33 +74,12 @@ class User extends Authenticatable
         'deleted_at'        => 'date:d-m-Y h:i A',
     ];
 
-    protected $appends = ['external_html', 'externals'];
-
     public function setPasswordAttribute($value)
     {
         if( $value != "" )
         {
             $this->attributes['password'] = bcrypt( $value );
         }
-    }
-
-    public function getExternalsAttribute()
-    {
-        $return = [];
-
-        $this->identifications->each( function( $el ) use( &$return){
-            $return['type'][]  = $el->id;
-            $return['value'][] = $el->pivot->value;
-        });
-
-        return $return;
-    }
-
-    public function getExternalHtmlAttribute()
-    {
-        return view('users.partials.externals', [ 
-            'identifications' => $this->identifications 
-        ])->render();
     }
 
     public function company()
@@ -110,12 +95,6 @@ class User extends Authenticatable
     public function logs()
     {
         return $this->morphMany( Log::class, 'loggable');
-    }
-
-    public function identifications()
-    {
-        return $this->morphToMany( IdentificationType::class, 'identifications')
-            ->withPivot(['value']);
     }
 
     public function sendPasswordResetNotification($token)

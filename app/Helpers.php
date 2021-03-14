@@ -16,6 +16,39 @@ function _log($user, $event, $descripcion, $request)
     ]);
 }
 
+function _classes_list()
+{
+    $classes_root = \File::files( app_path() );
+
+    foreach( $classes_root AS $class )
+    {
+        $class->classname = str_replace(
+            [ app_path(), '/', '.php'],
+            ['App', '\\', ''],
+            $class->getRealPath()
+        );
+    }
+
+    $classes = collect($classes_root)->pluck( 'classname', 'classname' );
+
+    foreach ( \Module::all() as $module )
+    {
+        $moduleName = $module->getName();
+        $modulePath = $module->getPath();
+        $allFiles   = File::glob( "{$modulePath}/Entities/*.php");
+
+        foreach ( $allFiles as $entity )
+        {
+            $file   = pathinfo( $entity, PATHINFO_FILENAME );
+            $class  = "Modules\\{$moduleName}\\Entities\\{$file}";
+            $classes[ $class ] = $class;
+        }
+        
+    }
+    
+    return $classes;
+}
+
 function _setting( $key, $default = '' )
 {
     $value = Setting::where( 'key', $key )->withTrashed()->first()->value ?? null;
@@ -72,4 +105,59 @@ function _decrypt($string)
             $result.=$char; 
         } 
     return $result; 
+}
+
+function _to_utf8($data)
+{
+  if ( is_string($data) )
+  {
+    return utf8_encode($data);
+  }
+  elseif ( is_array($data) )
+  {
+    $ret = [];
+    foreach ($data as $i => $d) $ret[ $i ] = ( is_string($data) ) ? utf8_encode( $d ) : _to_utf8( $d );
+    return $ret;
+  }
+  elseif ( is_object($data) )
+  {
+    foreach ($data as $i => $d) $data->$i = ( is_string($data) ) ? utf8_encode( $d ) : _to_utf8( $d );
+    return $data;
+  }
+  else
+  {
+    return $data;
+  }
+}
+
+function _check_rut( $value )
+{
+    if( trim( $value ) == '' ) 
+        return false;
+
+    $_rut   = strtoupper( preg_replace('/\.|,|-/','', $value) );
+    $subRut = substr($_rut,0,strlen($_rut)-1);
+    $subDv  = substr($_rut,-1);
+
+    $x      = 2;
+    $s      = 0;
+
+    for ( $i = strlen( $subRut ) -1; $i >= 0; $i-- )
+    {
+        if ( $x > 7 )
+            $x = 2;
+
+        $s += $subRut[$i]*$x;
+        $x++;
+    }
+
+    $dv = 11-( $s % 11 );
+
+    if ( $dv==10 )
+        $dv = 'K';
+
+    if ( $dv == 11 )
+        $dv = '0';
+
+    return( $dv == strtoupper($subDv) );
 }

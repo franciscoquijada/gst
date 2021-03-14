@@ -70,18 +70,18 @@ Route::group(['middleware' => ['auth']], function ()
       ->middleware(['permission:tipos identificadores:listado']);
   });
 
-  /*Grupos*/
-  Route::prefix('groups')
-  ->name('groups.')
+  /*Categorias*/
+  Route::prefix('categories')
+  ->name('categories.')
   ->group(function()
   {
-    Route::get('/','GroupsController@index')
+    Route::get('/','CategoriesController@index')
       ->name('index')
-      ->middleware(['permission:grupos:listado']);
+      ->middleware(['permission:categorias:listado']);
 
-    Route::get('export', 'GroupsController@export')
+    Route::get('export', 'CategoriesController@export')
       ->name('export')
-      ->middleware(['permission:grupos:listado']);
+      ->middleware(['permission:categorias:listado']);
   });
 
   /* Registros */

@@ -9,15 +9,18 @@ trait Auditable
 {
     public static function bootAuditable()
     {
-        static::created(function (Model $model) {
+        static::created( function ( Model $model )
+        {
             self::audit('creó', $model);
         });
 
-        static::updated(function (Model $model) {
+        static::updated( function ( Model $model )
+        {
             self::audit('actualizó', $model);
         });
 
-        static::deleted(function (Model $model) {
+        static::deleted(function (Model $model)
+        {
             self::audit('eliminó', $model);
         });
     }
