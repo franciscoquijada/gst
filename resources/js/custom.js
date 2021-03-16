@@ -157,6 +157,8 @@ window.sendForm = function(e){
   let $form = $(this).closest('form'),
       $formData = new FormData($form[0]);
 
+  $(this).closest('.modal').addClass('loading');
+
   $.ajax({
     type: $form.attr('method'), //metodo
     url:  $form.attr('action'), //url
@@ -171,14 +173,18 @@ window.sendForm = function(e){
     success: function (data) {
       $form.closest('.modal').modal('hide');
 
+      $('.modal.loading').removeClass('loading');
+
       ( typeof data.redirect !== 'undefined' ) ?
         location.href = data.redirect : location.reload();
     },
     error: function (xhr, ajaxOptions, thrownError) {
 
+      $('.modal.loading').removeClass('loading');
+
       if( xhr.status == 422 ){
 
-       $.each(xhr.responseJSON.errors, function( index, elem ){
+        $.each(xhr.responseJSON.errors, function( index, elem ){
 
         let $elem  = index.split('.'),
             $index = ( typeof $elem[1] != 'undefined' ) ? $elem[0] + '_' + $elem[1] : $elem[0];
@@ -197,11 +203,11 @@ window.sendForm = function(e){
         setTimeout( () =>
           $form
             .find(".error")
-              .fadeOut(1500)
+            .fadeOut(1500)
             .end()
             .find('.invalid')
-              .removeClass('invalid'),
-        6000);
+            .removeClass('invalid'),
+        10000);
 
       }else if( reloadCode.includes( xhr.status ) ){
         location.reload();
@@ -240,6 +246,17 @@ window.viewInfo = function(e) {
             //Fill html fields
             if( elem.data('type') === 'raw' ){
               elem.html( '<br/>' + eval( 'data.' + elem.data('field') + " || ' N/D ' " ) );
+
+            //Fill Array fields
+            }else if( elem.data('type') === 'object' ){
+              let html = '<ul>', 
+                  attr = eval( 'data.' + elem.data('field') + " || '' " );
+
+              Object.entries(attr).forEach(([key, value]) => 
+                html += `<li>${key}: ${value}</li>`);
+
+              html += '</ul>';
+              elem.html( html );
 
             //Fill text fields
             }else{

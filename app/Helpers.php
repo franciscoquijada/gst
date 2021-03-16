@@ -57,10 +57,31 @@ function _setting( $key, $default = '' )
 
 function _lower( $value )
 {
-	if( is_string( $value ) )
-		$value = strtolower( $value );
+  if ( is_string( $value ) )
+  {
+    return strtolower( $value );
+  }
+  elseif ( is_array( $value ) )
+  {
+    $ret = [];
+    foreach ( $value as $i => $d ) 
+        $ret[ $i ] = ( is_string($value) ) ?
+            strtolower( $d ) : _lower( $d );
 
-	return $value;
+    return $ret;
+  }
+  elseif ( is_object($value) )
+  {
+    foreach ( $value as $i => $d ) 
+        $value->$i = ( is_string($value) ) ? 
+            strtolower( $d ) : _lower( $d );
+
+    return $value;
+  }
+  else
+  {
+    return $value;
+  }
 }
 
 function _format_rut($value)
@@ -116,12 +137,18 @@ function _to_utf8($data)
   elseif ( is_array($data) )
   {
     $ret = [];
-    foreach ($data as $i => $d) $ret[ $i ] = ( is_string($data) ) ? utf8_encode( $d ) : _to_utf8( $d );
+    foreach ($data as $i => $d) 
+        $ret[ $i ] = ( is_string($data) ) ? 
+            utf8_encode( $d ) : _to_utf8( $d );
+            
     return $ret;
   }
   elseif ( is_object($data) )
   {
-    foreach ($data as $i => $d) $data->$i = ( is_string($data) ) ? utf8_encode( $d ) : _to_utf8( $d );
+    foreach ($data as $i => $d) 
+        $data->$i = ( is_string($data) ) ? 
+            utf8_encode( $d ) : _to_utf8( $d );
+
     return $data;
   }
   else

@@ -7,6 +7,12 @@ use App\Identification;
 
 trait Identifiable
 {
+    //TODO: Centralizar
+    protected $validation_errors = [
+        'required' => 'Este campo es obligatorio',
+        'unique'   => 'Este valor ya se encuentra registrado',
+    ];
+
 	public function initializeIdentifiable()
     {
         $this->with[] 		= 'identifications';
@@ -43,8 +49,43 @@ trait Identifiable
 
     public function getExternalHtmlAttribute()
     {
-        return view('identifications_types.partials.externals', [ 
+        return view('components.identifications.list', [ 
             'identifications' => $this->identifications 
         ])->render();
+    }
+
+    public function validateIdentifications()
+    {
+        $request = request()->all();
+        $model   = get_class( $this );
+        $id      = $this->id ?? NULL;
+
+        $identifications = [];
+
+        foreach ( $request['external'] AS $type_id => $value )
+        {
+            $identification_type = IdentificationType::findOrFail( $type_id );
+
+            $value   = preg_replace( '/[^0-9|k|K]/', '',$value );
+            $rules   = $identification_type->attr['rules'];
+            $rules[] = "unique:identifications,value,{$id},identifications_id,deleted_at,NULL,identifications_type,{$model}";
+
+            \Validator::make(
+                [
+                    'external'   => [ $type_id => $value ]
+                ],
+                [
+                    'external.*' => $rules
+                ], 
+                $this->validation_errors )
+                ->validate();
+
+            if( !empty( $value ) )
+                $identifications[ $type_id ] = [ 
+                    'value' =>  $value
+                ];
+        }
+
+        return $identifications;
     }
 }

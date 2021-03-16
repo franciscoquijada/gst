@@ -50,7 +50,7 @@ class AuthServiceProvider extends ServiceProvider
         $permission_file = config( 'permission.folder', __DIR__ . '/../../database/seeders/data/permissions.csv');
         $permissions     = \Arr::flatten( array_map('str_getcsv', file($permission_file)));
 
-        if( ! \Arr::exists( $permissions, $permission ) &&
+        if( ! in_array( $permission, $permissions ) &&
             file_exists( $permission_file ) && 
             is_writable( $permission_file ) 
         )

@@ -99,6 +99,14 @@ class MetasController extends Controller
 
         $newMeta = Meta::create( $data );
 
+        if( $userLogged = auth()->user() )
+            $userLogged->logs()->create([
+                'event'         => 'creó (ID:' . $newMeta->id . ')',
+                'description'   => 'App\Meta',
+                'ip'            => $request->ip(),
+                'attr'          => $newMeta
+            ]);
+
         \Notify::success('Metadata creada con éxito');
 
         return response()->json( $newMeta );
@@ -157,6 +165,14 @@ class MetasController extends Controller
         $meta = Meta::findOrFail($id)
         	->update( $data );
 
+        if( $userLogged = auth()->user() )
+            $userLogged->logs()->create([
+                'event'         => 'actualizó (ID:' . $id . ')',
+                'description'   => 'App\Meta',
+                'ip'            => $request->ip(),
+                'attr'          => $user
+            ]);
+
         \Notify::success('Metadata actualizada con éxito');
              
         return response()->json( $meta );
@@ -175,6 +191,14 @@ class MetasController extends Controller
 
         if( $item != null )
         {
+            if( $userLogged = auth()->user() )
+                $userLogged->logs()->create([
+                    'event'         => 'eliminó (ID:' . $id . ')',
+                    'description'   => 'App\Meta',
+                    'ip'            => request()->ip(),
+                    'attr'          => $item
+                ]);
+
             $item->delete();
         
             \Notify::success('Metadata eliminada con éxito');

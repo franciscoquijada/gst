@@ -95,34 +95,41 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $data = $request->validate(
+            [
                 'company_id'        => 'required|exists:companies,id',
                 'rol_id'            => 'required',
-                'name'              => ['required', 'string', 'max:255'],
-                'password'          => ['required', 'string', 'min:8', 'confirmed'],
-                'email'             => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
-            ],[
+                'name'              => [ 'required', 'string', 'max:255' ],
+                'password'          => [ 'required', 'string', 'min:8', 'confirmed' ],
+                'email'             => [
+                    'required',
+                    'email:rfc,dns',
+                    'unique:users,email,NULL,id,deleted_at,NULL'
+                ]
+            ],
+            [
                 'required'      => 'Campo requerido',
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
 
-        $identifications = new Identification();
+        $newUser = new User();
 
-        $identifications = $identifications->validateIdentifications( $request->all(), 'App\User' );
+        $identifications = $newUser->validateIdentifications( $request->all() );
 
-        $newUser = User::create( $data )
-            ->assignRole( $request->rol_id );
+        $newUser->fill( $data )->save();
+
+        $newUser->assignRole( $data['rol_id'] );
 
         $newUser->identificationstypes()
             ->sync($identifications);
 
-        if( $user = auth()->user() )
-            $user->logs()->create([
+        if( $userLogged = auth()->user() )
+            $userLogged->logs()->create([
                 'event'         => 'creó (ID:' . $newUser->id . ')',
                 'description'   => 'App\User',
                 'ip'            => $request->ip(),
-                'attr'         => $newUser
+                'attr'          => $newUser
             ]);
 
         \Notify::success('Usuario registrado con éxito');
@@ -190,15 +197,10 @@ class UsersController extends Controller
             ]
         );
 
-        $identifications = new Identification();
-
-        $identifications = $identifications->validateIdentifications( 
-            $request->all(), 
-            'App\User',
-            $id
-        );
-
         $user = User::findOrFail($id);
+
+        $identifications = $user->validateIdentifications( $request->all() );
+        
         $user->update( $data );
         $user->identificationstypes()
              ->sync($identifications);
@@ -209,12 +211,12 @@ class UsersController extends Controller
             $user->save();
         }
 
-        if( $login_user = auth()->user() )
-            $login_user->logs()->create([
+        if( $userLogged = auth()->user() )
+            $userLogged->logs()->create([
                 'event'         => 'actualizó (ID:' . $id . ')',
                 'description'   => 'App\User',
                 'ip'            => $request->ip(),
-                'attr'         => $user
+                'attr'          => $user
             ]);
 
         \Notify::success('Usuario actualizado con éxito');
@@ -251,7 +253,7 @@ class UsersController extends Controller
                 'event'         => 'actualizó (ID:' . $id . ')',
                 'description'   => 'App\User',
                 'ip'            => $request->ip(),
-                'attr'         => $user
+                'attr'          => $user
             ]);
 
         \Notify::success('Perfil actualizado con éxito');
@@ -274,15 +276,15 @@ class UsersController extends Controller
 
         if( $user != null && $id != 1 )
         {
-            $user->delete();
-
-            if( $login_user = auth()->user() )
-                $login_user->logs()->create([
+            if( $userLogged = auth()->user() )
+                $userLogged->logs()->create([
                     'event'         => 'eliminó (ID:' . $id . ')',
                     'description'   => 'App\User',
-                    'ip'            => $request->ip(),
+                    'ip'            => request()->ip(),
                     'attr'          => $user
                 ]);
+
+            $user->delete();
 
             \Notify::success('Usuario eliminado con éxito!');
             return response()->json($user);
