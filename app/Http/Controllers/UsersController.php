@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
 use App\User;
 use App\Log;
 use App\Group;
@@ -23,42 +24,42 @@ class UsersController extends Controller
     {
         $columns = [
             [
-                'data'      => 'name', 
-                'name'      => 'name', 
-                'title'     => 'Nombre', 
+                'data'      => 'name',
+                'name'      => 'name',
+                'title'     => 'Nombre',
                 'className' => 'text-center text-capitalize'
             ],
             [
-                'data'      => 'role_name', 
-                'name'      => 'role_name', 
-                'title'     => 'Permisos', 
+                'data'      => 'role_name',
+                'name'      => 'role_name',
+                'title'     => 'Permisos',
                 'className' => 'text-center'
             ],
             [
-                'data'      => 'email', 
-                'name'      => 'email', 
-                'title'     => 'Email', 
+                'data'      => 'email',
+                'name'      => 'email',
+                'title'     => 'Email',
                 'className' => 'text-center'
             ],
             [
-                'name'      => 'last_login_at.timestamp', 
-                'title'     => 'Ult. Ingreso', 
-                'className' => 'text-center', 
-                'data'      => [ 
-                    '_'     => 'last_login_at.display', 
-                    'sort'  => 'last_login_at.timestamp' 
-                ] 
+                'name'      => 'last_login_at.timestamp',
+                'title'     => 'Ult. Ingreso',
+                'className' => 'text-center',
+                'data'      => [
+                    '_'     => 'last_login_at.display',
+                    'sort'  => 'last_login_at.timestamp'
+                ]
             ],
             [
-                'data'          => 'action', 
-                'name'          => 'acciones', 
-                'orderable'     => false, 
-                'searchable'    => false, 
+                'data'          => 'action',
+                'name'          => 'acciones',
+                'orderable'     => false,
+                'searchable'    => false,
                 'className'     => 'text-center actions'
             ]
         ];
 
-        return view( 'users.index', [ 
+        return view( 'users.index', [
             'groups'    => Group::pluck('name', 'id'),
             'roles'     => Role::pluck('name', 'id'),
             'columns'   => $columns
@@ -76,9 +77,9 @@ class UsersController extends Controller
             ->addColumn( 'role_name', function( $data ){ return $data->roles[0]->name ?? ''; })
             ->editColumn('last_login_at', function($col) {
                 return [
-                    'display' => ( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ? 
+                    'display' => ( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ?
                         with( new \Carbon\Carbon($col->last_login_at) )->format('d/m/Y H:i:s') : '',
-                    'timestamp' =>( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ? 
+                    'timestamp' =>( $col->last_login_at && $col->last_login_at != '0000-00-00 00:00:00' ) ?
                         with( new \Carbon\Carbon($col->last_login_at) )->timestamp : ''
                     ];
                 })
@@ -91,23 +92,9 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $data = $request
-            ->validate([
-                'group_id'    => 'required|exists:groups,id',
-                'rol_id'        => 'required',
-                'name'          => ['required', 'string', 'max:255'],
-                'password'      => ['required', 'string', 'min:8', 'confirmed'],
-                'email'         => 'required|email:rfc,dns|unique:users,email,NULL,id,deleted_at,NULL'
-            ],[
-                'required'      => 'Campo requerido',
-                'rut.unique'    => 'Ya este rut esta registrado',  
-                'email.unique'  => 'Ya este email esta en uso'
-            ]
-        );
-        
-        $newUser = User::create( $data )->assignRole( $request->rol_id );
+        $newUser = User::create( $request->all() )->assignRole( $request->rol_id );
 
         if( $user = auth()->user() )
             $user->logs()->create([
@@ -140,7 +127,7 @@ class UsersController extends Controller
      */
     public function profile()
     {
-        return view( 'users.profile', [ 
+        return view( 'users.profile', [
             'user'    => User::findOrFail( auth()->id() )
         ]);
     }
@@ -178,12 +165,12 @@ class UsersController extends Controller
                 'password'      => 'confirmed',
                 'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
             ],[
-                'required'      => 'Campo requerido', 
-                'rut.unique'    => 'Ya este rut esta registrado', 
+                'required'      => 'Campo requerido',
+                'rut.unique'    => 'Ya este rut esta registrado',
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
-        
+
         $user = User::findOrFail($id);
         $user->update( $data );
 
@@ -221,12 +208,12 @@ class UsersController extends Controller
                 'password'      => 'nullable|confirmed|string|min:8',
                 'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
             ],[
-                'required'      => 'Campo requerido', 
-                'rut.unique'    => 'Ya este rut esta registrado', 
+                'required'      => 'Campo requerido',
+                'rut.unique'    => 'Ya este rut esta registrado',
                 'email.unique'  => 'Ya este email esta en uso'
             ]
         );
-        
+
         $user = User::findOrFail($id);
         $user
             ->update( $data )
@@ -240,7 +227,7 @@ class UsersController extends Controller
 
         \Notify::success('Perfil actualizado con éxito');
         return Response()->json([
-            'newUser'  => $user, 
+            'newUser'  => $user,
             'redirect' => route('home')
         ]);
     }
@@ -270,10 +257,10 @@ class UsersController extends Controller
             \Notify::success('Usuario eliminado con éxito!');
             return response()->json($user);
         }
-        
+
         return response()->json([
-            'message' => 'Datos invalidos', 
-            'errors'  => ['id' => 'Usuario invalido'] 
+            'message' => 'Datos invalidos',
+            'errors'  => ['id' => 'Usuario invalido']
         ], 422);
     }
 
