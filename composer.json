@@ -68,6 +68,13 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "post-install-cmd":[
+            "@php -r \"file_exists('.env') || copy('.env.dist', '.env');\"",
+            "@php artisan key:generate --ansi",
+            "@php artisan storage:link",
+            "@php artisan passport:install --force",
+            "chmod -R 777 storage bootstrap/cache"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
