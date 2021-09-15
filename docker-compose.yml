@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+
+  mysql:
+    image: mysql
+    restart: always
+    ports:
+      - '33060:3306'
+    volumes:
+      - sql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret-root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+
+  mongo:
+    image: bitnami/mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/bitnami
+
+  web:
+    image: thecodingmachine/php:7.4-v4-apache-node12 
+    ports:
+      - '8000:80'
+    volumes:
+      - ./:/var/www/html
+    env_file:
+      - .docker.env
+
+  ngrok:
+    image: wernight/ngrok
+    command: ngrok http -authtoken='${NGROK_AUTH}' web:80
+    ports:
+      -  '4040:4040'
+    env_file:
+      - .docker.env
+    depends_on:
+      - web
+
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9999:8080
+    depends_on:
+      - ngrok
+      
+volumes:
+  sql-data: {}
+  mongo-data: {}

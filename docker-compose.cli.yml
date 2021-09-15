@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  
+  composer:
+    image: thecodingmachine/php:7.4-v4-fpm-node12
+    env_file:
+      - .docker.env
+    init: true
+    volumes:
+      - ./:/var/www/html
+      - composer-cache:/root/.composer/cache
+    entrypoint: composer
+
+  npm:
+    image: thecodingmachine/php:7.4-v4-fpm-node12
+    env_file:
+      - .docker.env
+    init: true
+    volumes:
+      - ./:/var/www/html
+      - npm-cache:/home/docker/.npm/
+    entrypoint: npm
+
+  artisan:
+    image: thecodingmachine/php:7.4-v4-fpm-node12
+    env_file:
+      - .docker.env
+    init: true
+    volumes:
+      - ./:/var/www/html
+    entrypoint: php artisan
+
+volumes:
+  composer-cache: {}
+  npm-cache: {}
+
