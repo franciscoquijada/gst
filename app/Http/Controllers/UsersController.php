@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\User;
 use App\Log;
 use App\Group;
@@ -89,7 +90,7 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param UserStoreRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(UserStoreRequest $request)
@@ -151,28 +152,14 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param UserUpdateRequest $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
-        $data = $request
-            ->validate([
-                'group_id' => 'required|exists:groups,id',
-                'rol_id'        => 'required',
-                'name'          => ['required', 'string', 'max:255'],
-                'password'      => 'confirmed',
-                'email'         => 'required|email:rfc,dns|unique:users,email,'.$id.',id,deleted_at,NULL'
-            ],[
-                'required'      => 'Campo requerido',
-                'rut.unique'    => 'Ya este rut esta registrado',
-                'email.unique'  => 'Ya este email esta en uso'
-            ]
-        );
-
         $user = User::findOrFail($id);
-        $user->update( $data );
+        $user->update($request->all());
 
         if( $id != 1 )
         {
