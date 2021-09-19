@@ -95,16 +95,7 @@ class UsersController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        $newUser = User::create( $request->all() )->assignRole( $request->rol_id );
-
-        if( $user = auth()->user() )
-            $user->logs()->create([
-                'event'         => 'creó (ID:' . $newUser->id . ')',
-                'description'   => 'App\User',
-                'ip'            => $request->ip(),
-                'attr'          => $newUser
-            ]);
-
+        User::create( $request->all() )->assignRole( $request->rol_id );
         \Notify::success('Usuario registrado con éxito');
         return Response()->json(true);
     }
@@ -167,14 +158,6 @@ class UsersController extends Controller
             $user->save();
         }
 
-        if( $login_user = auth()->user() )
-            $login_user->logs()->create([
-            'event'         => 'actualizó (ID:' . $id . ')',
-            'description'   => 'App\User',
-            'ip'            => $request->ip(),
-            'attr'          => $user
-        ]);
-
         \Notify::success('Usuario actualizado con éxito');
         return response()->json(true);
     }
@@ -232,15 +215,6 @@ class UsersController extends Controller
         if ($user != null && $id != 1)
         {
             $user->delete();
-
-            if( $login_user = auth()->user() )
-                $login_user->logs()->create([
-                    'event'         => 'eliminó (ID:' . $id . ')',
-                    'description'   => 'App\User',
-                    'ip'            => $request->ip(),
-                    'attr'          => $user
-                ]);
-
             \Notify::success('Usuario eliminado con éxito!');
             return response()->json($user);
         }
